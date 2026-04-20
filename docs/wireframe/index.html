@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexGames Wireframe</title>
+    <link rel="stylesheet" href="./index.css" />
+</head>
+<body>
+    <div class="top-header">
+        <div class="container top-header-content">
+            <span class="welcome-message">Bem-vindo a loja virtual da NexGames</span>
+
+            <nav class="top-header-links" aria-label="Navegacao utilitaria">
+                <a href="#">Localizar loja</a>
+                <a href="#">Rastrear pedido</a>
+                <a href="#">Loja</a>
+                <a href="#">Minha conta</a>
+            </nav>
+        </div>
+    </div>
+
+    <header class="store-header">
+        <div class="container store-header-content">
+            <button class="logo" type="button" aria-label="Ir para a home">
+                <span class="logo-badge"></span>
+                <span class="logo-text">NexGames</span>
+            </button>
+
+            <button class="mobile-search-toggle" id="mobile-search-toggle" type="button">
+                <i data-lucide="search"></i>
+                Buscar
+            </button>
+
+            <button class="department-button" type="button" aria-label="Abrir menu de departamentos">
+                <i data-lucide="menu"></i>
+            </button>
+
+            <form class="search-form" id="search-form">
+                <input type="search" placeholder="Buscar jogos, categorias ou publishers" />
+
+                <label class="search-category">
+                    <span class="screen-reader-only">Selecionar categoria</span>
+                    <select>
+                        <option>Todas as categorias</option>
+                        <option>RPG</option>
+                        <option>Acao</option>
+                        <option>Aventura</option>
+                        <option>Esportes</option>
+                    </select>
+                </label>
+
+                <button class="search-button" type="submit">
+                    <i data-lucide="search"></i>
+                    <span>Pesquisar</span>
+                </button>
+            </form>
+
+            <div class="header-actions" aria-label="Acoes da conta">
+                <button class="action-button" type="button" aria-label="Produtos vistos recentemente">
+                    <i data-lucide="refresh-cw"></i>
+                    <span class="action-badge">2</span>
+                </button>
+
+                <button class="action-button" type="button" aria-label="Favoritos">
+                    <i data-lucide="heart"></i>
+                    <span class="action-badge">4</span>
+                </button>
+
+                <button class="action-button account-button" type="button" aria-label="Conta">
+                    <i data-lucide="user-round"></i>
+                </button>
+
+                <button class="action-button cart-button" type="button" aria-label="Carrinho">
+                    <i data-lucide="shopping-bag"></i>
+                    <strong>R$ 279,90</strong>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sub-header">
+        <div class="container sub-header-content" aria-label="Categorias principais">
+            <a href="#">Home</a>
+            <a href="#">RPG</a>
+            <a href="#">Acao</a>
+            <a href="#">Aventura</a>
+            <a href="#">Esportes</a>
+            <a href="#">Puzzle</a>
+            <a href="#">Indie</a>
+            <a href="#">Ofertas</a>
+        </div>
+    </nav>
+
+    <main class="container page-content">
+        <section class="hero-banner" aria-label="Banner principal da vitrine">
+            <div class="hero-banner-content">
+                <div class="hero-copy">
+                    <span class="hero-eyebrow" id="hero-eyebrow">Curadoria NexGames</span>
+                    <h1 class="hero-title" id="hero-title">Jogos digitais com entrega imediata</h1>
+                    <p class="hero-description" id="hero-description">
+                        Estrutura principal da home pensada para destacar campanhas, colecoes e promocoes sazonais.
+                    </p>
+
+                    <div class="hero-actions">
+                        <button class="hero-primary-button" id="hero-primary-button" type="button">
+                            Comprar agora
+                        </button>
+                        <button class="hero-secondary-button" type="button">
+                            Ver ofertas
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="hero-visual-card">
+                        <span class="hero-visual-badge" id="hero-visual-badge">RPG</span>
+                        <strong class="hero-visual-title" id="hero-visual-title">Colecao destaque</strong>
+                        <small class="hero-visual-subtitle" id="hero-visual-subtitle">Banner visual do wireframe</small>
+                    </div>
+
+                    <div class="hero-floating-info">
+                        <i data-lucide="download"></i>
+                        <div>
+                            <strong>Entrega digital</strong>
+                            <span>Ativacao imediata</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-controls">
+                <button class="hero-arrow-button" id="hero-prev" type="button" aria-label="Banner anterior">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+
+                <div class="hero-dots" id="hero-dots" aria-label="Indicadores do banner"></div>
+
+                <button class="hero-arrow-button" id="hero-next" type="button" aria-label="Proximo banner">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="./index.js"></script>
+</body>
+</html>
