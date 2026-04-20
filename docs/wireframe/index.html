@@ -9,139 +9,154 @@
 <body>
     <div class="top-header">
         <div class="container top-header-content">
-            <span class="welcome-message">Bem-vindo a loja virtual da NexGames</span>
+            <span class="welcome-message">Bem-vindo à loja virtual da NexGames</span>
 
-            <nav class="top-header-links" aria-label="Navegacao utilitaria">
-                <a href="#">Localizar loja</a>
-                <a href="#">Rastrear pedido</a>
-                <a href="#">Loja</a>
-                <a href="#">Minha conta</a>
+            <nav class="top-header-links" aria-label="Navegação utilitária da loja">
+                <button class="utility-button" type="button">
+                    <i data-lucide="map-pin"></i>
+                    <span>Localizar loja</span>
+                </button>
+
+                <button class="utility-button" type="button">Rastrear pedido</button>
+                <button class="utility-button" type="button">Loja</button>
+                <button class="utility-button" type="button">Minha conta</button>
             </nav>
         </div>
     </div>
 
     <header class="store-header">
         <div class="container store-header-content">
-            <button class="logo" type="button" aria-label="Ir para a home">
-                <span class="logo-badge"></span>
-                <span class="logo-text">NexGames</span>
+            <button class="brand-button" type="button" aria-label="Ir para a página inicial">
+                <span class="brand-text">
+                    <span class="brand-primary">Nexgames</span>
+                    <span class="brand-dot">.</span>
+                </span>
             </button>
 
-            <button class="mobile-search-toggle" id="mobile-search-toggle" type="button">
+            <button
+                class="mobile-search-toggle"
+                id="mobile-search-toggle"
+                type="button"
+                aria-label="Abrir pesquisa"
+            >
                 <i data-lucide="search"></i>
-                Buscar
             </button>
 
-            <button class="department-button" type="button" aria-label="Abrir menu de departamentos">
+            <button class="department-button" type="button" aria-label="Abrir departamentos">
                 <i data-lucide="menu"></i>
+                <span class="screen-reader-only">Abrir departamentos</span>
             </button>
 
             <form class="search-form" id="search-form">
-                <input type="search" placeholder="Buscar jogos, categorias ou publishers" />
+                <input class="search-field" type="search" placeholder="Buscar jogos, categorias ou publishers" />
 
-                <label class="search-category">
+                <label class="search-category-field">
                     <span class="screen-reader-only">Selecionar categoria</span>
-                    <select>
+                    <select class="search-category-select">
                         <option>Todas as categorias</option>
                         <option>RPG</option>
-                        <option>Acao</option>
+                        <option>Ação</option>
                         <option>Aventura</option>
                         <option>Esportes</option>
                     </select>
                 </label>
 
-                <button class="search-button" type="submit">
+                <button class="search-button" type="submit" aria-label="Pesquisar">
                     <i data-lucide="search"></i>
-                    <span>Pesquisar</span>
                 </button>
             </form>
 
-            <div class="header-actions" aria-label="Acoes da conta">
-                <button class="action-button" type="button" aria-label="Produtos vistos recentemente">
-                    <i data-lucide="refresh-cw"></i>
-                    <span class="action-badge">2</span>
+            <div class="header-actions" aria-label="Ações da conta">
+                <button class="action-icon-button" type="button" aria-label="Itens vistos recentemente">
+                    <i data-lucide="refresh-ccw"></i>
+                    <span class="badge-counter">2</span>
                 </button>
 
-                <button class="action-button" type="button" aria-label="Favoritos">
+                <button class="action-icon-button" type="button" aria-label="Lista de favoritos">
                     <i data-lucide="heart"></i>
-                    <span class="action-badge">4</span>
+                    <span class="badge-counter">4</span>
                 </button>
 
-                <button class="action-button account-button" type="button" aria-label="Conta">
-                    <i data-lucide="user-round"></i>
+                <button class="account-action-button" type="button" aria-label="Conta">
+                    <i data-lucide="user"></i>
+                    <small class="account-action-label">Conta</small>
                 </button>
 
-                <button class="action-button cart-button" type="button" aria-label="Carrinho">
+                <button class="cart-action-button" type="button" aria-label="Carrinho">
                     <i data-lucide="shopping-bag"></i>
-                    <strong>R$ 279,90</strong>
+                    <span class="badge-counter">3</span>
+                    <strong class="total-cart-text">R$ 279,90</strong>
                 </button>
             </div>
         </div>
     </header>
 
-    <nav class="sub-header">
-        <div class="container sub-header-content" aria-label="Categorias principais">
-            <a href="#">Home</a>
-            <a href="#">RPG</a>
-            <a href="#">Acao</a>
-            <a href="#">Aventura</a>
-            <a href="#">Esportes</a>
-            <a href="#">Puzzle</a>
-            <a href="#">Indie</a>
-            <a href="#">Ofertas</a>
+    <nav class="sub-header" aria-label="Navegação principal da loja">
+        <div class="container sub-header-content">
+            <button class="subnav-button" type="button">Home</button>
+            <button class="subnav-button" type="button">RPG <i data-lucide="chevron-down"></i></button>
+            <button class="subnav-button" type="button">Ação <i data-lucide="chevron-down"></i></button>
+            <button class="subnav-button" type="button">Aventura <i data-lucide="chevron-down"></i></button>
+            <button class="subnav-button" type="button">Esportes <i data-lucide="chevron-down"></i></button>
+            <button class="subnav-button" type="button">Puzzle <i data-lucide="chevron-down"></i></button>
+            <button class="subnav-button" type="button">Indie <i data-lucide="chevron-down"></i></button>
+            <button class="subnav-button" type="button">Ofertas <i data-lucide="chevron-down"></i></button>
         </div>
     </nav>
 
-    <main class="container page-content">
-        <section class="hero-banner" aria-label="Banner principal da vitrine">
-            <div class="hero-banner-content">
+    <main class="store-content">
+        <section class="hero-section">
+            <article class="container hero-slider" id="hero-slider">
                 <div class="hero-copy">
-                    <span class="hero-eyebrow" id="hero-eyebrow">Curadoria NexGames</span>
-                    <h1 class="hero-title" id="hero-title">Jogos digitais com entrega imediata</h1>
-                    <p class="hero-description" id="hero-description">
-                        Estrutura principal da home pensada para destacar campanhas, colecoes e promocoes sazonais.
-                    </p>
+                    <span class="hero-overline" id="hero-overline">COMPRE O QUE VOCÊ CURTE</span>
+
+                    <h1 class="hero-title" id="hero-title">
+                        <span>CONSOLES E JOGOS</span>
+                        <span>COM ENTREGA DIGITAL</span>
+                        <span>ATÉ 40% OFF</span>
+                    </h1>
 
                     <div class="hero-actions">
-                        <button class="hero-primary-button" id="hero-primary-button" type="button">
-                            Comprar agora
-                        </button>
-                        <button class="hero-secondary-button" type="button">
-                            Ver ofertas
+                        <button class="hero-primary-button" type="button" id="hero-primary-button">
+                            <span id="hero-primary-label">Comprar agora</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="hero-visual">
-                    <div class="hero-visual-card">
-                        <span class="hero-visual-badge" id="hero-visual-badge">RPG</span>
-                        <strong class="hero-visual-title" id="hero-visual-title">Colecao destaque</strong>
-                        <small class="hero-visual-subtitle" id="hero-visual-subtitle">Banner visual do wireframe</small>
-                    </div>
-
-                    <div class="hero-floating-info">
-                        <i data-lucide="download"></i>
-                        <div>
-                            <strong>Entrega digital</strong>
-                            <span>Ativacao imediata</span>
+                    <div class="media-placeholder media-placeholder--hero" id="hero-media">
+                        <div class="media-glow"></div>
+                        <div class="media-shape"></div>
+                        <div class="media-label-group">
+                            <span id="hero-media-secondary-label">COMPRE O QUE VOCÊ CURTE</span>
+                            <strong id="hero-media-primary-label">CONSOLES E JOGOS</strong>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="hero-controls">
-                <button class="hero-arrow-button" id="hero-prev" type="button" aria-label="Banner anterior">
-                    <i data-lucide="chevron-left"></i>
-                </button>
+                <div class="hero-controls">
+                    <button class="hero-arrow-button" id="hero-prev" type="button" aria-label="Banner anterior">
+                        <i data-lucide="chevron-left"></i>
+                    </button>
 
-                <div class="hero-dots" id="hero-dots" aria-label="Indicadores do banner"></div>
+                    <div class="hero-dots" id="hero-dots" aria-label="Navegação dos banners"></div>
 
-                <button class="hero-arrow-button" id="hero-next" type="button" aria-label="Proximo banner">
-                    <i data-lucide="chevron-right"></i>
-                </button>
-            </div>
+                    <button class="hero-arrow-button" id="hero-next" type="button" aria-label="Próximo banner">
+                        <i data-lucide="chevron-right"></i>
+                    </button>
+                </div>
+            </article>
         </section>
 
+        <section class="container promo-banner-row" id="promo-banner-row" aria-label="Banners promocionais"></section>
+
+        <section class="container benefits-strip" id="benefits-strip" aria-label="Benefícios da loja"></section>
+
+        <section class="container tabbed-catalog" aria-labelledby="tabbed-catalog-title">
+            <h2 class="screen-reader-only" id="tabbed-catalog-title">Catálogo em destaque</h2>
+            <div class="tab-buttons-row" id="tab-buttons-row"></div>
+            <div class="catalog-grid" id="catalog-grid"></div>
+        </section>
     </main>
 
     <script src="https://unpkg.com/lucide@latest"></script>
