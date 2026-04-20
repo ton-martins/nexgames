@@ -1,0 +1,50 @@
+<section class="products-section">
+    <div class="container products-layout" id="products-layout"></div>
+
+    <div class="products-modal-overlay" id="products-modal-overlay" hidden>
+        <div
+            class="products-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="products-modal-title"
+        >
+            <button class="products-modal-close" type="button" data-products-modal-close aria-label="Fechar modal">
+                <i data-lucide="x"></i>
+            </button>
+
+            <div class="products-modal-grid">
+                <div class="products-modal-media" id="products-modal-media"></div>
+
+                <div class="products-modal-content">
+                    <span class="products-modal-category" id="products-modal-category"></span>
+                    <h3 class="products-modal-title" id="products-modal-title"></h3>
+                    <p class="products-modal-description" id="products-modal-description"></p>
+
+                    <div class="products-modal-meta">
+                        <div class="products-modal-rating">
+                            <i data-lucide="star"></i>
+                            <span id="products-modal-rating"></span>
+                        </div>
+
+                        <div class="products-modal-tag" id="products-modal-tag"></div>
+                    </div>
+
+                    <div class="products-modal-price-block">
+                        <strong id="products-modal-price"></strong>
+                        <span id="products-modal-old-price"></span>
+                    </div>
+
+                    <div class="products-modal-actions">
+                        <button class="products-modal-primary-button" type="button">
+                            Adicionar ao carrinho
+                        </button>
+
+                        <button class="products-modal-secondary-button" type="button">
+                            Favoritar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

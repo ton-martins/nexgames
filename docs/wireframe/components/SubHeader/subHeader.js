@@ -3,12 +3,15 @@ export function initSubHeader(rootElement) {
         return;
     }
 
-    const subNavButtons = document.querySelector('subnav-button');
+    const subNavButtons = rootElement.querySelectorAll(".subnav-button");
 
-    subNavButtons.forEach(buttonElement => {
+    subNavButtons.forEach((buttonElement) => {
         buttonElement.addEventListener("click", () => {
-
-            console.log("[subNav] teste");
+            console.log(`[SubHeader] clique em: ${buttonElement.textContent.trim()}`);
         });
     });
+
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
 }

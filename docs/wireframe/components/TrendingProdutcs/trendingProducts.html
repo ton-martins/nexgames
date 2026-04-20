@@ -1,0 +1,53 @@
+<section class="trending-products-section">
+    <div class="container trending-tabs-section">
+        <div class="trending-tabs-row" id="trending-tabs-row"></div>
+        <div class="trending-products-grid" id="trending-products-grid"></div>
+    </div>
+
+    <div class="trending-modal-overlay" id="trending-modal-overlay" hidden>
+        <div
+            class="trending-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="trending-modal-title"
+        >
+            <button class="trending-modal-close" type="button" data-trending-modal-close aria-label="Fechar modal">
+                <i data-lucide="x"></i>
+            </button>
+
+            <div class="trending-modal-grid">
+                <div class="trending-modal-media" id="trending-modal-media"></div>
+
+                <div class="trending-modal-content">
+                    <span class="trending-modal-category" id="trending-modal-category"></span>
+                    <h3 class="trending-modal-title" id="trending-modal-title"></h3>
+                    <p class="trending-modal-description" id="trending-modal-description"></p>
+
+                    <div class="trending-modal-meta">
+                        <div class="trending-modal-rating">
+                            <i data-lucide="star"></i>
+                            <span id="trending-modal-rating"></span>
+                        </div>
+
+                        <div class="trending-modal-tag" id="trending-modal-tag"></div>
+                    </div>
+
+                    <div class="trending-modal-price-block">
+                        <strong id="trending-modal-price"></strong>
+                        <span id="trending-modal-old-price"></span>
+                    </div>
+
+                    <div class="trending-modal-actions">
+                        <button class="trending-modal-primary-button" type="button">
+                            Adicionar ao carrinho
+                        </button>
+
+                        <button class="trending-modal-secondary-button" type="button">
+                            Favoritar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
