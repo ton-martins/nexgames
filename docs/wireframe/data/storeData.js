@@ -507,6 +507,19 @@ export const productShelfSectionList = [
     },
 ];
 
+export const bestSellersSectionContent = {
+    title: "Mais vendidos",
+    productIds: [
+        "red-dead-redemption-2",
+        "elden-ring",
+        "the-witcher-3",
+        "last-of-us-part-1",
+        "spider-man-2",
+        "cyberpunk-2077",
+    ],
+    featuredProductId: "baldurs-gate-3",
+};
+
 export function getProductById(productId) {
     return productCatalogMap.get(productId) || null;
 }
