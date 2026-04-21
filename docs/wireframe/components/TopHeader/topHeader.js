@@ -28,9 +28,7 @@ const topHeaderContent = {
 };
 
 function createUtilityLinkMarkup(link) {
-    const iconMarkup = link.iconName
-        ? `<i data-lucide="${link.iconName}"></i>`
-        : "";
+    const iconMarkup = link.iconName ? `<i data-lucide="${link.iconName}"></i>` : "";
 
     return `
         <button class="utility-button" type="button" data-top-header-link="${link.id}">
@@ -55,30 +53,11 @@ function renderTopHeader(rootElement) {
         .join("");
 }
 
-function bindTopHeaderEvents(rootElement) {
-    rootElement.addEventListener("click", (event) => {
-        const utilityButton = event.target.closest("[data-top-header-link]");
-
-        if (!utilityButton) {
-            return;
-        }
-
-        const selectedLink = topHeaderContent.utilityLinks.find(
-            (link) => link.id === utilityButton.dataset.topHeaderLink
-        );
-
-        if (selectedLink) {
-            console.log(`[TopHeader] clique em: ${selectedLink.label}`);
-        }
-    });
-}
-
 export function initTopHeader(rootElement) {
     if (!rootElement) {
         return;
     }
 
     renderTopHeader(rootElement);
-    bindTopHeaderEvents(rootElement);
     refreshIcons();
 }

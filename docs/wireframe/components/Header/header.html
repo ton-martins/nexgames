@@ -1,8 +1,8 @@
 <header class="store-header">
     <div class="container store-header-content">
-        <button class="brand-button" type="button" aria-label="Ir para a página inicial">
+        <button class="brand-button" id="header-brand-button" type="button">
             <span class="brand-text">
-                <span class="brand-primary">Nexgames</span>
+                <span class="brand-primary" id="header-brand-primary"></span>
                 <span class="brand-dot">.</span>
             </span>
         </button>
@@ -11,56 +11,25 @@
             class="icon-button mobile-search-toggle"
             id="mobile-search-toggle"
             type="button"
-            aria-label="Abrir pesquisa"
-        >
-            <i data-lucide="search"></i>
-        </button>
+        ></button>
 
-        <button class="icon-button department-button" type="button" aria-label="Abrir departamentos">
-            <i data-lucide="menu"></i>
-            <span class="screen-reader-only">Abrir departamentos</span>
-        </button>
+        <button
+            class="icon-button department-button"
+            id="header-department-button"
+            type="button"
+        ></button>
 
         <form class="search-form" id="search-form">
-            <input class="search-field" type="search" placeholder="Buscar jogos, categorias ou publishers" />
+            <input class="search-field" id="header-search-field" type="search" />
 
             <label class="search-category-field">
-                <span class="screen-reader-only">Selecionar categoria</span>
-                <select class="search-category-select">
-                    <option>Todas as categorias</option>
-                    <option>RPG</option>
-                    <option>Ação</option>
-                    <option>Aventura</option>
-                    <option>Esportes</option>
-                </select>
+                <span class="screen-reader-only" id="header-search-category-label"></span>
+                <select class="search-category-select" id="header-search-category-select"></select>
             </label>
 
-            <button class="search-button" type="submit" aria-label="Pesquisar">
-                <i data-lucide="search"></i>
-            </button>
+            <button class="search-button" id="header-search-button" type="submit"></button>
         </form>
 
-        <div class="header-actions" aria-label="Ações da conta">
-            <button class="action-icon-button" type="button" aria-label="Itens vistos recentemente">
-                <i data-lucide="refresh-ccw"></i>
-                <span class="badge-counter">2</span>
-            </button>
-
-            <button class="action-icon-button" type="button" aria-label="Lista de favoritos">
-                <i data-lucide="heart"></i>
-                <span class="badge-counter">4</span>
-            </button>
-
-            <button class="account-action-button" type="button" aria-label="Conta">
-                <i data-lucide="user"></i>
-                <small class="account-action-label">Conta</small>
-            </button>
-
-            <button class="cart-action-button" type="button" aria-label="Carrinho">
-                <i data-lucide="shopping-bag"></i>
-                <span class="badge-counter">3</span>
-                <strong class="total-cart-text">R$ 279,90</strong>
-            </button>
-        </div>
+        <div class="header-actions" id="header-actions"></div>
     </div>
 </header>
