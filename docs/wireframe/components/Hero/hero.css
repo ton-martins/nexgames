@@ -64,9 +64,14 @@
 
 .hero-actions {
     display: flex;
+    align-items: center;
     margin-top: 30px;
     margin-bottom: 1rem;
     gap: 6px;
+}
+
+.hero-actions span {
+    display: flex;
 }
 
 .hero-visual {

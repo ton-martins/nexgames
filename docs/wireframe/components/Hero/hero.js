@@ -4,6 +4,8 @@ const heroBannerList = [
         titleLines: ["CONSOLES, KEYS E GAMES", "COM ENTREGA DIGITAL", "E OFERTAS DE ATÉ 40%"],
         primaryLabel: "Comprar agora",
         secondaryLabel: "Ver promoções",
+        primaryIcon: "shopping-cart",
+        secondaryIcon: "badge-percent",
         mediaSecondaryLabel: "COMPRE O QUE VOCÊ CURTE",
         mediaPrimaryLabel: "CONSOLES E JOGOS",
         startColor: "#fde26c",
@@ -14,6 +16,8 @@ const heroBannerList = [
         titleLines: ["GIFT CARDS, ACESSÓRIOS", "E CAMPANHAS EXCLUSIVAS", "PARA SUA PRÓXIMA JOGATINA"],
         primaryLabel: "Ver ofertas",
         secondaryLabel: "Ver produtos",
+        primaryIcon: "tags",
+        secondaryIcon: "grid-2x2",
         mediaSecondaryLabel: "CURADORIA NEXGAMES",
         mediaPrimaryLabel: "OFERTAS DA SEMANA",
         startColor: "#85d6ff",
@@ -24,6 +28,8 @@ const heroBannerList = [
         titleLines: ["RPG, AÇÃO E INDIES", "EM UMA VITRINE FEITA", "PARA O UNIVERSO GAMER"],
         primaryLabel: "Explorar catálogo",
         secondaryLabel: "Ver destaques",
+        primaryIcon: "compass",
+        secondaryIcon: "star",
         mediaSecondaryLabel: "MONTE SUA BIBLIOTECA",
         mediaPrimaryLabel: "RPG, AÇÃO E INDIES",
         startColor: "#9ce6b3",
@@ -173,6 +179,8 @@ function renderHeroBanner(rootElement) {
     const heroTitle = rootElement.querySelector("#hero-title");
     const heroPrimaryLabel = rootElement.querySelector("#hero-primary-label");
     const heroSecondaryLabel = rootElement.querySelector("#hero-secondary-label");
+    const heroPrimaryIcon = rootElement.querySelector('#hero-primary-icon');
+    const heroSecondaryIcon = rootElement.querySelector('#hero-secondary-icon');
     const heroVisual = rootElement.querySelector("#hero-visual");
     const heroDots = rootElement.querySelector("#hero-dots");
 
@@ -186,6 +194,15 @@ function renderHeroBanner(rootElement) {
     heroTitle.innerHTML = currentBanner.titleLines.map((line) => `<span>${line}</span>`).join("");
     heroPrimaryLabel.textContent = currentBanner.primaryLabel;
     heroSecondaryLabel.textContent = currentBanner.secondaryLabel;
+
+    heroPrimaryIcon.innerHTML = currentBanner.primaryIcon
+        ? `<i data-lucide="${currentBanner.primaryIcon}"></i>`
+        : "";
+
+    heroSecondaryIcon.innerHTML = currentBanner.secondaryIcon
+        ? `<i data-lucide="${currentBanner.secondaryIcon}"></i>`
+        : "";
+
     heroVisual.innerHTML = createHeroVisualMarkup(currentBanner);
     heroSlider.style.setProperty("--hero-end-color", currentBanner.endColor);
 
