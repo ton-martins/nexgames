@@ -1,9 +1,54 @@
-import { getProductsByIds, productShelfSectionList } from "../../data/storeData.js";
+import { getProductsByIds } from "../../data/storeData.js";
 import {
     calculateDiscountPercentage,
     formatCurrency,
     refreshIcons,
 } from "../../core/storefrontUtils.js";
+
+const productShelfSectionList = [
+    {
+        id: "featured",
+        title: "Lançamentos e destaques",
+        description: "Uma prateleira pensada para destacar grandes estreias, edições deluxe e campanhas que puxam o tráfego da home.",
+        productIds: [
+            "spider-man-2",
+            "final-fantasy-16",
+            "forza-horizon-5",
+            "resident-evil-4",
+            "age-of-empires-4",
+            "last-of-us-part-1",
+            "modern-warfare-3",
+        ],
+    },
+    {
+        id: "promotion",
+        title: "Promoções e oportunidades",
+        description: "Campanhas com maior apelo comercial para destacar descontos agressivos, bundles e ofertas limitadas do universo gamer.",
+        productIds: [
+            "cyberpunk-2077",
+            "hogwarts-legacy",
+            "mortal-kombat-1",
+            "alan-wake-2",
+            "persona-3-reload",
+            "red-dead-redemption-2",
+            "dead-space-remake",
+        ],
+    },
+    {
+        id: "launches",
+        title: "Novidades para sua próxima jogatina",
+        description: "Área voltada para pré-vendas, lançamentos e títulos quentes que mantêm a vitrine com cara de loja atualizada.",
+        productIds: [
+            "ea-sports-fc-26",
+            "hades-2",
+            "dragons-dogma-2",
+            "black-myth-wukong",
+            "star-wars-outlaws",
+            "lies-of-p",
+            "avowed",
+        ],
+    },
+];
 
 const productSections = productShelfSectionList.map((section) => ({
     ...section,

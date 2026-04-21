@@ -1,13 +1,22 @@
-import {
-    bestSellersSectionContent,
-    getProductById,
-    getProductsByIds,
-} from "../../data/storeData.js";
+import { getProductById, getProductsByIds } from "../../data/storeData.js";
 import {
     calculateDiscountPercentage,
     formatCurrency,
     refreshIcons,
 } from "../../core/storefrontUtils.js";
+
+export const bestSellersSectionContent = {
+    title: "Mais vendidos",
+    productIds: [
+        "red-dead-redemption-2",
+        "elden-ring",
+        "the-witcher-3",
+        "last-of-us-part-1",
+        "spider-man-2",
+        "cyberpunk-2077",
+    ],
+    featuredProductId: "baldurs-gate-3",
+};
 
 const bestSellersProducts = getProductsByIds(bestSellersSectionContent.productIds);
 const featuredBestSellerProduct = getProductById(bestSellersSectionContent.featuredProductId);

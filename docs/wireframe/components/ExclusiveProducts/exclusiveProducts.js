@@ -1,12 +1,28 @@
-import {
-    getProductsByIds,
-    exclusiveProductsContent,
-} from "../../data/storeData.js";
+import { getProductsByIds } from "../../data/storeData.js";
 import {
     calculateDiscountPercentage,
     formatCurrency,
     refreshIcons,
 } from "../../core/storefrontUtils.js";
+
+const exclusiveProductsContent = {
+    overline: "NexGames Pro",
+    titleBanner: "Eleve seu setup com títulos de elite",
+    descriptionBanner: "Uma seleção feita para quem gosta de montar biblioteca com RPG, ação, narrativa forte e experiências premium do entretenimento gamer.",
+    titleCards: "Lote exclusivo",
+    descriptionCards: "Mergulhe em mundos onde cada escolha molda o destino. Uma curadoria focada em narrativas viscerais, mistérios sombrios e personagens inesquecíveis.",
+    buttonLabel: "Desbloquear Coleção",
+    mediaPrimaryLabel: "Biblioteca gamer",
+    mediaSecondaryLabel: "Seleção premium",
+    startColor: "#fed700",
+    endColor: "#f7f9fc",
+    productIds: [
+        "baldurs-gate-3",
+        "elden-ring",
+        "last-of-us-part-1",
+        "enigma-do-medo",
+    ],
+};
 
 const exclusiveProducts = getProductsByIds(exclusiveProductsContent.productIds);
 

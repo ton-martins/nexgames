@@ -1,13 +1,42 @@
-import {
-    getProductsByIds,
-    trendingProductsByTabIds,
-    trendingTabList,
-} from "../../data/storeData.js";
+import { getProductsByIds} from "../../data/storeData.js";
 import {
     calculateDiscountPercentage,
     formatCurrency,
     refreshIcons,
 } from "../../core/storefrontUtils.js";
+
+const trendingTabList = [
+    { id: "featured", label: "Em destaque" },
+    { id: "promotion", label: "Em promoção" },
+    { id: "rating", label: "Mais bem avaliados" },
+];
+
+const trendingProductsByTabIds = {
+    featured: [
+        "spider-man-2",
+        "final-fantasy-16",
+        "forza-horizon-5",
+        "resident-evil-4",
+        "ea-sports-fc-26",
+        "hades-2",
+    ],
+    promotion: [
+        "cyberpunk-2077",
+        "hogwarts-legacy",
+        "mortal-kombat-1",
+        "alan-wake-2",
+        "lies-of-p",
+        "dead-space-remake",
+    ],
+    rating: [
+        "baldurs-gate-3",
+        "elden-ring",
+        "red-dead-redemption-2",
+        "the-witcher-3",
+        "god-of-war-ragnarok",
+        "hollow-knight",
+    ],
+};
 
 const productsByTab = Object.fromEntries(
     Object.entries(trendingProductsByTabIds).map(([tabId, productIdList]) => [
