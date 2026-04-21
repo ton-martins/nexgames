@@ -23,11 +23,24 @@
     color: var(--text-muted-color);
     font-size: 21px;
     font-weight: 500;
+    position: relative;
 }
 
 .trending-tab-button.is-active {
     color: var(--text-primary-color);
     font-weight: 800;
+}
+
+.trending-tab-button.is-active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px; 
+    left: 50%;   
+    transform: translateX(-50%);
+    width: 60%;  
+    height: 2px;  
+    background-color: var(--primary-color);
+    border-radius: 2px; 
 }
 
 .trending-products-grid {
@@ -57,7 +70,7 @@
 
 .trending-product-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(254, 215, 0, 0.85);
+    border-color: var(--primary-color);
     box-shadow: var(--shadow-medium);
 }
 
@@ -211,13 +224,7 @@
     margin-top: auto;
 }
 
-.trending-product-price strong {
-    display: block;
-    color: var(--text-primary-color);
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 1;
-}
+c
 
 .trending-product-price span {
     color: var(--text-muted-color);
@@ -356,24 +363,10 @@
     margin-top: 4px;
 }
 
-.trending-modal-primary-button,
-.trending-modal-secondary-button {
+.trending-modal-actions button {
     min-height: 46px;
     padding: 0 22px;
-    border-radius: 999px;
     font-weight: 700;
-}
-
-.trending-modal-primary-button {
-    border: 0;
-    background-color: var(--primary-color);
-    color: var(--text-primary-color);
-}
-
-.trending-modal-secondary-button {
-    border: 1px solid var(--border-color);
-    background-color: var(--surface-color);
-    color: var(--text-primary-color);
 }
 
 body.modal-open {

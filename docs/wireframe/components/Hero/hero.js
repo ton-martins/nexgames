@@ -1,17 +1,17 @@
 const heroBannerList = [
     {
-        overline: "A SUA LOJA PREFERIDA DE GAMES",
-        titleLines: ["CONSOLES E JOGOS", "COM ENTREGA DIGITAL", "ATÉ 40% OFF"],
+        overline: "A SUA CENTRAL DE GAMES E ENTRETENIMENTO",
+        titleLines: ["CONSOLES, KEYS E GAMES", "COM ENTREGA DIGITAL", "E OFERTAS DE ATÉ 40%"],
         primaryLabel: "Comprar agora",
-        secondaryLabel: "Ver ofertas",
+        secondaryLabel: "Ver promoções",
         mediaSecondaryLabel: "COMPRE O QUE VOCÊ CURTE",
         mediaPrimaryLabel: "CONSOLES E JOGOS",
         startColor: "#fde26c",
         endColor: "#f5f7fa",
     },
     {
-        overline: "PLATAFORMA NEXGAMES",
-        titleLines: ["ACESSÓRIOS, KEYS", "E OFERTAS DA SEMANA", "NA MESMA VITRINE"],
+        overline: "NOVIDADES DA SEMANA",
+        titleLines: ["GIFT CARDS, ACESSÓRIOS", "E CAMPANHAS EXCLUSIVAS", "PARA SUA PRÓXIMA JOGATINA"],
         primaryLabel: "Ver ofertas",
         secondaryLabel: "Ver produtos",
         mediaSecondaryLabel: "CURADORIA NEXGAMES",
@@ -20,8 +20,8 @@ const heroBannerList = [
         endColor: "#f4f7fb",
     },
     {
-        overline: "MONTE SUA BIBLIOTECA",
-        titleLines: ["RPG, AÇÃO E INDIES", "EM UM LAYOUT", "PRONTO PARA ESCALAR"],
+        overline: "MONTE SUA BIBLIOTECA DIGITAL",
+        titleLines: ["RPG, AÇÃO E INDIES", "EM UMA VITRINE FEITA", "PARA O UNIVERSO GAMER"],
         primaryLabel: "Explorar catálogo",
         secondaryLabel: "Ver destaques",
         mediaSecondaryLabel: "MONTE SUA BIBLIOTECA",
@@ -33,36 +33,64 @@ const heroBannerList = [
 
 const heroInfoCardList = [
     {
-        titleTop: "Descubra as melhores",
-        titleMain: "ofertas",
-        titleBottom: "em RPG e aventura",
+        titleTop: "Campanhas quentes",
+        titleMain: "em oferta",
+        titleBottom: "para RPG e aventura",
         buttonLabel: "Comprar agora",
         startColor: "#fff6d6",
         endColor: "#f5f5f5",
     },
     {
         titleTop: "Jogos digitais",
-        titleMain: "prontos",
-        titleBottom: "para entrega imediata",
+        titleMain: "na hora",
+        titleBottom: "com liberação imediata",
         buttonLabel: "Ver catálogo",
         startColor: "#e8f6ff",
         endColor: "#f6f7f9",
     },
     {
-        titleTop: "Acessórios gamer",
+        titleTop: "Setup e acessórios",
         titleMain: "em alta",
-        titleBottom: "para setup e console",
+        titleBottom: "para console e PC",
         buttonLabel: "Explorar",
         startColor: "#e9fff2",
         endColor: "#f6f7f9",
     },
     {
-        titleTop: "Curadoria NexGames",
+        titleTop: "Curadoria gamer",
         titleMain: "premium",
-        titleBottom: "para vitrine e lançamentos",
+        titleBottom: "para lançamentos e destaques",
         buttonLabel: "Ver seleção",
         startColor: "#f0ecff",
         endColor: "#f6f7f9",
+    },
+];
+
+const heroBenefitList = [
+    {
+        iconName: "badge-check",
+        title: "Entrega digital",
+        description: "Liberação rápida e automática",
+    },
+    {
+        iconName: "gift",
+        title: "Ofertas ativas",
+        description: "Campanhas e descontos visíveis",
+    },
+    {
+        iconName: "layout-grid",
+        title: "Catálogo dinâmico",
+        description: "Estrutura pronta para API",
+    },
+    {
+        iconName: "shield-check",
+        title: "Compra segura",
+        description: "Fluxo visual de confiança",
+    },
+    {
+        iconName: "life-buoy",
+        title: "Suporte contínuo",
+        description: "Base pronta para evolução",
     },
 ];
 
@@ -120,6 +148,25 @@ function renderHeroInfoCards(infoCardsContainer) {
     `).join("");
 }
 
+function renderHeroBenefits(benefitsContainer) {
+    if (!benefitsContainer) {
+        return;
+    }
+
+    benefitsContainer.innerHTML = heroBenefitList.map((benefit) => `
+        <article class="hero-benefit-card">
+            <div class="hero-benefit-icon" aria-hidden="true">
+                <i data-lucide="${benefit.iconName}"></i>
+            </div>
+
+            <div class="hero-benefit-copy">
+                <strong>${benefit.title}</strong>
+                <span>${benefit.description}</span>
+            </div>
+        </article>
+    `).join("");
+}
+
 function renderHeroBanner(rootElement) {
     const heroSlider = rootElement.querySelector("#hero-slider");
     const heroOverline = rootElement.querySelector("#hero-overline");
@@ -140,7 +187,6 @@ function renderHeroBanner(rootElement) {
     heroPrimaryLabel.textContent = currentBanner.primaryLabel;
     heroSecondaryLabel.textContent = currentBanner.secondaryLabel;
     heroVisual.innerHTML = createHeroVisualMarkup(currentBanner);
-
     heroSlider.style.setProperty("--hero-end-color", currentBanner.endColor);
 
     heroDots.innerHTML = heroBannerList.map((_, bannerIndex) => `
@@ -178,11 +224,13 @@ export function initHero(rootElement) {
     }
 
     const infoCardsContainer = rootElement.querySelector("#hero-info-cards");
+    const benefitsContainer = rootElement.querySelector("#hero-benefits-strip");
     const heroPrevButton = rootElement.querySelector("#hero-prev");
     const heroNextButton = rootElement.querySelector("#hero-next");
     const heroDots = rootElement.querySelector("#hero-dots");
 
     renderHeroInfoCards(infoCardsContainer);
+    renderHeroBenefits(benefitsContainer);
     renderHeroBanner(rootElement);
     startHeroAutoplay(rootElement);
 

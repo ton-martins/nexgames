@@ -1,6 +1,7 @@
 import { initHeader } from "./components/Header/header.js";
 import { initHero } from "./components/Hero/hero.js";
 import { initProducts } from "./components/Products/products.js";
+import { initExclusiveProducts } from "./components/ExclusiveProducts/exclusiveProducts.js";
 import { initSubHeader } from "./components/SubHeader/subHeader.js";
 import { initTopHeader } from "./components/TopHeader/topHeader.js";
 import { initTrendingProducts } from "./components/TrendingProdutcs/trendingProducts.js";
@@ -40,6 +41,13 @@ async function initializeWireframe() {
         htmlPath: "./components/TrendingProdutcs/trendingProducts.html",
         cssPath: "./components/TrendingProdutcs/trendingProducts.css",
         onLoaded: initTrendingProducts,
+    });
+
+    await loadComponent({
+        rootSelector: "#exclusive-products-root",
+        htmlPath: "./components/ExclusiveProducts/exclusiveProducts.html",
+        cssPath: "./components/ExclusiveProducts/exclusiveProducts.css",
+        onLoaded: initExclusiveProducts,
     });
 
     await loadComponent({

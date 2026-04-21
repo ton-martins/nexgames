@@ -25,7 +25,7 @@
 
 .brand-text {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
     font-size: 38px;
     font-weight: 800;
     line-height: 1;
@@ -39,7 +39,7 @@
     color: var(--primary-color);
 }
 
-.screen-header-only {
+.screen-reader-only {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -53,34 +53,10 @@
 
 .mobile-search-toggle {
     display: none;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    padding: 0;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--text-primary-color);
 }
 
 .department-button {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    min-width: 42px;
-    height: 42px;
-    padding: 0;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--text-primary-color);
-    transition: color 0.2s ease, background-color 0.2s ease;
-}
-
-.department-button:hover {
-    background-color: rgba(254, 215, 0, 0.26);
 }
 
 .search-form {
@@ -218,6 +194,7 @@
         justify-content: flex-start;
     }
 }
+
 
 @media (max-width: 760px) {
     .brand-text {

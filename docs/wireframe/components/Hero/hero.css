@@ -41,7 +41,7 @@
 .hero-overline {
     display: inline-flex;
     margin-bottom: 12px;
-    color: #2db7e5;
+    color: var(--link-color);
     font-size: 14px;
     font-weight: 800;
 }
@@ -273,6 +273,62 @@
     font-weight: 700;
 }
 
+.hero-benefits-strip {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin-top: 34px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-large);
+    overflow: hidden;
+    background: linear-gradient(180deg, #fffdf4 0%, var(--surface-color) 100%);
+    box-shadow: var(--shadow-soft);
+}
+
+.hero-benefit-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 88px;
+    padding: 18px;
+    transition: background-color 0.22s ease, transform 0.22s ease;
+}
+
+.hero-benefit-card:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+}
+
+.hero-benefit-card:hover {
+    background-color: #fff9d6;
+    transform: translateY(-1px);
+}
+
+.hero-benefit-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    color: var(--primary-color);
+}
+
+.hero-benefit-copy strong,
+.hero-benefit-copy span {
+    display: block;
+}
+
+.hero-benefit-copy strong {
+    color: var(--text-primary-color);
+    font-size: 16px;
+}
+
+.hero-benefit-copy span {
+    color: var(--text-muted-color);
+    font-size: 14px;
+    line-height: 1.2;
+}
+
 .hero-section svg {
     width: 18px;
     height: 18px;
@@ -292,6 +348,22 @@
 
     .hero-info-cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero-benefits-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero-benefit-card:nth-child(2n) {
+        border-right: 0;
+    }
+
+    .hero-benefit-card {
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero-benefit-card:last-child {
+        border-bottom: 0;
     }
 }
 
@@ -324,5 +396,35 @@
 
     .hero-info-card {
         grid-template-columns: 120px minmax(0, 1fr);
+    }
+
+    .hero-benefits-strip {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(84%, 1fr);
+        gap: 12px;
+        padding: 12px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-benefits-strip::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hero-benefit-card,
+    .hero-benefit-card:nth-child(2n) {
+        justify-content: flex-start;
+        min-height: 96px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-large);
+        background-color: var(--surface-color);
+        scroll-snap-align: start;
+    }
+
+    .hero-benefit-card:last-child {
+        border-bottom: 1px solid var(--border-color);
     }
 }
