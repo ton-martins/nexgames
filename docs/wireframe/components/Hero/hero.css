@@ -10,7 +10,7 @@
     min-height: 440px;
     padding: 64px 72px;
     overflow: hidden;
-    border: 1px solid rgba(229, 229, 229, 0.95);
+    border: 1px solid var(--border-light-color);
     border-radius: var(--radius-large);
     box-shadow: var(--shadow-soft);
     background:
@@ -205,7 +205,7 @@
 
 .hero-info-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(254, 215, 0, 0.85);
+    border-color: var(--border-primary-color);
     box-shadow: var(--shadow-medium);
 }
 

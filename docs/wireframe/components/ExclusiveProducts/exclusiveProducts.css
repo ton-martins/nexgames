@@ -155,7 +155,7 @@
 .exclusive-products-product-card:hover,
 .exclusive-products-product-card.is-highlighted {
     transform: translateY(-4px);
-    border-color: rgba(254, 215, 0, 0.85);
+    border-color: var(--border-primary-color);
     box-shadow: var(--shadow-medium);
 }
 

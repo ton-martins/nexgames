@@ -59,7 +59,7 @@
 
 .products-featured-card,
 .products-compact-card {
-    border: 1px solid #edf0f2;
+    border: 1px solid var(--border-light-color);
     border-radius: var(--radius-large);
     background-color: var(--surface-color);
     text-align: left;
@@ -69,7 +69,7 @@
 .products-featured-card:hover,
 .products-compact-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(254, 215, 0, 0.85);
+    border-color: var(--border-primary-color);
     box-shadow: var(--shadow-medium);
 }
 
