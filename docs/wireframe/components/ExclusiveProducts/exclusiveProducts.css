@@ -335,6 +335,7 @@
 @media (max-width: 1180px) {
     .exclusive-products-layout {
         grid-template-columns: 1fr;
+        min-height: auto;
     }
 
     .exclusive-products-visual-panel {
@@ -344,9 +345,18 @@
 }
 
 @media (max-width: 760px) {
+    .exclusive-products-visual-panel,
+    .exclusive-products-content-panel {
+        padding: 20px;
+    }
+
     .exclusive-products-heading {
         flex-wrap: wrap;
         align-items: flex-start;
+    }
+
+    .exclusive-products-media {
+        min-height: 220px;
     }
 
     .exclusive-products-product-grid {

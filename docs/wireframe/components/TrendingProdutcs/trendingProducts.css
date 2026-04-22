@@ -14,6 +14,11 @@
     flex-wrap: wrap;
     gap: 34px;
     padding-bottom: 16px;
+    scrollbar-width: none;
+}
+
+.trending-tabs-row::-webkit-scrollbar {
+    display: none;
 }
 
 .trending-tab-button {
@@ -24,6 +29,7 @@
     font-size: 21px;
     font-weight: 500;
     position: relative;
+    white-space: nowrap;
 }
 
 .trending-tab-button.is-active {
@@ -224,8 +230,6 @@
     margin-top: auto;
 }
 
-c
-
 .trending-product-price span {
     color: var(--text-muted-color);
     font-size: 12px;
@@ -402,12 +406,21 @@ body.modal-open {
 
 @media (max-width: 760px) {
     .trending-tabs-row {
-        gap: 18px;
+        flex-wrap: nowrap;
+        gap: 14px;
         justify-content: flex-start;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 12px;
+        scroll-snap-type: x proximity;
+        scroll-padding-inline: 4px;
+        -webkit-overflow-scrolling: touch;
     }
 
     .trending-tab-button {
+        flex: 0 0 auto;
         font-size: 18px;
+        scroll-snap-align: start;
     }
 
     .trending-products-grid {

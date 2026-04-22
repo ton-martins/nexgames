@@ -276,6 +276,10 @@
 }
 
 .bestseller-featured-footer button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     min-height: 42px;
     padding: 0 20px;
     border: 0;
@@ -341,6 +345,27 @@
     .bestseller-grid {
         grid-template-columns: 1fr;
         padding: 10px;
+    }
+
+    .bestseller-featured-panel {
+        padding: 18px;
+    }
+
+    .bestseller-featured-title {
+        font-size: 20px;
+    }
+
+    .bestseller-featured-media {
+        min-height: 220px;
+    }
+
+    .bestseller-featured-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bestseller-featured-footer button {
+        width: 100%;
     }
 
     .bestseller-thumbnail-row {

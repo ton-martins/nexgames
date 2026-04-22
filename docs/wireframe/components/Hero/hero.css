@@ -388,11 +388,22 @@
 
     .hero-actions {
         flex-direction: column;
+        align-items: stretch;
     }
 
     .hero-visual {
         width: 100%;
+        min-height: 220px;
         opacity: 0.4;
+    }
+
+    .hero-media-card {
+        min-height: 220px;
+    }
+
+    .hero-controls {
+        bottom: 18px;
+        gap: 12px;
     }
 
     .hero-info-cards {
@@ -400,7 +411,7 @@
     }
 
     .hero-info-card {
-        grid-template-columns: 120px minmax(0, 1fr);
+        grid-template-columns: 96px minmax(0, 1fr);
     }
 
     .hero-benefits-strip {

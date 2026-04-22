@@ -135,6 +135,21 @@ function renderTabButtons(rootElement) {
     `).join("");
 }
 
+function syncActiveTabIntoView(rootElement) {
+    if (!window.matchMedia("(max-width: 760px)").matches) {
+        return;
+    }
+
+    const activeTabButton = rootElement.querySelector(".trending-tab-button.is-active");
+
+    if (activeTabButton) {
+        activeTabButton.scrollIntoView({
+            block: "nearest",
+            inline: "center",
+        });
+    }
+}
+
 function renderProductsGrid(rootElement) {
     const productsGrid = rootElement.querySelector("#trending-products-grid");
     const activeProductList = productsByTab[activeTabId] || [];
@@ -208,6 +223,7 @@ export function initTrendingProducts(rootElement) {
     const modalOverlay = rootElement.querySelector("#trending-modal-overlay");
 
     renderTabButtons(rootElement);
+    syncActiveTabIntoView(rootElement);
     renderProductsGrid(rootElement);
     refreshIcons();
 
@@ -219,6 +235,7 @@ export function initTrendingProducts(rootElement) {
         if (tabButton) {
             activeTabId = tabButton.dataset.tabId;
             renderTabButtons(rootElement);
+            syncActiveTabIntoView(rootElement);
             renderProductsGrid(rootElement);
             refreshIcons();
             return;
