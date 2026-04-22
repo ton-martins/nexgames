@@ -8,7 +8,8 @@
     --link-color: #2db7e5;
     --surface-color: #ffffff;
     --surface-soft-color: #fafbfd;
-    --border-color: #e5e5e5;
+    --border-light-color: #e5e5e5;
+    --border-primary-color: rgba(254, 215, 0, 0.85);
     --danger-color: #e2401c;
     --container-width: 1490px;
     --container-padding: 32px;

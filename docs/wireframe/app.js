@@ -7,6 +7,7 @@ import { initTopHeader } from "./components/TopHeader/topHeader.js";
 import { initTrendingProducts } from "./components/TrendingProdutcs/trendingProducts.js";
 import { loadComponent } from "./core/loadComponent.js";
 import { initBestSellersProducts } from "./components/BestSellersProducts/bestSellersProducts.js";
+import { initRecommendedProducts } from "./components/RecommendedProducts/recommendedProducts.js";
 
 async function initializeWireframe() {
     await loadComponent({
@@ -63,6 +64,13 @@ async function initializeWireframe() {
         htmlPath: "./components/BestSellersProducts/bestSellersProducts.html",
         cssPath: "./components/BestSellersProducts/bestSellersProducts.css",
         onLoaded: initBestSellersProducts,
+    });
+
+    await loadComponent({
+        rootSelector: "#recommended-products-root",
+        htmlPath: "./components/RecommendedProducts/recommendedProducts.html",
+        cssPath: "./components/RecommendedProducts/recommendedProducts.css",
+        onLoaded: initRecommendedProducts,
     });
 }
 
