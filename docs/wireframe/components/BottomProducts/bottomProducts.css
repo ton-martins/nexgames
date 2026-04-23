@@ -1,0 +1,195 @@
+.bottom-products-section {
+    margin-top: var(--section-spacing);
+}
+
+.bottom-products-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 22px;
+}
+
+.bottom-products-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.bottom-products-column-card {
+    padding: 22px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-large);
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+    box-shadow: var(--shadow-soft);
+}
+
+.bottom-products-column-heading h3 {
+    margin: 0 0 16px;
+    color: var(--text-primary-color);
+    font-size: 18px;
+}
+
+.bottom-products-row {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 12px 0;
+    border: 0;
+    border-bottom: 1px solid var(--border-light-color);
+    border-radius: 0;
+    background: transparent;
+    text-align: left;
+}
+
+.bottom-products-row:last-child {
+    border-bottom: 0;
+}
+
+.bottom-products-row-media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 82px;
+    height: 82px;
+    overflow: hidden;
+    border-radius: var(--radius-medium);
+    background: linear-gradient(135deg, var(--bottom-row-start-color), var(--bottom-row-end-color));
+}
+
+.bottom-products-row-shape,
+.bottom-products-ad-shape {
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.58);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.28)),
+        rgba(255, 255, 255, 0.4);
+    transform: rotate(-14deg);
+}
+
+.bottom-products-row-shape {
+    width: 52%;
+    height: 58%;
+    border-radius: 18px;
+}
+
+.bottom-products-row-content {
+    display: grid;
+    gap: 6px;
+}
+
+.bottom-products-row-content span {
+    color: var(--text-muted-color);
+    font-size: 12px;
+}
+
+.bottom-products-row-content strong {
+    color: var(--text-primary-color);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.bottom-products-row-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bottom-products-row-price span {
+    color: var(--text-primary-color);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.bottom-products-row-price.is-promotional span {
+    color: var(--danger-color);
+}
+
+.bottom-products-row-price small {
+    color: var(--text-muted-color);
+    font-size: 12px;
+    text-decoration: line-through;
+}
+
+.bottom-products-ad-card {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 22px;
+    border: 1px solid var(--border-light-color);
+    border-radius: var(--radius-large);
+    background: linear-gradient(180deg, #fffdf4 0%, #fbfcff 100%);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.bottom-products-ad-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-primary-color);
+    box-shadow: var(--shadow-medium);
+}
+
+.bottom-products-ad-card span {
+    color: var(--text-muted-color);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.bottom-products-ad-card strong {
+    color: var(--text-primary-color);
+    font-size: 24px;
+    line-height: 1.05;
+}
+
+.bottom-products-ad-media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    overflow: hidden;
+    border-radius: var(--radius-large);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 60%),
+        linear-gradient(135deg, var(--bottom-ad-start-color), var(--bottom-ad-end-color));
+}
+
+.bottom-products-ad-shape {
+    width: 56%;
+    height: 66%;
+    border-radius: 22px;
+}
+
+.bottom-products-ad-labels {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    display: grid;
+    gap: 2px;
+    color: #ffffff;
+}
+
+.bottom-products-ad-labels span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    opacity: 0.9;
+}
+
+.bottom-products-ad-labels strong {
+    font-size: 15px;
+    line-height: 1.05;
+}
+
+@media (max-width: 1180px) {
+    .bottom-products-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .bottom-products-columns {
+        grid-template-columns: 1fr;
+    }
+}
