@@ -10,6 +10,8 @@ import { initBestSellersProducts } from "./components/BestSellersProducts/bestSe
 import { initRecommendedProducts } from "./components/RecommendedProducts/recommendedProducts.js";
 import { initBrands } from "./components/Brands/brands.js";
 import { initBottomProducts } from "./components/BottomProducts/bottomProducts.js";
+import { initNewsletter } from "./components/Newsletter/newsletter.js";
+import { initFooter } from "./components/Footer/footer.js";
 
 async function initializeWireframe() {
     await loadComponent({
@@ -87,6 +89,20 @@ async function initializeWireframe() {
         htmlPath: "./components/BottomProducts/bottomProducts.html",
         cssPath: "./components/BottomProducts/bottomProducts.css",
         onLoaded: initBottomProducts,
+    });
+
+    await loadComponent({
+        rootSelector: "#newsletter-root",
+        htmlPath: "./components/Newsletter/newsletter.html",
+        cssPath: "./components/Newsletter/newsletter.css",
+        onLoaded: initNewsletter,
+    });
+
+    await loadComponent({
+        rootSelector: "#footer-root",
+        htmlPath: "./components/Footer/footer.html",
+        cssPath: "./components/Footer/footer.css",
+        onLoaded: initFooter,
     });
 }
 
