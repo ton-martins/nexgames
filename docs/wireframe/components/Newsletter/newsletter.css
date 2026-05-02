@@ -26,13 +26,13 @@
 }
 
 .newsletter-text-block strong {
-    color: var(--text-primary-color);
+    color: var(--text-on-primary-color);
     font-size: 25px;
     font-weight: 400;
 }
 
 .newsletter-text-block span {
-    color: var(--text-primary-color);
+    color: var(--text-on-primary-color);
     font-size: 18px;
 }
 
@@ -50,13 +50,15 @@
 .newsletter-form input {
     padding-left: 22px;
     border-radius: var(--radius-large) 0 0 var(--radius-large);
+    background-color: var(--surface-color);
+    color: var(--text-primary-color);
     font-size: 18px;
 }
 
 .newsletter-form button {
     border-radius: 0 var(--radius-large) var(--radius-large) 0;
-    background-color: var(--text-primary-color);
-    color: #ffffff;
+    background-color: var(--surface-contrast-color);
+    color: var(--text-on-contrast-color);
     font-size: 16px;
     font-weight: 700;
 }

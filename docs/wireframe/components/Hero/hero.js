@@ -1,37 +1,37 @@
 const heroBannerList = [
     {
-        overline: "A SUA CENTRAL DE GAMES E ENTRETENIMENTO",
-        titleLines: ["CONSOLES, KEYS E GAMES", "COM ENTREGA DIGITAL", "E OFERTAS DE ATÉ 40%"],
+        overline: "O HUB GAMER DA SUA PRÓXIMA JOGATINA",
+        titleLines: ["LANÇAMENTOS, INDIES E KEYS", "PRONTOS PARA O PLAY"],
         primaryLabel: "Comprar agora",
-        secondaryLabel: "Ver promoções",
+        secondaryLabel: "Ver drops",
         primaryIcon: "shopping-cart",
         secondaryIcon: "badge-percent",
-        mediaSecondaryLabel: "COMPRE O QUE VOCÊ CURTE",
-        mediaPrimaryLabel: "CONSOLES E JOGOS",
+        mediaSecondaryLabel: "LOADOUT NEXGAMES",
+        mediaPrimaryLabel: "JOGOS E KEYS",
         startColor: "#fde26c",
         endColor: "#f5f7fa",
     },
     {
-        overline: "NOVIDADES DA SEMANA",
-        titleLines: ["GIFT CARDS, ACESSÓRIOS", "E CAMPANHAS EXCLUSIVAS", "PARA SUA PRÓXIMA JOGATINA"],
+        overline: "OFERTAS INSANAS PARA SUA GAMEPLAY",
+        titleLines: ["GIFT CARDS E CRÉDITOS", "PARA ENTRAR NO GAME"],
         primaryLabel: "Ver ofertas",
-        secondaryLabel: "Ver produtos",
+        secondaryLabel: "Montar setup",
         primaryIcon: "tags",
         secondaryIcon: "grid-2x2",
-        mediaSecondaryLabel: "CURADORIA NEXGAMES",
-        mediaPrimaryLabel: "OFERTAS DA SEMANA",
+        mediaSecondaryLabel: "BOOST DE SALDO",
+        mediaPrimaryLabel: "DEALS DA SEMANA",
         startColor: "#85d6ff",
         endColor: "#f4f7fb",
     },
     {
-        overline: "MONTE SUA BIBLIOTECA DIGITAL",
-        titleLines: ["RPG, AÇÃO E INDIES", "EM UMA VITRINE FEITA", "PARA O UNIVERSO GAMER"],
-        primaryLabel: "Explorar catálogo",
+        overline: "MONTE SUA COLEÇÃO DE RESPEITO",
+        titleLines: ["RPG, FPS E CO-OP", "PARA O SEU SAVE"],
+        primaryLabel: "Explorar arsenal",
         secondaryLabel: "Ver destaques",
         primaryIcon: "compass",
         secondaryIcon: "star",
-        mediaSecondaryLabel: "MONTE SUA BIBLIOTECA",
-        mediaPrimaryLabel: "RPG, AÇÃO E INDIES",
+        mediaSecondaryLabel: "BIBLIOTECA EM XP MAX",
+        mediaPrimaryLabel: "RPG, FPS E INDIES",
         startColor: "#9ce6b3",
         endColor: "#f5f7fb",
     },
@@ -49,13 +49,13 @@ const heroInfoCardList = [
     {
         titleTop: "Jogos digitais",
         titleMain: "na hora",
-        titleBottom: "com liberação imediata",
-        buttonLabel: "Ver catálogo",
+        titleBottom: "com liberacao imediata",
+        buttonLabel: "Ver catalogo",
         startColor: "#e8f6ff",
         endColor: "#f6f7f9",
     },
     {
-        titleTop: "Setup e acessórios",
+        titleTop: "Setup e acessorios",
         titleMain: "em alta",
         titleBottom: "para console e PC",
         buttonLabel: "Explorar",
@@ -65,8 +65,8 @@ const heroInfoCardList = [
     {
         titleTop: "Curadoria gamer",
         titleMain: "premium",
-        titleBottom: "para lançamentos e destaques",
-        buttonLabel: "Ver seleção",
+        titleBottom: "para lancamentos e destaques",
+        buttonLabel: "Ver selecao",
         startColor: "#f0ecff",
         endColor: "#f6f7f9",
     },
@@ -76,27 +76,27 @@ const heroBenefitList = [
     {
         iconName: "badge-check",
         title: "Entrega digital",
-        description: "Liberação rápida e automática",
+        description: "Liberacao rapida e automatica",
     },
     {
         iconName: "gift",
         title: "Ofertas ativas",
-        description: "Campanhas e descontos visíveis",
+        description: "Campanhas e descontos visiveis",
     },
     {
         iconName: "layout-grid",
-        title: "Catálogo dinâmico",
+        title: "Catalogo dinamico",
         description: "Estrutura pronta para API",
     },
     {
         iconName: "shield-check",
         title: "Compra segura",
-        description: "Fluxo visual de confiança",
+        description: "Fluxo visual de confianca",
     },
     {
         iconName: "life-buoy",
-        title: "Suporte contínuo",
-        description: "Base pronta para evolução",
+        title: "Suporte continuo",
+        description: "Base pronta para evolucao",
     },
 ];
 
@@ -179,8 +179,8 @@ function renderHeroBanner(rootElement) {
     const heroTitle = rootElement.querySelector("#hero-title");
     const heroPrimaryLabel = rootElement.querySelector("#hero-primary-label");
     const heroSecondaryLabel = rootElement.querySelector("#hero-secondary-label");
-    const heroPrimaryIcon = rootElement.querySelector('#hero-primary-icon');
-    const heroSecondaryIcon = rootElement.querySelector('#hero-secondary-icon');
+    const heroPrimaryIcon = rootElement.querySelector("#hero-primary-icon");
+    const heroSecondaryIcon = rootElement.querySelector("#hero-secondary-icon");
     const heroVisual = rootElement.querySelector("#hero-visual");
     const heroDots = rootElement.querySelector("#hero-dots");
 

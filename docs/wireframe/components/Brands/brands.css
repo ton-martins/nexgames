@@ -18,9 +18,9 @@
     align-items: center;
     justify-content: center;
     min-height: 62px;
-    border: 1px solid #edf0f2;
+    border: 1px solid var(--border-light-color);
     border-radius: var(--radius-medium);
-    background-color: #f7f8fa;
+    background-color: var(--surface-soft-color);
     color: var(--text-muted-color);
     font-size: 20px;
     font-weight: 700;
@@ -28,7 +28,7 @@
 }
 
 .brand-item:hover {
-    background-color: #fff9d6;
+    background-color: var(--surface-accent-hover-color);
     color: var(--text-primary-color);
     transform: translateY(-1px);
 }

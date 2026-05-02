@@ -26,7 +26,8 @@
     padding: 18px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-large);
-    background: linear-gradient(180deg, #ffffff 0%, var(--surface-soft-color) 100%);
+    background-color: var(--surface-soft-color);
+    background-image: var(--surface-panel-gradient);
     box-shadow: var(--shadow-soft);
 }
 
@@ -96,7 +97,7 @@
     border: 1px solid var(--primary-color);
     border-radius: 12px;
     background-color: var(--primary-color);
-    color: var(--text-primary-color);
+    color: var(--text-on-primary-color);
 }
 
 .bestseller-product-category {
@@ -121,8 +122,12 @@
     overflow: hidden;
     border-radius: var(--radius-large);
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 60%),
-        linear-gradient(135deg, var(--bestseller-start-color), var(--bestseller-end-color));
+        var(--media-top-overlay),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--bestseller-start-color) 82%, var(--surface-color)),
+            color-mix(in srgb, var(--bestseller-end-color) 88%, var(--surface-soft-color))
+        );
 }
 
 .bestseller-product-media::after {
@@ -131,7 +136,7 @@
     width: 62%;
     aspect-ratio: 1;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.34);
+    background: var(--glass-glow-color);
     filter: blur(8px);
 }
 
@@ -140,10 +145,10 @@
 .bestseller-thumbnail-shape {
     position: relative;
     z-index: 1;
-    border: 1px solid rgba(255, 255, 255, 0.58);
+    border: 1px solid var(--glass-border-color);
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.28)),
-        rgba(255, 255, 255, 0.4);
+        var(--glass-surface-gradient),
+        var(--glass-fill-color);
     transform: rotate(-14deg);
 }
 
@@ -151,7 +156,7 @@
     width: 58%;
     height: 68%;
     border-radius: 22px;
-    box-shadow: 0 20px 40px rgba(17, 22, 27, 0.14);
+    box-shadow: var(--shadow-float);
 }
 
 .bestseller-product-labels,
@@ -161,7 +166,7 @@
     bottom: 18px;
     display: grid;
     gap: 2px;
-    color: #ffffff;
+    color: var(--text-inverse-color);
 }
 
 .bestseller-product-labels span,
@@ -214,7 +219,8 @@
     padding: 24px;
     border: 1px solid var(--border-primary-color);
     border-radius: var(--radius-large);
-    background: linear-gradient(180deg, #fffdf4 0%, var(--surface-color) 100%);
+    background-color: var(--surface-highlight-end-color);
+    background-image: var(--surface-highlight-gradient);
     box-shadow: var(--shadow-medium);
 }
 
@@ -242,8 +248,12 @@
     overflow: hidden;
     border-radius: var(--radius-large);
     background:
-        radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.34), transparent 36%),
-        linear-gradient(135deg, var(--bestseller-featured-start-color), var(--bestseller-featured-end-color));
+        var(--media-radial-overlay),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--bestseller-featured-start-color) 82%, var(--surface-color)),
+            color-mix(in srgb, var(--bestseller-featured-end-color) 88%, var(--surface-soft-color))
+        );
 }
 
 .bestseller-featured-glow {
@@ -251,7 +261,7 @@
     width: 68%;
     aspect-ratio: 1;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.34);
+    background: var(--glass-glow-color);
     filter: blur(8px);
 }
 
@@ -259,7 +269,7 @@
     width: 54%;
     height: 72%;
     border-radius: 22px;
-    box-shadow: 0 20px 40px rgba(17, 22, 27, 0.14);
+    box-shadow: var(--shadow-float);
 }
 
 .bestseller-featured-footer {
@@ -285,7 +295,7 @@
     border: 0;
     border-radius: var(--radius-medium);
     background-color: var(--primary-color);
-    color: var(--text-primary-color);
+    color: var(--text-on-primary-color);
     font-weight: 700;
 }
 
@@ -310,7 +320,11 @@
     height: 82px;
     overflow: hidden;
     border-radius: var(--radius-medium);
-    background: linear-gradient(135deg, var(--bestseller-thumbnail-start-color), var(--bestseller-thumbnail-end-color));
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--bestseller-thumbnail-start-color) 82%, var(--surface-color)),
+        color-mix(in srgb, var(--bestseller-thumbnail-end-color) 88%, var(--surface-soft-color))
+    );
 }
 
 .bestseller-thumbnail-shape {

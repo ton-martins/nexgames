@@ -113,7 +113,7 @@
     border: 0;
     border-left: 1px solid var(--primary-color);
     background-color: var(--primary-color);
-    color: var(--text-primary-color);
+    color: var(--text-on-primary-color);
     transition: background-color 0.2s ease;
 }
 
@@ -147,7 +147,7 @@
 .action-icon-button:hover,
 .account-action-button:hover,
 .cart-action-button:hover {
-    color: var(--link-color);
+    color: var(--secondary-color);
 }
 
 .badge-counter {
@@ -162,7 +162,7 @@
     padding: 0 5px;
     border-radius: 8px;
     background-color: var(--primary-color);
-    color: var(--text-primary-color);
+    color: var(--text-on-primary-color);
     font-size: 10px;
     font-weight: 700;
 }

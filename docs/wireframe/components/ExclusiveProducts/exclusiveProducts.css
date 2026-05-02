@@ -8,7 +8,8 @@
     min-height: 520px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-large);
-    background: linear-gradient(180deg, #ffffff 0%, var(--surface-soft-color) 100%);
+    background-color: var(--surface-soft-color);
+    background-image: var(--surface-panel-gradient);
     box-shadow: var(--shadow-soft);
     overflow: hidden;
 }
@@ -19,7 +20,8 @@
     gap: 14px;
     padding: 26px;
     border-right: 1px solid var(--border-color);
-    background: linear-gradient(180deg, #fffdf4 0%, #f7f9fc 100%);
+    background-color: var(--surface-highlight-end-color);
+    background-image: var(--surface-highlight-gradient);
 }
 
 .exclusive-products-overline,
@@ -70,8 +72,12 @@
     overflow: hidden;
     border-radius: var(--radius-large);
     background:
-        radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.34), transparent 36%),
-        linear-gradient(135deg, var(--exclusive-products-start-color), var(--exclusive-products-end-color));
+        var(--media-radial-overlay),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--exclusive-products-start-color) 82%, var(--surface-color)),
+            color-mix(in srgb, var(--exclusive-products-end-color) 88%, var(--surface-soft-color))
+        );
 }
 
 .exclusive-products-media-glow {
@@ -79,7 +85,7 @@
     width: 68%;
     aspect-ratio: 1;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.34);
+    background: var(--glass-glow-color);
     filter: blur(8px);
 }
 
@@ -88,12 +94,12 @@
     width: 54%;
     height: 72%;
     border-radius: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.58);
+    border: 1px solid var(--glass-border-color);
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.28)),
-        rgba(255, 255, 255, 0.4);
+        var(--glass-surface-gradient),
+        var(--glass-fill-color);
     transform: rotate(-14deg);
-    box-shadow: 0 20px 40px rgba(17, 22, 27, 0.14);
+    box-shadow: var(--shadow-float);
 }
 
 .exclusive-products-media-labels {
@@ -102,7 +108,7 @@
     bottom: 20px;
     display: grid;
     gap: 2px;
-    color: #ffffff;
+    color: var(--text-inverse-color);
 }
 
 .exclusive-products-media-labels span,
@@ -145,7 +151,7 @@
     gap: 12px;
     min-height: 170px;
     padding: 18px;
-    border: 1px solid #edf0f2;
+    border: 1px solid var(--border-light-color);
     border-radius: var(--radius-large);
     background-color: var(--surface-color);
     text-align: left;
@@ -168,8 +174,12 @@
     overflow: hidden;
     border-radius: var(--radius-large);
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 60%),
-        linear-gradient(135deg, var(--split-product-start-color), var(--split-product-end-color));
+        var(--media-top-overlay),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--split-product-start-color) 82%, var(--surface-color)),
+            color-mix(in srgb, var(--split-product-end-color) 88%, var(--surface-soft-color))
+        );
 }
 
 .exclusive-products-product-media::after {
@@ -178,7 +188,7 @@
     width: 62%;
     aspect-ratio: 1;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.34);
+    background: var(--glass-glow-color);
     filter: blur(8px);
 }
 
@@ -188,12 +198,12 @@
     width: 58%;
     height: 68%;
     border-radius: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.58);
+    border: 1px solid var(--glass-border-color);
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.28)),
-        rgba(255, 255, 255, 0.4);
+        var(--glass-surface-gradient),
+        var(--glass-fill-color);
     transform: rotate(-14deg);
-    box-shadow: 0 20px 40px rgba(17, 22, 27, 0.14);
+    box-shadow: var(--shadow-float);
 }
 
 .exclusive-products-product-labels {
@@ -202,7 +212,7 @@
     bottom: 16px;
     display: grid;
     gap: 2px;
-    color: #ffffff;
+    color: var(--text-inverse-color);
 }
 
 .exclusive-products-product-content {
@@ -304,7 +314,7 @@
     border: 1px solid var(--primary-color);
     border-radius: 12px;
     background-color: var(--primary-color);
-    color: var(--text-primary-color);
+    color: var(--text-on-primary-color);
 }
 
 .exclusive-products-dots {
@@ -318,7 +328,7 @@
     width: 8px;
     height: 8px;
     border-radius: 999px;
-    background-color: rgba(115, 127, 139, 0.4);
+    background-color: var(--muted-fill-color);
 }
 
 .exclusive-products-dots span.is-active {

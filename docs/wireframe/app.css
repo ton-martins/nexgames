@@ -1,18 +1,187 @@
 :root {
-    --background-color: #ffffff;
-    --primary-color: #fed700;
-    --primary-hover-color: #f6cf00;
-    --primary-light-color: #ffe45f;
-    --primary-soft-color: #fff8cf;
-    --text-primary-color: #333e48;
-    --text-muted-color: #737f8b;
-    --link-color: #2db7e5;
-    --surface-color: #ffffff;
-    --surface-soft-color: #fafbfd;
-    --border-color: #e5e5e5;
-    --border-light-color: #e5e5e5;
-    --border-primary-color: rgba(254, 215, 0, 0.85);
-    --danger-color: #e2401c;
+    /* Light palette */
+    --light-primary-color: #fed700;
+    --light-primary-hover-color: #f6cf00;
+    --light-primary-light-color: #ffe45f;
+    --light-primary-soft-color: #fff8cf;
+    --light-secondary-color: #2db7e5;
+    --light-secondary-hover-color: #1f9fca;
+    --light-secondary-soft-color: #dff5fc;
+
+    --light-background-color: #f4f7fb;
+    --light-surface-color: #ffffff;
+    --light-surface-soft-color: #f7f9fc;
+    --light-surface-muted-color: #fbfcff;
+    --light-surface-highlight-start-color: #fffdf4;
+    --light-surface-highlight-end-color: #f7f9fc;
+    --light-surface-accent-hover-color: #fff9d6;
+    --light-surface-contrast-color: #333e48;
+
+    --light-text-primary-color: #333e48;
+    --light-text-muted-color: #737f8b;
+    --light-text-soft-color: #97a1ab;
+    --light-text-inverse-color: #ffffff;
+    --light-text-on-primary-color: #1f2933;
+    --light-text-on-contrast-color: #ffffff;
+
+    --light-border-color: #e5eaf0;
+    --light-border-light-color: #edf0f2;
+    --light-border-strong-color: #b3bfca;
+    --light-border-primary-color: rgba(254, 215, 0, 0.85);
+
+    --light-danger-color: #e2401c;
+    --light-rating-color: #f2b01e;
+    --light-overlay-color: rgba(17, 22, 27, 0.56);
+    --light-muted-fill-color: rgba(115, 127, 139, 0.4);
+    --light-icon-hover-background: rgba(254, 215, 0, 0.26);
+    --light-subnav-hover-background: rgba(255, 255, 255, 0.35);
+
+    --light-glass-glow-color: rgba(255, 255, 255, 0.34);
+    --light-glass-border-color: rgba(255, 255, 255, 0.58);
+    --light-glass-fill-color: rgba(255, 255, 255, 0.4);
+    --light-glass-top-color: rgba(255, 255, 255, 0.94);
+    --light-glass-bottom-color: rgba(255, 255, 255, 0.28);
+    --light-media-highlight-color: rgba(255, 255, 255, 0.5);
+
+    --light-hero-overlay-strong-color: rgba(248, 249, 250, 0.98);
+    --light-hero-overlay-soft-color: rgba(248, 249, 250, 0.88);
+    --light-hero-overlay-muted-color: rgba(248, 249, 250, 0.24);
+    --light-hero-overlay-transparent-color: rgba(248, 249, 250, 0);
+    --light-hero-base-start-color: #f8f9fa;
+    --light-hero-base-end-color: #eef1f3;
+    --light-panel-shell-gradient: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+    --light-panel-alt-gradient: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+    --light-panel-highlight-gradient: linear-gradient(180deg, #fffdf4 0%, #f7f9fc 100%);
+
+    --light-shadow-soft: 0 8px 22px rgba(51, 62, 72, 0.07);
+    --light-shadow-medium: 0 16px 38px rgba(51, 62, 72, 0.14);
+    --light-shadow-large: 0 20px 48px rgba(17, 22, 27, 0.24);
+    --light-shadow-float: 0 20px 40px rgba(17, 22, 27, 0.14);
+
+    /* Dark palette */
+    --dark-primary-color: #f4cb31;
+    --dark-primary-hover-color: #ffd84f;
+    --dark-primary-light-color: #ffe37c;
+    --dark-primary-soft-color: rgba(244, 203, 49, 0.16);
+    --dark-secondary-color: #62c8f0;
+    --dark-secondary-hover-color: #8ad9f7;
+    --dark-secondary-soft-color: rgba(98, 200, 240, 0.18);
+
+    --dark-background-color: #0e141b;
+    --dark-surface-color: #1a212a;
+    --dark-surface-soft-color: #161d25;
+    --dark-surface-muted-color: #111821;
+    --dark-surface-highlight-start-color: #1d1810;
+    --dark-surface-highlight-end-color: #121922;
+    --dark-surface-accent-hover-color: rgba(244, 203, 49, 0.12);
+    --dark-surface-contrast-color: #0b1015;
+    --dark-panel-shell-gradient: linear-gradient(180deg, #181f27 0%, #121922 100%);
+    --dark-panel-alt-gradient: linear-gradient(180deg, #1a212a 0%, #111821 100%);
+    --dark-panel-highlight-gradient: linear-gradient(180deg, #1d1810 0%, #121a22 100%);
+
+    --dark-text-primary-color: #f4f7fb;
+    --dark-text-muted-color: #97a4b3;
+    --dark-text-soft-color: #728090;
+    --dark-text-inverse-color: #ffffff;
+    --dark-text-on-primary-color: #14181d;
+    --dark-text-on-contrast-color: #f4f7fb;
+
+    --dark-border-color: #2a3440;
+    --dark-border-light-color: #202a35;
+    --dark-border-strong-color: #44505f;
+    --dark-border-primary-color: rgba(244, 203, 49, 0.42);
+
+    --dark-danger-color: #ff7c5d;
+    --dark-rating-color: #ffc94d;
+    --dark-overlay-color: rgba(5, 8, 11, 0.72);
+    --dark-muted-fill-color: rgba(151, 164, 179, 0.34);
+    --dark-icon-hover-background: rgba(244, 203, 49, 0.18);
+    --dark-subnav-hover-background: rgba(255, 255, 255, 0.08);
+
+    --dark-glass-glow-color: rgba(255, 255, 255, 0.14);
+    --dark-glass-border-color: rgba(255, 255, 255, 0.18);
+    --dark-glass-fill-color: rgba(255, 255, 255, 0.08);
+    --dark-glass-top-color: rgba(255, 255, 255, 0.24);
+    --dark-glass-bottom-color: rgba(255, 255, 255, 0.06);
+    --dark-media-highlight-color: rgba(0, 0, 0, 0.18);
+
+    --dark-hero-overlay-strong-color: rgba(15, 20, 26, 0.96);
+    --dark-hero-overlay-soft-color: rgba(15, 20, 26, 0.86);
+    --dark-hero-overlay-muted-color: rgba(15, 20, 26, 0.32);
+    --dark-hero-overlay-transparent-color: rgba(15, 20, 26, 0);
+    --dark-hero-base-start-color: #111920;
+    --dark-hero-base-end-color: #1b2631;
+
+    --dark-shadow-soft: 0 10px 24px rgba(0, 0, 0, 0.28);
+    --dark-shadow-medium: 0 18px 42px rgba(0, 0, 0, 0.34);
+    --dark-shadow-large: 0 24px 56px rgba(0, 0, 0, 0.52);
+    --dark-shadow-float: 0 20px 40px rgba(0, 0, 0, 0.32);
+
+    /* Active semantic tokens */
+    --primary-color: var(--light-primary-color);
+    --primary-hover-color: var(--light-primary-hover-color);
+    --primary-light-color: var(--light-primary-light-color);
+    --primary-soft-color: var(--light-primary-soft-color);
+    --secondary-color: var(--light-secondary-color);
+    --secondary-hover-color: var(--light-secondary-hover-color);
+    --secondary-soft-color: var(--light-secondary-soft-color);
+
+    --background-color: var(--light-background-color);
+    --surface-color: var(--light-surface-color);
+    --surface-soft-color: var(--light-surface-soft-color);
+    --surface-muted-color: var(--light-surface-muted-color);
+    --surface-highlight-start-color: var(--light-surface-highlight-start-color);
+    --surface-highlight-end-color: var(--light-surface-highlight-end-color);
+    --surface-accent-hover-color: var(--light-surface-accent-hover-color);
+    --surface-contrast-color: var(--light-surface-contrast-color);
+
+    --text-primary-color: var(--light-text-primary-color);
+    --text-muted-color: var(--light-text-muted-color);
+    --text-soft-color: var(--light-text-soft-color);
+    --text-inverse-color: var(--light-text-inverse-color);
+    --text-on-primary-color: var(--light-text-on-primary-color);
+    --text-on-contrast-color: var(--light-text-on-contrast-color);
+    --link-color: var(--secondary-color);
+
+    --border-color: var(--light-border-color);
+    --border-light-color: var(--light-border-light-color);
+    --border-strong-color: var(--light-border-strong-color);
+    --secondary-border-color: var(--light-border-strong-color);
+    --border-primary-color: var(--light-border-primary-color);
+
+    --danger-color: var(--light-danger-color);
+    --rating-color: var(--light-rating-color);
+    --overlay-color: var(--light-overlay-color);
+    --muted-fill-color: var(--light-muted-fill-color);
+    --icon-hover-background: var(--light-icon-hover-background);
+    --subnav-hover-background: var(--light-subnav-hover-background);
+
+    --glass-glow-color: var(--light-glass-glow-color);
+    --glass-border-color: var(--light-glass-border-color);
+    --glass-fill-color: var(--light-glass-fill-color);
+    --glass-top-color: var(--light-glass-top-color);
+    --glass-bottom-color: var(--light-glass-bottom-color);
+    --media-highlight-color: var(--light-media-highlight-color);
+
+    --hero-overlay-strong-color: var(--light-hero-overlay-strong-color);
+    --hero-overlay-soft-color: var(--light-hero-overlay-soft-color);
+    --hero-overlay-muted-color: var(--light-hero-overlay-muted-color);
+    --hero-overlay-transparent-color: var(--light-hero-overlay-transparent-color);
+    --hero-base-start-color: var(--light-hero-base-start-color);
+    --hero-base-end-color: var(--light-hero-base-end-color);
+
+    --surface-panel-gradient: var(--light-panel-shell-gradient);
+    --surface-panel-alt-gradient: var(--light-panel-alt-gradient);
+    --surface-highlight-gradient: var(--light-panel-highlight-gradient);
+    --media-top-overlay: linear-gradient(180deg, var(--media-highlight-color), transparent 60%);
+    --media-radial-overlay: radial-gradient(circle at 30% 40%, var(--glass-glow-color), transparent 36%);
+    --glass-surface-gradient: linear-gradient(180deg, var(--glass-top-color), var(--glass-bottom-color));
+
+    --shadow-soft: var(--light-shadow-soft);
+    --shadow-medium: var(--light-shadow-medium);
+    --shadow-large: var(--light-shadow-large);
+    --shadow-float: var(--light-shadow-float);
+
     --container-width: 1490px;
     --container-padding: 32px;
     --section-spacing: clamp(38px, 4vw, 56px);
@@ -20,9 +189,72 @@
     --radius-small: 6px;
     --radius-medium: 10px;
     --radius-large: 10px;
-    --shadow-soft: 0 8px 22px rgba(51, 62, 72, 0.07);
-    --shadow-medium: 0 16px 38px rgba(51, 62, 72, 0.14);
-    --shadow-large: 0 20px 48px rgba(17, 22, 27, 0.24);
+}
+
+body[data-theme="dark"],
+body:has(#theme-toggle:checked) {
+    --primary-color: var(--dark-primary-color);
+    --primary-hover-color: var(--dark-primary-hover-color);
+    --primary-light-color: var(--dark-primary-light-color);
+    --primary-soft-color: var(--dark-primary-soft-color);
+    --secondary-color: var(--dark-secondary-color);
+    --secondary-hover-color: var(--dark-secondary-hover-color);
+    --secondary-soft-color: var(--dark-secondary-soft-color);
+
+    --background-color: var(--dark-background-color);
+    --surface-color: var(--dark-surface-color);
+    --surface-soft-color: var(--dark-surface-soft-color);
+    --surface-muted-color: var(--dark-surface-muted-color);
+    --surface-highlight-start-color: var(--dark-surface-highlight-start-color);
+    --surface-highlight-end-color: var(--dark-surface-highlight-end-color);
+    --surface-accent-hover-color: var(--dark-surface-accent-hover-color);
+    --surface-contrast-color: var(--dark-surface-contrast-color);
+
+    --text-primary-color: var(--dark-text-primary-color);
+    --text-muted-color: var(--dark-text-muted-color);
+    --text-soft-color: var(--dark-text-soft-color);
+    --text-inverse-color: var(--dark-text-inverse-color);
+    --text-on-primary-color: var(--dark-text-on-primary-color);
+    --text-on-contrast-color: var(--dark-text-on-contrast-color);
+    --link-color: var(--secondary-color);
+
+    --border-color: var(--dark-border-color);
+    --border-light-color: var(--dark-border-light-color);
+    --border-strong-color: var(--dark-border-strong-color);
+    --secondary-border-color: var(--dark-border-strong-color);
+    --border-primary-color: var(--dark-border-primary-color);
+
+    --danger-color: var(--dark-danger-color);
+    --rating-color: var(--dark-rating-color);
+    --overlay-color: var(--dark-overlay-color);
+    --muted-fill-color: var(--dark-muted-fill-color);
+    --icon-hover-background: var(--dark-icon-hover-background);
+    --subnav-hover-background: var(--dark-subnav-hover-background);
+
+    --glass-glow-color: var(--dark-glass-glow-color);
+    --glass-border-color: var(--dark-glass-border-color);
+    --glass-fill-color: var(--dark-glass-fill-color);
+    --glass-top-color: var(--dark-glass-top-color);
+    --glass-bottom-color: var(--dark-glass-bottom-color);
+    --media-highlight-color: var(--dark-media-highlight-color);
+
+    --hero-overlay-strong-color: var(--dark-hero-overlay-strong-color);
+    --hero-overlay-soft-color: var(--dark-hero-overlay-soft-color);
+    --hero-overlay-muted-color: var(--dark-hero-overlay-muted-color);
+    --hero-overlay-transparent-color: var(--dark-hero-overlay-transparent-color);
+    --hero-base-start-color: var(--dark-hero-base-start-color);
+    --hero-base-end-color: var(--dark-hero-base-end-color);
+    --surface-panel-gradient: var(--dark-panel-shell-gradient);
+    --surface-panel-alt-gradient: var(--dark-panel-alt-gradient);
+    --surface-highlight-gradient: var(--dark-panel-highlight-gradient);
+    --media-top-overlay: linear-gradient(180deg, var(--media-highlight-color), transparent 64%);
+    --media-radial-overlay: radial-gradient(circle at 30% 40%, var(--glass-glow-color), transparent 36%);
+    --glass-surface-gradient: linear-gradient(180deg, var(--glass-top-color), var(--glass-bottom-color));
+
+    --shadow-soft: var(--dark-shadow-soft);
+    --shadow-medium: var(--dark-shadow-medium);
+    --shadow-large: var(--dark-shadow-large);
+    --shadow-float: var(--dark-shadow-float);
 }
 
 * {
@@ -41,6 +273,13 @@ body {
     color: var(--text-primary-color);
     line-height: 1.5;
     overflow-x: hidden;
+    color-scheme: light;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+body[data-theme="dark"],
+body:has(#theme-toggle:checked) {
+    color-scheme: dark;
 }
 
 button,
@@ -70,7 +309,6 @@ img {
     margin-inline: auto;
 }
 
-
 @media (max-width: 1180px) {
     :root {
         --container-padding: 20px;
@@ -88,16 +326,15 @@ img {
     border: 0;
     border-radius: var(--radius-small);
     background-color: var(--primary-color);
-    color: var(--text-primary-color);
+    color: var(--text-on-primary-color);
     font-size: 15px;
     font-weight: 700;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .primary-button:hover {
     background-color: var(--primary-hover-color);
-    transition: ease-in-out 300ms;
-    scale: 1.01;
+    transform: scale(1.01);
 }
 
 .secondary-button {
@@ -108,18 +345,19 @@ img {
     min-width: 220px;
     height: 50px;
     padding: 0 28px;
-    border: 1px solid #b3bfca;
+    border: 1px solid var(--secondary-border-color);
     border-radius: var(--radius-small);
     background-color: transparent;
     color: var(--text-primary-color);
     font-size: 15px;
     font-weight: 700;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .secondary-button:hover {
-    transition: ease-in-out 300ms;
-    scale: 1.01;
+    border-color: var(--primary-color);
+    background-color: var(--surface-accent-hover-color);
+    transform: scale(1.01);
 }
 
 .icon-button {
@@ -138,7 +376,8 @@ img {
 }
 
 .icon-button:hover {
-    background-color: rgba(254, 215, 0, 0.26);
+    background-color: var(--icon-hover-background);
+    color: var(--secondary-color);
 }
 
 @media (max-width: 760px) {
