@@ -126,7 +126,7 @@ export async function updateGame(
 export async function deleteGame(id) {
     const token = getToken();
 
-    return apiRequest(`/jogos//${id}`, {
+    return apiRequest(`/jogos/${id}`, {
         method: "DELETE",
         token
     });

@@ -27,7 +27,7 @@ export async function getCategories() {
 export async function getCategoryById(id) {
     const token = getToken();
 
-    const data = await apiRequest(`/categorias//${id}`, {
+    const data = await apiRequest(`/categorias/${id}`, {
         token,
     });
 
