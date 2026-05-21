@@ -179,7 +179,7 @@ nexgames/
 - `docs/wireframe/`: referência visual e estrutural da Home em HTML, CSS e JS
 - `routes/`: controle das rotas da aplicação e proteção de acesso
 - `services/`: consumo da API e preparação dos dados para uso nas páginas e componentes
-- `src/components/`: componentes visuais e seções do wireframe
+- `src/components/`: componentes visuais e seções do ecommerce
 - `src/pages/`: páginas finais da aplicação
 - `src/App.jsx`: ponto de composição principal da aplicação
 - `src/main.jsx`: bootstrap do React
@@ -221,7 +221,7 @@ Hoje o projeto está propositalmente cru para a equipe desenvolver os componente
 
 ## Convenções para a equipe
 
-- componente visual nao deve chamar API diretamente
+- componente visual não deve chamar API diretamente
 - chamadas HTTP devem ficar centralizadas em `services/`
 - páginas devem orquestrar dados e renderização
 - rotas protegidas devem ser tratadas em `routes/`
