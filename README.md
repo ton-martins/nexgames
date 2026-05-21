@@ -162,7 +162,7 @@ nexgames/
       Login.jsx
       MyAccount.jsx
       MyWishlist.jsx
-      PurchaseHistory.jsx
+      Order.jsx
       Register.jsx
       SingleProduct.jsx
     App.jsx
@@ -213,7 +213,7 @@ Hoje o projeto está propositalmente cru para a equipe desenvolver os componente
 - `/my-wishlist`
 - `/cart`
 - `/checkout`
-- `/purchase-history`
+- `/order`
 - `/my-account`
 - `/admin/companies`
 - `/admin/games`

@@ -79,7 +79,7 @@ export async function login({ email, senha }) {
         token: data.token,
         user: getSessionUser(),
         message: data.message,
-    }
+    };
 }
 
 export async function register({ nome, email, senha, dataNascimento }) {
