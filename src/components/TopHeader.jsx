@@ -43,20 +43,23 @@ export default function TopHeader() {
     ];
 
     return (
-        <div className="hidden border-b border-zinc-800 bg-zinc-950 text-zinc-300 md:block">
-            <div className="mx-auto flex min-h-[34px] max-w-7xl items-center justify-between gap-4 px-4 text-xs lg:px-6">
+        <div className="hidden border-b border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] md:block">
+            <div className="app-container flex min-h-[34px] items-center justify-between gap-4 text-xs">
                 <span className="truncate">{welcomeMessage}</span>
 
-                <nav aria-label="Navegacao utilitaria da loja" className="flex items-center gap-4 lg:gap-5">
+                <nav
+                    aria-label="Navegacao utilitaria da loja"
+                    className="flex items-center gap-4 lg:gap-[18px]"
+                >
                     {utilityLinks.map((link) => (
-                        <Link
+                    <Link
                         key={link.id}
                         to={link.to}
-                        className="inline-flex items-center gap-1.5 transition hover:text-white"
-                        >
-                            {link.icon ? <MapPin size={14} strokeWidth={2} /> : null}
-                            <span>{link.label}</span>
-                        </Link>
+                        className="inline-flex items-center gap-1.5 transition hover:text-[color:var(--text-primary-color)]"
+                    >
+                        {link.icon ? <MapPin size={14} strokeWidth={2} /> : null}
+                        <span>{link.label}</span>
+                    </Link>
                     ))}
                 </nav>
             </div>

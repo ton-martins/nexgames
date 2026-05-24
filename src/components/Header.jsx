@@ -154,157 +154,164 @@ export default function Header() {
     }
 
     return (
-        <header className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950/95 text-white backdrop-blur">
-            <div className="mx-auto max-w-7xl px-4 lg:px-6">
-                <div className="grid min-h-[88px] grid-cols-[1fr_auto] items-center gap-4 py-4 lg:grid-cols-[220px_52px_minmax(420px,1fr)_auto] lg:gap-5">
-                    <Link
-                        to="/"
-                        aria-label="Ir para a pagina inicial"
-                        className="inline-flex items-center"
+        <header className="sticky top-0 z-30 border-b border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-primary-color)]">
+            <div className="app-container">
+            <div className="grid min-h-[88px] grid-cols-[1fr_auto] items-center gap-4 py-4 lg:grid-cols-[220px_52px_minmax(420px,1fr)_auto] lg:gap-[22px] lg:py-0">
+            <Link
+                to="/"
+                aria-label="Ir para a página inicial"
+                className="inline-flex items-center"
+            >
+                <span className="inline-flex items-center text-3xl font-extrabold leading-none lg:text-[38px]">
+                <span className="text-[color:var(--text-primary-color)]">
+                    Nexgames
+                </span>
+                <span className="text-[color:var(--primary-color)]">.</span>
+                </span>
+            </Link>
+
+            <button
+                type="button"
+                aria-label={isMobileSearchOpen ? "Fechar pesquisa" : "Abrir pesquisa"}
+                onClick={() => setIsMobileSearchOpen((current) => !current)}
+                className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--icon-hover-background)] hover:text-[color:var(--secondary-color)] lg:hidden"
+            >
+                {isMobileSearchOpen ? <X size={18} /> : <Search size={18} />}
+            </button>
+
+            <div className="relative hidden lg:block">
+                <button
+                    type="button"
+                    aria-label="Abrir departamentos"
+                    onClick={() => setIsDepartmentsOpen((current) => !current)}
+                    className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--icon-hover-background)] hover:text-[color:var(--secondary-color)]"
+                >
+                    <Menu size={18} />
+                </button>
+
+                {isDepartmentsOpen ? (
+                    <div
+                        className="absolute left-0 top-14 w-72 overflow-hidden rounded-[var(--radius-large)] border border-[color:var(--border-color)] bg-[color:var(--surface-color)]"
+                        style={{ boxShadow: "var(--shadow-large)" }}
                     >
-                        <span className="inline-flex items-center text-3xl font-extrabold leading-none lg:text-[38px]">
-                        <span className="text-white">Nexgames</span>
-                        <span className="text-emerald-400">.</span>
-                        </span>
-                    </Link>
+                        <div className="border-b border-[color:var(--border-color)] px-4 py-3 text-sm font-semibold text-[color:var(--text-primary-color)]">
+                        Departamentos
+                        </div>
 
-                    <button
-                        type="button"
-                        aria-label={isMobileSearchOpen ? "Fechar pesquisa" : "Abrir pesquisa"}
-                        onClick={() => setIsMobileSearchOpen((current) => !current)}
-                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 text-zinc-300 transition hover:border-zinc-700 hover:text-white lg:hidden"
-                    >
-                        {isMobileSearchOpen ? <X size={18} /> : <Search size={18} />}
-                    </button>
-
-                    <div className="relative hidden lg:block">
-                        <button
-                            type="button"
-                            aria-label="Abrir departamentos"
-                            onClick={() => setIsDepartmentsOpen((current) => !current)}
-                            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-zinc-800 text-zinc-300 transition hover:border-zinc-700 hover:text-white"
-                        >
-                            <Menu size={18} />
-                        </button>
-
-                        {isDepartmentsOpen ? (
-                        <div className="absolute left-0 top-14 w-72 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl">
-                            <div className="border-b border-zinc-800 px-4 py-3 text-sm font-semibold text-white">
-                                Departamentos
-                            </div>
-
-                            <div className="max-h-80 overflow-y-auto py-2">
-                            {categories.map((category) => (
-                                <button
+                        <div className="max-h-80 overflow-y-auto py-2">
+                        {categories.map((category) => (
+                            <button
                                 key={category}
                                 type="button"
                                 onClick={() => handleCategoryShortcut(category)}
-                                className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
-                                >
-                                <span>{category}</span>
-                                {category === selectedCategory ? (
-                                    <span className="text-xs text-emerald-400">Atual</span>
-                                ) : null}
-                                </button>
-                            ))}
-                            </div>
-                        </div>
-                        ) : null}
-                    </div>
-
-                    <form
-                        onSubmit={handleSearchSubmit}
-                        className={`${
-                        isMobileSearchOpen ? "grid" : "hidden"
-                        } col-span-full grid-cols-[minmax(0,1fr)_54px] overflow-hidden rounded-full border-2 border-emerald-400 bg-zinc-950 lg:col-auto lg:grid lg:h-11 lg:grid-cols-[minmax(0,1fr)_220px_58px]`}
-                    >
-                        <input
-                            type="search"
-                            value={searchTerm}
-                            onChange={(event) => setSearchTerm(event.target.value)}
-                            placeholder="Buscar jogos, categorias ou publishers"
-                            className="min-w-0 bg-transparent px-5 py-3 text-sm text-zinc-200 outline-none placeholder:text-zinc-500"
-                        />
-
-                        <label className="hidden h-full items-center border-l border-emerald-400 px-4 lg:flex">
-                            <span className="sr-only">Selecionar categoria</span>
-                            <select
-                                value={selectedCategory}
-                                onChange={(event) => setSelectedCategory(event.target.value)}
-                                className="w-full bg-transparent text-sm text-zinc-200 outline-none"
+                                className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-[color:var(--text-muted-color)] transition hover:bg-[color:var(--surface-accent-hover-color)] hover:text-[color:var(--text-primary-color)]"
                             >
-                                {categories.map((category) => (
-                                <option
-                                    key={category}
-                                    value={category}
-                                    className="bg-zinc-950 text-zinc-200"
-                                >
-                                    {category}
-                                </option>
-                                ))}
-                            </select>
-                        </label>
-
-                        <button
-                            type="submit"
-                            aria-label="Pesquisar"
-                            className="inline-flex items-center justify-center border-l border-emerald-400 bg-emerald-400 text-zinc-950 transition hover:bg-emerald-300"
-                        >
-                            <Search size={18} />
-                        </button>
-                    </form>
-
-                    <div className="hidden items-center gap-2 lg:flex" aria-label="Acoes da conta">
-                        <button
-                            type="button"
-                            aria-label="Itens vistos recentemente"
-                            title="Itens vistos recentemente"
-                            className="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-zinc-300 transition hover:text-white"
-                        >
-                            <RefreshCcw size={18} />
-                        </button>
-
-                        <Link
-                            to={sessionUser ? "/my-wishlist" : "/login"}
-                            aria-label="Lista de favoritos"
-                            className="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-zinc-300 transition hover:text-white"
-                        >
-                            <Heart size={18} />
-                            {wishlistCount > 0 ? (
-                                <span className="absolute right-0 top-0 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-emerald-400 px-1 text-[10px] font-bold text-zinc-950">
-                                {wishlistCount}
+                            <span>{category}</span>
+                            {category === selectedCategory ? (
+                                <span className="text-xs text-[color:var(--primary-color)]">
+                                Atual
                                 </span>
                             ) : null}
-                        </Link>
-
-                        <Link
-                            to={sessionUser ? "/my-account" : "/login"}
-                            aria-label="Conta"
-                            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-zinc-300 transition hover:text-white"
-                        >
-                            <User size={18} />
-                        </Link>
-
-                        <Link
-                            to={sessionUser ? "/cart" : "/login"}
-                            aria-label="Carrinho"
-                            className="relative inline-flex items-center gap-2 rounded-full px-2 text-zinc-300 transition hover:text-white"
-                        >
-                        <div className="relative inline-flex h-11 w-11 items-center justify-center rounded-full">
-                            <ShoppingBag size={18} />
-                            {cartCount > 0 ? (
-                            <span className="absolute right-0 top-0 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-emerald-400 px-1 text-[10px] font-bold text-zinc-950">
-                                {cartCount}
-                            </span>
-                            ) : null}
+                            </button>
+                        ))}
                         </div>
-
-                        <strong className="text-sm font-semibold text-white">
-                            {formatCurrency(cartTotal)}
-                        </strong>
-                        </Link>
                     </div>
+                ) : null}
+            </div>
+
+            <form
+                onSubmit={handleSearchSubmit}
+                className={`${
+                isMobileSearchOpen ? "grid" : "hidden"
+                } col-span-full grid-cols-[minmax(0,1fr)_54px] overflow-hidden rounded-full border-2 border-[color:var(--primary-color)] bg-[color:var(--surface-color)] lg:col-auto lg:grid lg:h-11 lg:grid-cols-[minmax(0,1fr)_220px_58px]`}
+            >
+                <input
+                    type="search"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Buscar jogos, categorias ou publishers"
+                    className="min-w-0 bg-transparent px-5 py-3 text-sm text-[color:var(--text-muted-color)] outline-none placeholder:text-[color:var(--text-soft-color)]"
+                />
+
+                <label className="hidden h-full items-center border-l border-[color:var(--primary-color)] px-[18px] lg:flex">
+                <span className="sr-only">Selecionar categoria</span>
+                <select
+                    value={selectedCategory}
+                    onChange={(event) => setSelectedCategory(event.target.value)}
+                    className="w-full bg-transparent text-sm text-[color:var(--text-primary-color)] outline-none"
+                >
+                    {categories.map((category) => (
+                    <option
+                        key={category}
+                        value={category}
+                        className="bg-[color:var(--surface-color)] text-[color:var(--text-primary-color)]"
+                    >
+                        {category}
+                    </option>
+                    ))}
+                </select>
+                </label>
+
+                <button
+                    type="submit"
+                    aria-label="Pesquisar"
+                    className="inline-flex items-center justify-center border-l border-[color:var(--primary-color)] bg-[color:var(--primary-color)] text-[color:var(--text-on-primary-color)] transition hover:bg-[color:var(--primary-hover-color)]"
+                >
+                    <Search size={18} />
+                </button>
+            </form>
+
+            <div className="hidden items-center gap-[6px] lg:flex" aria-label="Acoes da conta">
+                <button
+                    type="button"
+                    aria-label="Itens vistos recentemente"
+                    title="Itens vistos recentemente"
+                    className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)]"
+                >
+                    <RefreshCcw size={18} />
+                </button>
+
+                <Link
+                    to={sessionUser ? "/my-wishlist" : "/login"}
+                    aria-label="Lista de favoritos"
+                    className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)]"
+                >
+                    <Heart size={18} />
+                    {wishlistCount > 0 ? (
+                        <span className="absolute right-0 top-0 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[color:var(--primary-color)] px-1 text-[10px] font-bold text-[color:var(--text-on-primary-color)]">
+                            {wishlistCount}
+                        </span>
+                    ) : null}
+                </Link>
+
+                <Link
+                    to={sessionUser ? "/my-account" : "/login"}
+                    aria-label="Conta"
+                    className="inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)]"
+                >
+                    <User size={18} />
+                </Link>
+
+                <Link
+                    to={sessionUser ? "/cart" : "/login"}
+                    aria-label="Carrinho"
+                    className="relative inline-flex items-center gap-2 rounded-full px-2 text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)]"
+                >
+                <div className="relative inline-flex h-[42px] w-[42px] items-center justify-center rounded-full">
+                    <ShoppingBag size={18} />
+                    {cartCount > 0 ? (
+                    <span className="absolute right-0 top-0 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[color:var(--primary-color)] px-1 text-[10px] font-bold text-[color:var(--text-on-primary-color)]">
+                        {cartCount}
+                    </span>
+                    ) : null}
                 </div>
+
+                <strong className="text-sm font-semibold text-[color:var(--text-primary-color)]">
+                    {formatCurrency(cartTotal)}
+                </strong>
+                </Link>
+            </div>
+            </div>
             </div>
         </header>
     );
