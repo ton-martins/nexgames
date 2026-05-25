@@ -16,15 +16,9 @@ import {
 import { getCart } from "../../services/cartService";
 import { getPublicGameCategories } from "../../services/gameService";
 import { getWishlist } from "../../services/wishlistService";
+import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 
 const ALL_CATEGORIES_LABEL = "Todas as categorias";
-
-function formatCurrency(value) {
-	return new Intl.NumberFormat("pt-BR", {
-		style: "currency",
-		currency: "BRL",
-	}).format(Number(value || 0));
-}
 
 export default function Header({ games = [] }) {
 	const navigate = useNavigate();
