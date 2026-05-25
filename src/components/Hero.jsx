@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import {
 	BadgeCheck,
-	BadgePercent,
 	ChevronLeft,
 	ChevronRight,
-	Compass,
 	CircleArrowRight,
+	Compass,
 	Gift,
 	LayoutGrid,
 	LifeBuoy,
@@ -126,7 +125,6 @@ function buildHeroSlides(games) {
 			nome: game.nome ?? "Jogo em destaque",
 			categoria: game.categoria ?? "",
 			empresaNome: game.empresaNome ?? "NexGames",
-			ano: game.ano ?? null,
 			description: sanitizeDescription(game.descricao),
 			price: formatCurrency(getDiscountedPrice(game)),
 			originalPrice: hasDiscount ? formatCurrency(game.preco) : null,
@@ -164,7 +162,6 @@ function buildHeroInfoCards(games) {
 			},
 			startColor: palette.startColor,
 			endColor: palette.endColor,
-			price: formatCurrency(getDiscountedPrice(game)),
 		};
 	});
 }
@@ -354,7 +351,7 @@ export default function Hero({ games = [], catalogGames = [] }) {
 								</span>
 							</div>
 
-							<div className="mt-[30px] mb-4 flex flex-col gap-[6px] sm:flex-row sm:items-center">
+							<div className="mb-4 mt-[30px] flex flex-col gap-[6px] sm:flex-row sm:items-center">
 								<button
 									type="button"
 									onClick={() =>
@@ -454,11 +451,11 @@ export default function Hero({ games = [], catalogGames = [] }) {
 					) : null}
 				</article>
 
-				<div className="mt-7 grid gap-[22px] md:grid-cols-2 xl:grid-cols-4">
+				<div className="mt-7 flex snap-x snap-mandatory gap-[22px] overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:overflow-visible md:pb-0 md:snap-none md:grid-cols-2 xl:grid-cols-4">
 					{infoCards.map((card) => (
 						<article
 							key={card.key}
-							className="grid min-h-[164px] grid-cols-[46%_minmax(0,1fr)] gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] p-[18px] transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)]"
+							className="grid min-h-[164px] min-w-[292px] shrink-0 snap-start grid-cols-[46%_minmax(0,1fr)] gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] p-[18px] transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] md:min-w-0"
 							style={{ boxShadow: "var(--shadow-soft)" }}
 						>
 							<div
@@ -470,8 +467,7 @@ export default function Hero({ games = [], catalogGames = [] }) {
 								<div
 									className="absolute aspect-square w-[62%] rounded-full blur-lg"
 									style={{
-										background:
-											"color-mix(in srgb, white 64%, transparent)",
+										background: "color-mix(in srgb, white 64%, transparent)",
 									}}
 								/>
 
@@ -509,16 +505,16 @@ export default function Hero({ games = [], catalogGames = [] }) {
 					))}
 				</div>
 
-				<div className="mt-[34px] grid overflow-hidden rounded-[var(--radius-large)] border border-[color:var(--border-color)] bg-[color:var(--surface-soft-color)] shadow-[var(--shadow-soft)] md:grid-cols-2 xl:grid-cols-5">
+				<div className="mt-[34px] flex snap-x snap-mandatory overflow-x-auto rounded-[var(--radius-large)] border border-[color:var(--border-color)] bg-[color:var(--surface-soft-color)] shadow-[var(--shadow-soft)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:overflow-hidden md:snap-none md:grid-cols-2 xl:grid-cols-5">
 					{HERO_BENEFITS.map((benefit, index) => {
 						const Icon = benefit.icon;
 
 						return (
 							<article
 								key={benefit.title}
-								className={`flex min-h-[88px] items-center justify-center gap-[14px] bg-[color:var(--surface-soft-color)] px-[18px] transition hover:bg-[color:var(--surface-color)] ${
+								className={`flex min-h-[88px] min-w-[272px] shrink-0 snap-start items-center justify-center gap-[14px] bg-[color:var(--surface-soft-color)] px-[18px] transition hover:bg-[color:var(--surface-color)] md:min-w-0 ${
 									index < HERO_BENEFITS.length - 1
-										? "border-b border-[color:var(--border-color)] md:border-r xl:border-b-0"
+										? "border-r border-[color:var(--border-color)] md:border-b md:border-r-0 xl:border-b-0 xl:border-r"
 										: ""
 								}`}
 							>

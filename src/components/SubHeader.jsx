@@ -10,7 +10,7 @@ function buildSubHeaderItems(games) {
 		return [];
 	}
 
-	const items = [
+	return [
 		{
 			id: "home",
 			label: "Home",
@@ -22,8 +22,6 @@ function buildSubHeaderItems(games) {
 			action: { category },
 		})),
 	];
-
-	return items;
 }
 
 function buildSearchParams({ search, category } = {}) {

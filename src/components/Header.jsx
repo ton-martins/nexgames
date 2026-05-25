@@ -115,24 +115,26 @@ export default function Header({ games = [] }) {
 		};
 	}, [location.pathname]);
 
-	function handleSearchSubmit(event) {
-		event.preventDefault();
-
+	function navigateWithCategory(category) {
 		const params = new URLSearchParams();
 
 		if (searchTerm.trim()) {
 			params.set("search", searchTerm.trim());
 		}
 
-		if (selectedCategory && selectedCategory !== ALL_CATEGORIES_LABEL) {
-			params.set("categoria", selectedCategory);
+		if (category && category !== ALL_CATEGORIES_LABEL) {
+			params.set("categoria", category);
 		}
 
 		navigate({
 			pathname: "/",
 			search: params.toString() ? `?${params.toString()}` : "",
 		});
+	}
 
+	function handleSearchSubmit(event) {
+		event.preventDefault();
+		navigateWithCategory(selectedCategory);
 		setIsMobileSearchOpen(false);
 		setIsCategoryMenuOpen(false);
 	}
@@ -140,6 +142,7 @@ export default function Header({ games = [] }) {
 	function handleCategorySelect(category) {
 		setSelectedCategory(category);
 		setIsCategoryMenuOpen(false);
+		navigateWithCategory(category);
 	}
 
 	return (
