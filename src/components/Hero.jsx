@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
+import PrimaryButton from "./shared/PrimaryButton";
+import SecondaryButton from "./shared/SecondaryButton";
 import {
 	THEMES,
 	applyTheme,
@@ -352,29 +354,27 @@ export default function Hero({ games = [], catalogGames = [] }) {
 							</div>
 
 							<div className="mb-4 mt-[30px] flex flex-col gap-[6px] sm:flex-row sm:items-center">
-								<button
-									type="button"
+								<PrimaryButton
+									icon={ShoppingCart}
 									onClick={() =>
 										handleCatalogNavigation({ search: currentSlide.search })
 									}
-									className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary-color)] px-6 py-3 text-sm font-extrabold text-[color:var(--text-on-primary-color)] transition hover:bg-[color:var(--primary-hover-color)]"
+									className="text-sm font-extrabold"
 								>
-									<ShoppingCart size={17} />
 									Comprar agora
-								</button>
+								</PrimaryButton>
 
-								<button
-									type="button"
+								<SecondaryButton
+									icon={Compass}
 									onClick={() =>
 										handleCatalogNavigation({
 											category: currentSlide.category,
 										})
 									}
-									className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border-color)] bg-[color:var(--surface-color)] px-6 py-3 text-sm font-extrabold text-[color:var(--text-primary-color)] transition hover:border-[color:var(--primary-color)]"
+									className="bg-[color:var(--surface-color)] text-sm font-extrabold"
 								>
-									<Compass size={17} />
 									Ver categoria
-								</button>
+								</SecondaryButton>
 							</div>
 						</div>
 

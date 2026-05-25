@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Hero from "../components/Hero";
 import SubHeader from "../components/SubHeader";
 import TopHeader from "../components/TopHeader";
+import TrendingProducts from "../components/TrendingProducts";
 import {
 	getPublicGameCategories,
 	getPublicGames,
@@ -87,6 +88,7 @@ export default function Home() {
 
 					<main>
 						<Hero games={visibleGames} catalogGames={games} />
+						<TrendingProducts games={games} />
 					</main>
 				</>
 			) : null}
