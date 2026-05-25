@@ -357,7 +357,7 @@ export default function Hero({ games = [], catalogGames = [] }) {
 									onClick={() =>
 										handleCatalogNavigation({ search: currentSlide.search })
 									}
-									className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary-color)] px-6 py-3 text-sm font-extrabold uppercase tracking-[0.04em] text-[color:var(--text-on-primary-color)] transition hover:bg-[color:var(--primary-hover-color)]"
+									className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary-color)] px-6 py-3 text-sm font-extrabold text-[color:var(--text-on-primary-color)] transition hover:bg-[color:var(--primary-hover-color)]"
 								>
 									<ShoppingCart size={17} />
 									Comprar agora
@@ -370,7 +370,7 @@ export default function Hero({ games = [], catalogGames = [] }) {
 											category: currentSlide.category,
 										})
 									}
-									className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border-color)] bg-[color:var(--surface-color)] px-6 py-3 text-sm font-extrabold uppercase tracking-[0.04em] text-[color:var(--text-primary-color)] transition hover:border-[color:var(--primary-color)]"
+									className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border-color)] bg-[color:var(--surface-color)] px-6 py-3 text-sm font-extrabold text-[color:var(--text-primary-color)] transition hover:border-[color:var(--primary-color)]"
 								>
 									<Compass size={17} />
 									Ver categoria
