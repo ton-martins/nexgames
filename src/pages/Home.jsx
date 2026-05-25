@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import ExclusiveProducts from "../components/ExclusiveProducts";
 import FeedbackPopup from "../components/FeedbackPopup";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
@@ -89,6 +90,7 @@ export default function Home() {
 					<main>
 						<Hero games={visibleGames} catalogGames={games} />
 						<TrendingProducts games={games} />
+						<ExclusiveProducts games={games} />
 					</main>
 				</>
 			) : null}

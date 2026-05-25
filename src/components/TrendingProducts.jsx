@@ -1,10 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-	CalendarDays,
-	Eye,
-	Heart,
-	ShoppingBag,
-} from "lucide-react";
+import { CalendarDays, Eye, Heart, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import ModalProduct from "./shared/ModalProduct";
@@ -78,7 +73,9 @@ function buildTabProducts(games) {
 	const featuredGames = games.slice(0, 6);
 	const discountedGames = games
 		.filter((game) => Number(game.desconto ?? 0) > 0)
-		.sort((gameA, gameB) => Number(gameB.desconto ?? 0) - Number(gameA.desconto ?? 0))
+		.sort(
+			(gameA, gameB) => Number(gameB.desconto ?? 0) - Number(gameA.desconto ?? 0)
+		)
 		.slice(0, 6);
 	const recentGames = [...games]
 		.sort((gameA, gameB) => Number(gameB.ano ?? 0) - Number(gameA.ano ?? 0))
