@@ -196,7 +196,7 @@ export default function ExclusiveProducts({ games = [] }) {
 					</article>
 
 					<div className="grid content-center gap-[18px] p-[26px] max-md:p-5">
-						<div className="flex flex-wrap items-end justify-between gap-[18px]">
+						<div className="grid gap-[18px] md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
 							<div className="grid gap-1">
 								<span className="text-[13px] font-extrabold uppercase text-[color:var(--secondary-color)]">
 									{EXCLUSIVE_CONTENT.headingOverline}
@@ -209,18 +209,18 @@ export default function ExclusiveProducts({ games = [] }) {
 								</p>
 							</div>
 
-							<SecondaryButton
-								icon={ArrowRight}
-								iconPosition="right"
+							<button
+								type="button"
 								onClick={() =>
 									handleCatalogNavigation({
 										category: featuredProduct.category,
 									})
 								}
-								className="!h-[42px] !min-w-0 !rounded-[var(--radius-medium)] !bg-[color:var(--surface-color)] !px-[18px] md:!w-fit"
+								className="inline-flex items-center gap-2 self-start bg-transparent p-0 text-sm font-bold text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)] md:justify-self-end"
 							>
 								{EXCLUSIVE_CONTENT.headingActionLabel}
-							</SecondaryButton>
+								<ArrowRight size={18} />
+							</button>
 						</div>
 
 						<div className="grid gap-4 md:grid-cols-2">

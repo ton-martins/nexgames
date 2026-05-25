@@ -4,6 +4,7 @@ import ExclusiveProducts from "../components/ExclusiveProducts";
 import FeedbackPopup from "../components/FeedbackPopup";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
+import Products from "../components/Products";
 import SubHeader from "../components/SubHeader";
 import TopHeader from "../components/TopHeader";
 import TrendingProducts from "../components/TrendingProducts";
@@ -91,6 +92,7 @@ export default function Home() {
 						<Hero games={visibleGames} catalogGames={games} />
 						<TrendingProducts games={games} />
 						<ExclusiveProducts games={games} />
+						<Products games={games} />
 					</main>
 				</>
 			) : null}
