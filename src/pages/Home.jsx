@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
+import BestSellersProducts from "../components/BestSellersProducts";
 import { useLocation } from "react-router-dom";
 import ExclusiveProducts from "../components/ExclusiveProducts";
 import FeedbackPopup from "../components/FeedbackPopup";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Products from "../components/Products";
+import RecommendedProducts from "../components/RecommendedProducts";
 import SubHeader from "../components/SubHeader";
 import TopHeader from "../components/TopHeader";
 import TrendingProducts from "../components/TrendingProducts";
@@ -93,6 +95,8 @@ export default function Home() {
 						<TrendingProducts games={games} />
 						<ExclusiveProducts games={games} />
 						<Products games={games} />
+						<BestSellersProducts games={games} />
+						<RecommendedProducts games={games} />
 					</main>
 				</>
 			) : null}

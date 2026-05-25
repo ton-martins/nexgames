@@ -61,7 +61,7 @@ export default function SubHeader({ games = [] }) {
 	return (
 		<nav
 			aria-label="Navegação principal da loja"
-			className="hidden bg-[color:var(--primary-color)] lg:block"
+			className="hidden bg-[color:var(--primary-color)] text-[color:var(--primary-ui-text-color)] lg:block"
 		>
 			<div className="app-container flex items-center justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-lg:justify-start">
 				{items.map((item) => {
@@ -77,8 +77,8 @@ export default function SubHeader({ games = [] }) {
 							onClick={() => handleNavigation(item.action)}
 							className={`inline-flex min-h-12 shrink-0 items-center gap-1.5 px-4 text-sm font-bold transition ${
 								isActive
-									? "bg-[color:var(--subnav-hover-background)] text-[color:var(--text-on-primary-color)]"
-									: "bg-transparent text-[color:var(--text-on-primary-color)] hover:bg-[color:var(--subnav-hover-background)]"
+									? "bg-[color:var(--subnav-hover-background)] !text-[color:var(--primary-ui-text-color)]"
+									: "bg-transparent !text-[color:var(--primary-ui-text-color)] hover:bg-[color:var(--subnav-hover-background)]"
 							}`}
 						>
 							<span>{item.label}</span>

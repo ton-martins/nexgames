@@ -16,7 +16,7 @@ export default function TertiaryButton({
 		<button
 			type={type}
 			className={joinClasses(
-				"inline-flex items-center justify-center border border-[color:var(--primary-color)] bg-[color:var(--primary-color)] text-[color:var(--text-on-primary-color)] transition hover:bg-[color:var(--primary-hover-color)]",
+				"inline-flex items-center justify-center border border-[color:var(--primary-color)] bg-[color:var(--primary-color)] !text-[color:var(--primary-ui-text-color)] transition hover:bg-[color:var(--primary-hover-color)]",
 				sizeClassName,
 				className
 			)}

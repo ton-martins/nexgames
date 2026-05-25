@@ -188,7 +188,7 @@ function ThemeToggle({ theme, onToggle }) {
 				<span
 					className={`relative z-10 flex items-center justify-center text-[11px] font-extrabold uppercase tracking-[0.08em] transition ${
 						isDark
-							? "text-[color:var(--surface-contrast-color)]"
+							? "text-[color:var(--text-inverse-color)]"
 							: "text-[color:var(--text-inverse-color)]"
 					}`}
 				>

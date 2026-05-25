@@ -232,7 +232,7 @@ export default function Header({ games = [] }) {
 						<button
 							type="submit"
 							aria-label="Pesquisar"
-							className="inline-flex h-full items-center justify-center rounded-r-full border-l border-[color:var(--primary-color)] bg-[color:var(--primary-color)] text-[color:var(--text-on-primary-color)] transition hover:bg-[color:var(--primary-hover-color)]"
+							className="inline-flex h-full items-center justify-center rounded-r-full border-l border-[color:var(--primary-color)] bg-[color:var(--primary-color)] !text-[color:var(--primary-ui-text-color)] transition hover:bg-[color:var(--primary-hover-color)]"
 						>
 							<Search size={18} />
 						</button>

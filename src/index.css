@@ -24,6 +24,8 @@
   --text-soft-color: #97a1ab;
   --text-inverse-color: #ffffff;
   --text-on-primary-color: #1f2933;
+  --primary-content-color: #1f2933;
+  --primary-ui-text-color: #1f2933;
   --text-on-contrast-color: #ffffff;
 
   /* Borders */
@@ -78,6 +80,8 @@
   --text-soft-color: #728090;
   --text-inverse-color: #ffffff;
   --text-on-primary-color: #14181d;
+  --primary-content-color: #14181d;
+  --primary-ui-text-color: #14181d;
   --text-on-contrast-color: #f4f7fb;
 
   --border-color: #2a3440;
