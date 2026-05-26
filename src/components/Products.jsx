@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
 	ArrowRight,
 	CalendarDays,
@@ -7,7 +7,11 @@ import {
 	ShoppingBag,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../../services/authService";
+import { addToCart } from "../../services/cartService";
+import { addToWishlist } from "../../services/wishlistService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
+import FeedbackPopup from "./FeedbackPopup";
 import ModalProduct from "./shared/ModalProduct";
 import TertiaryButton from "./shared/TertiaryButton";
 
@@ -30,7 +34,7 @@ const PRODUCTS_SECTION_LIST = [
 		id: "launches",
 		title: "Novidades para sua próxima jogatina",
 		description:
-			"Uma seleção com jogos recentes e títulos fortes para manter a home com cara de loja atualizada e pronta para conversão.",
+			"Uma seleção com jogos recentes e títulos fortes para manter a home sempre atualizada e pronta para conversão.",
 		type: "curated",
 	},
 ];
@@ -115,6 +119,7 @@ function buildProductItem(game, index) {
 
 	return {
 		key: `${createGameKey(game)}-${index}`,
+		id: game.id ?? null,
 		nome: game.nome ?? "Jogo em destaque",
 		categoria: game.categoria ?? "Catálogo digital",
 		empresaNome: game.empresaNome ?? "NexGames",
@@ -143,9 +148,8 @@ function buildSectionCatalog(games) {
 	const recentGames = takeUniqueGames(games, usedKeys, 7, sortByRecent);
 	recentGames.forEach((game) => usedKeys.add(createGameKey(game)));
 
-	const promotionSource = games.filter((game) => Number(game.desconto ?? 0) > 0);
 	const promotionGames = takeUniqueGames(
-		promotionSource,
+		games.filter((game) => Number(game.desconto ?? 0) > 0),
 		new Set(),
 		7,
 		sortByPromotion
@@ -181,11 +185,9 @@ function buildSections(games) {
 					? catalog.curated
 					: catalog.recent;
 
-		const products = sourceGames.map((game, index) => buildProductItem(game, index));
-
 		return {
 			...section,
-			products,
+			products: sourceGames.map((game, index) => buildProductItem(game, index)),
 		};
 	}).filter((section) => section.products.length > 0);
 }
@@ -199,7 +201,6 @@ function ProductMedia({ product, className = "" }) {
 			}}
 		>
 			<div className="absolute aspect-square w-[62%] rounded-full bg-white/45 blur-lg" />
-
 			<div
 				className="relative z-10 h-[68%] w-[58%] rounded-[22px] border border-white/35"
 				style={{
@@ -209,7 +210,6 @@ function ProductMedia({ product, className = "" }) {
 					boxShadow: "var(--shadow-float)",
 				}}
 			/>
-
 			<div className="absolute bottom-[18px] left-[18px] grid max-w-[62%] gap-0.5 text-[color:var(--text-inverse-color)]">
 				<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
 					{product.empresaNome}
@@ -224,8 +224,26 @@ function ProductMedia({ product, className = "" }) {
 
 export default function Products({ games = [] }) {
 	const navigate = useNavigate();
+	const cartAnimationTimeoutRef = useRef(null);
+
 	const [selectedProduct, setSelectedProduct] = useState(null);
+	const [addingCartKey, setAddingCartKey] = useState("");
+	const [addedCartKey, setAddedCartKey] = useState("");
+	const [popupState, setPopupState] = useState({
+		open: false,
+		title: "",
+		message: "",
+	});
+
 	const sections = useMemo(() => buildSections(games), [games]);
+
+	useEffect(() => {
+		return () => {
+			if (cartAnimationTimeoutRef.current) {
+				window.clearTimeout(cartAnimationTimeoutRef.current);
+			}
+		};
+	}, []);
 
 	useEffect(() => {
 		function handleEscape(event) {
@@ -241,6 +259,27 @@ export default function Products({ games = [] }) {
 		};
 	}, []);
 
+	function closePopup() {
+		setPopupState({
+			open: false,
+			title: "",
+			message: "",
+		});
+	}
+
+	function navigateToLogin(product) {
+		navigate("/login", {
+			state: product
+				? {
+						pendingProduct: {
+							nome: product.nome,
+							ano: product.ano ?? null,
+						},
+					}
+				: undefined,
+		});
+	}
+
 	function handleCatalogNavigation(action = {}) {
 		const search = buildSearchParams(action);
 
@@ -248,6 +287,114 @@ export default function Products({ games = [] }) {
 			pathname: "/",
 			search: search ? `?${search}` : "",
 		});
+	}
+
+	function handleCardKeyDown(event, product) {
+		if (event.key === "Enter" || event.key === " ") {
+			event.preventDefault();
+			handleOpenProductPage(product, event);
+		}
+	}
+
+	function handleOpenProductPreview(product, event) {
+		event?.stopPropagation?.();
+		setSelectedProduct(product);
+	}
+
+	function handleOpenProductPage(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin(product);
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível abrir este produto agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		navigate(`/product/${product.id}`);
+	}
+
+	async function handleAddToCart(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin();
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível adicionar este jogo ao carrinho agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		setAddingCartKey(product.key);
+
+		try {
+			await addToCart(product.id);
+			window.dispatchEvent(new Event("nexgames:cart-updated"));
+			setAddedCartKey(product.key);
+
+			if (cartAnimationTimeoutRef.current) {
+				window.clearTimeout(cartAnimationTimeoutRef.current);
+			}
+
+			cartAnimationTimeoutRef.current = window.setTimeout(() => {
+				setAddedCartKey("");
+			}, 900);
+		} catch {
+			setPopupState({
+				open: true,
+				title: "Não foi possível adicionar ao carrinho",
+				message:
+					"Verifique se o produto já está no carrinho ou tente novamente em instantes.",
+			});
+		} finally {
+			setAddingCartKey("");
+		}
+	}
+
+	async function handleAddToWishlist(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin();
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível adicionar este jogo aos favoritos agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		try {
+			await addToWishlist(product.id);
+			window.dispatchEvent(new Event("nexgames:wishlist-updated"));
+		} catch {
+			setPopupState({
+				open: true,
+				title: "Não foi possível adicionar aos favoritos",
+				message:
+					"Verifique se o jogo já está na sua lista de desejos ou tente novamente em instantes.",
+			});
+		}
 	}
 
 	if (!sections.length) {
@@ -293,10 +440,12 @@ export default function Products({ games = [] }) {
 								</div>
 
 								<div className="grid gap-[18px] rounded-[var(--radius-large)] border border-[color:var(--border-color)] bg-[color:var(--surface-soft-color)] p-[18px] shadow-[var(--shadow-soft)] xl:grid-cols-[minmax(280px,340px)_minmax(0,1fr)]">
-									<button
-										type="button"
-										onClick={() => setSelectedProduct(featuredProduct)}
-										className="flex min-h-full flex-col gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] px-6 pb-[18px] pt-5 text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] hover:shadow-[var(--shadow-medium)]"
+									<div
+										role="button"
+										tabIndex={0}
+										onClick={(event) => handleOpenProductPage(featuredProduct, event)}
+										onKeyDown={(event) => handleCardKeyDown(event, featuredProduct)}
+										className="flex min-h-full cursor-pointer flex-col gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] px-6 pb-[18px] pt-5 text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] hover:shadow-[var(--shadow-medium)]"
 									>
 										<div className="flex items-center justify-between gap-3">
 											<span className="inline-flex min-w-[58px] items-center justify-center rounded-full bg-[color:var(--primary-soft-color)] px-[10px] py-1.5 text-[11px] font-extrabold uppercase text-[color:var(--text-primary-color)]">
@@ -304,12 +453,27 @@ export default function Products({ games = [] }) {
 											</span>
 
 											<div className="flex items-center gap-2">
-												<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
+												<button
+													type="button"
+													aria-label={`Adicionar ${featuredProduct.nome} aos favoritos`}
+													onClick={(event) =>
+														handleAddToWishlist(featuredProduct, event)
+													}
+													className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] transition hover:border-[color:var(--border-primary-color)] hover:text-[color:var(--text-primary-color)]"
+												>
 													<Heart size={18} />
-												</span>
-												<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
+												</button>
+
+												<button
+													type="button"
+													aria-label={`Visualizar ${featuredProduct.nome}`}
+													onClick={(event) =>
+														handleOpenProductPreview(featuredProduct, event)
+													}
+													className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] transition hover:border-[color:var(--border-primary-color)] hover:text-[color:var(--text-primary-color)]"
+												>
 													<Eye size={18} />
-												</span>
+												</button>
 											</div>
 										</div>
 
@@ -358,19 +522,30 @@ export default function Products({ games = [] }) {
 
 											<TertiaryButton
 												icon={ShoppingBag}
-												size="sm"
-												aria-label={`Comprar ${featuredProduct.nome}`}
+												aria-label={`Adicionar ${featuredProduct.nome} ao carrinho`}
+												onClick={(event) =>
+													handleAddToCart(featuredProduct, event)
+												}
+												className={`transition-all duration-200 ${
+													addingCartKey === featuredProduct.key ? "opacity-70" : ""
+												} ${
+													addedCartKey === featuredProduct.key
+														? "scale-110 shadow-[var(--shadow-medium)]"
+														: ""
+												}`}
 											/>
 										</div>
-									</button>
+									</div>
 
 									<div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
 										{compactProducts.map((product) => (
-											<button
+											<div
 												key={product.key}
-												type="button"
-												onClick={() => setSelectedProduct(product)}
-												className="flex min-h-[170px] flex-col gap-3 rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] p-[18px] text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] hover:shadow-[var(--shadow-medium)]"
+												role="button"
+												tabIndex={0}
+												onClick={(event) => handleOpenProductPage(product, event)}
+												onKeyDown={(event) => handleCardKeyDown(event, product)}
+												className="flex min-h-[170px] cursor-pointer flex-col gap-3 rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] p-[18px] text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] hover:shadow-[var(--shadow-medium)]"
 											>
 												<div className="grid w-full gap-2">
 													<div className="flex items-center justify-between gap-3">
@@ -379,12 +554,27 @@ export default function Products({ games = [] }) {
 														</span>
 
 														<div className="flex items-center gap-2">
-															<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
+															<button
+																type="button"
+																aria-label={`Adicionar ${product.nome} aos favoritos`}
+																onClick={(event) =>
+																	handleAddToWishlist(product, event)
+																}
+																className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] transition hover:border-[color:var(--border-primary-color)] hover:text-[color:var(--text-primary-color)]"
+															>
 																<Heart size={18} />
-															</span>
-															<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
+															</button>
+
+															<button
+																type="button"
+																aria-label={`Visualizar ${product.nome}`}
+																onClick={(event) =>
+																	handleOpenProductPreview(product, event)
+																}
+																className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] transition hover:border-[color:var(--border-primary-color)] hover:text-[color:var(--text-primary-color)]"
+															>
 																<Eye size={18} />
-															</span>
+															</button>
 														</div>
 													</div>
 
@@ -397,10 +587,7 @@ export default function Products({ games = [] }) {
 													</strong>
 												</div>
 
-												<ProductMedia
-													product={product}
-													className="min-h-[132px]"
-												/>
+												<ProductMedia product={product} className="min-h-[132px]" />
 
 												<div className="mt-auto flex items-center justify-between gap-[14px]">
 													<div className="grid gap-1">
@@ -422,11 +609,18 @@ export default function Products({ games = [] }) {
 
 													<TertiaryButton
 														icon={ShoppingBag}
-														size="sm"
-														aria-label={`Comprar ${product.nome}`}
+														aria-label={`Adicionar ${product.nome} ao carrinho`}
+														onClick={(event) => handleAddToCart(product, event)}
+														className={`transition-all duration-200 ${
+															addingCartKey === product.key ? "opacity-70" : ""
+														} ${
+															addedCartKey === product.key
+																? "scale-110 shadow-[var(--shadow-medium)]"
+																: ""
+														}`}
 													/>
 												</div>
-											</button>
+											</div>
 										))}
 									</div>
 								</div>
@@ -444,16 +638,15 @@ export default function Products({ games = [] }) {
 			<ModalProduct
 				product={selectedProduct}
 				onClose={() => setSelectedProduct(null)}
-				onPrimaryAction={() =>
-					handleCatalogNavigation({
-						search: selectedProduct?.search,
-					})
-				}
-				onSecondaryAction={() =>
-					handleCatalogNavigation({
-						category: selectedProduct?.category,
-					})
-				}
+				onPrimaryAction={() => handleAddToCart(selectedProduct)}
+				onSecondaryAction={() => handleOpenProductPage(selectedProduct)}
+			/>
+
+			<FeedbackPopup
+				open={popupState.open}
+				title={popupState.title}
+				message={popupState.message}
+				onClose={closePopup}
 			/>
 		</section>
 	);

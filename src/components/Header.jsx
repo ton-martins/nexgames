@@ -9,10 +9,7 @@ import {
 	X,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-	getSessionUser,
-	isAuthenticated,
-} from "../../services/authService";
+import { getSessionUser } from "../../services/authService";
 import { getCart, removeFromCart } from "../../services/cartService";
 import { getPublicGameCategories } from "../../services/gameService";
 import { getWishlist } from "../../services/wishlistService";
@@ -25,8 +22,8 @@ export default function Header({ games = [] }) {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const categoryMenuRef = useRef(null);
-	const sessionUser = useMemo(() => getSessionUser(), [location.pathname]);
 
+	const [sessionUser, setSessionUser] = useState(() => getSessionUser());
 	const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 	const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -42,6 +39,10 @@ export default function Header({ games = [] }) {
 	const categories = useMemo(() => {
 		return [ALL_CATEGORIES_LABEL, ...getPublicGameCategories(games)];
 	}, [games]);
+
+	useEffect(() => {
+		setSessionUser(getSessionUser());
+	}, [location.pathname]);
 
 	useEffect(() => {
 		const params = new URLSearchParams(location.search);
@@ -74,7 +75,7 @@ export default function Header({ games = [] }) {
 		let isMounted = true;
 
 		async function loadHeaderActions() {
-			if (!isAuthenticated()) {
+			if (!sessionUser) {
 				if (!isMounted) return;
 				setCart(null);
 				setWishlistCount(0);
@@ -87,20 +88,19 @@ export default function Header({ games = [] }) {
 				if (!isMounted) return;
 				setIsCartLoading(true);
 
-				const [wishlist, cart] = await Promise.all([
+				const [wishlist, cartData] = await Promise.all([
 					getWishlist().catch(() => []),
 					getCart().catch(() => null),
 				]);
 
 				if (!isMounted) return;
 
-				const items = Array.isArray(cart?.itens) ? cart.itens : [];
+				const items = Array.isArray(cartData?.itens) ? cartData.itens : [];
 				const total = items.reduce((sum, item) => {
-					const itemPrice = getDiscountedPrice(item?.jogo);
-					return sum + itemPrice;
+					return sum + getDiscountedPrice(item?.jogo);
 				}, 0);
 
-				setCart(cart);
+				setCart(cartData);
 				setWishlistCount(Array.isArray(wishlist) ? wishlist.length : 0);
 				setCartCount(items.length);
 				setCartTotal(total);
@@ -121,9 +121,16 @@ export default function Header({ games = [] }) {
 		return () => {
 			isMounted = false;
 		};
-	}, [location.pathname]);
+	}, [location.pathname, sessionUser]);
 
 	async function refreshCartState() {
+		if (!getSessionUser()) {
+			setCart(null);
+			setCartCount(0);
+			setCartTotal(0);
+			return;
+		}
+
 		setIsCartLoading(true);
 
 		try {
@@ -140,6 +147,47 @@ export default function Header({ games = [] }) {
 			setIsCartLoading(false);
 		}
 	}
+
+	async function refreshWishlistState() {
+		if (!getSessionUser()) {
+			setWishlistCount(0);
+			return;
+		}
+
+		try {
+			const wishlist = await getWishlist().catch(() => []);
+			setWishlistCount(Array.isArray(wishlist) ? wishlist.length : 0);
+		} catch {
+			setWishlistCount(0);
+		}
+	}
+
+	useEffect(() => {
+		async function handleCartUpdated() {
+			await refreshCartState();
+		}
+
+		window.addEventListener("nexgames:cart-updated", handleCartUpdated);
+
+		return () => {
+			window.removeEventListener("nexgames:cart-updated", handleCartUpdated);
+		};
+	}, [location.pathname]);
+
+	useEffect(() => {
+		async function handleWishlistUpdated() {
+			await refreshWishlistState();
+		}
+
+		window.addEventListener("nexgames:wishlist-updated", handleWishlistUpdated);
+
+		return () => {
+			window.removeEventListener(
+				"nexgames:wishlist-updated",
+				handleWishlistUpdated
+			);
+		};
+	}, [location.pathname]);
 
 	function navigateWithCategory(category) {
 		const params = new URLSearchParams();
@@ -185,6 +233,7 @@ export default function Header({ games = [] }) {
 		try {
 			await removeFromCart(item.fkJogo);
 			await refreshCartState();
+			window.dispatchEvent(new Event("nexgames:cart-updated"));
 		} finally {
 			setIsCartUpdating(false);
 		}
@@ -202,7 +251,7 @@ export default function Header({ games = [] }) {
 
 	function handleLoginFromCart() {
 		setIsCartModalOpen(false);
-		navigate("/login");
+		navigate("/login", { state: { redirectTo: "/cart" } });
 	}
 
 	return (
@@ -245,10 +294,7 @@ export default function Header({ games = [] }) {
 							className="min-w-0 self-stretch rounded-l-full bg-transparent px-5 py-3 text-sm text-[color:var(--text-muted-color)] outline-none placeholder:text-[color:var(--text-soft-color)]"
 						/>
 
-						<div
-							ref={categoryMenuRef}
-							className="relative hidden h-full lg:flex"
-						>
+						<div ref={categoryMenuRef} className="relative hidden h-full lg:flex">
 							<button
 								type="button"
 								onClick={() => setIsCategoryMenuOpen((current) => !current)}
@@ -314,26 +360,56 @@ export default function Header({ games = [] }) {
 							<RefreshCcw size={18} />
 						</button>
 
-						<Link
-							to={sessionUser ? "/my-wishlist" : "/login"}
-							aria-label="Lista de favoritos"
-							className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
-						>
-							<Heart size={18} />
-							{wishlistCount > 0 ? (
-								<span className="absolute right-0 top-0 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[color:var(--primary-color)] px-1 text-[10px] font-bold text-[color:var(--text-on-primary-color)]">
-									{wishlistCount}
-								</span>
-							) : null}
-						</Link>
+						{sessionUser ? (
+							<Link
+								to="/my-wishlist"
+								aria-label="Lista de favoritos"
+								className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
+							>
+								<Heart size={18} />
+								{wishlistCount > 0 ? (
+									<span className="absolute right-0 top-0 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[color:var(--primary-color)] px-1 text-[10px] font-bold text-[color:var(--text-on-primary-color)]">
+										{wishlistCount}
+									</span>
+								) : null}
+							</Link>
+						) : (
+							<button
+								type="button"
+								aria-label="Entrar para acessar favoritos"
+								onClick={() =>
+									navigate("/login", {
+										state: { redirectTo: "/my-wishlist" },
+									})
+								}
+								className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
+							>
+								<Heart size={18} />
+							</button>
+						)}
 
-						<Link
-							to={sessionUser ? "/my-account" : "/login"}
-							aria-label="Conta"
-							className="inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
-						>
-							<User size={18} />
-						</Link>
+						{sessionUser ? (
+							<Link
+								to="/my-account"
+								aria-label="Conta"
+								className="inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
+							>
+								<User size={18} />
+							</Link>
+						) : (
+							<button
+								type="button"
+								aria-label="Entrar para acessar sua conta"
+								onClick={() =>
+									navigate("/login", {
+										state: { redirectTo: "/my-account" },
+									})
+								}
+								className="inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
+							>
+								<User size={18} />
+							</button>
+						)}
 
 						<button
 							type="button"
@@ -361,7 +437,7 @@ export default function Header({ games = [] }) {
 			<ModalCart
 				open={isCartModalOpen}
 				cart={cart}
-				isAuthenticated={isAuthenticated()}
+				isAuthenticated={Boolean(sessionUser)}
 				isLoading={isCartLoading}
 				isUpdating={isCartUpdating}
 				onClose={() => setIsCartModalOpen(false)}

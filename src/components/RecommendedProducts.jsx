@@ -1,7 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Eye, Heart, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../../services/authService";
+import { addToCart } from "../../services/cartService";
+import { addToWishlist } from "../../services/wishlistService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
+import FeedbackPopup from "./FeedbackPopup";
 import ModalProduct from "./shared/ModalProduct";
 import TertiaryButton from "./shared/TertiaryButton";
 
@@ -59,6 +63,7 @@ function buildRecommendedProduct(game, index) {
 
 	return {
 		key: `${game.nome}-${index}`,
+		id: game.id ?? null,
 		nome: game.nome ?? "Jogo recomendado",
 		categoria: game.categoria ?? "Catálogo digital",
 		empresaNome: game.empresaNome ?? "NexGames",
@@ -66,7 +71,6 @@ function buildRecommendedProduct(game, index) {
 		ano: game.ano ?? null,
 		precoAtual: currentPrice,
 		precoOriginal: hasDiscount ? originalPrice : null,
-		badge: hasDiscount ? `-${discount}%` : "Para você",
 		search: game.nome ?? "",
 		category: game.categoria ?? "",
 		startColor: palette.startColor,
@@ -152,7 +156,6 @@ function ProductMedia({ product }) {
 			}}
 		>
 			<div className="absolute aspect-square w-[62%] rounded-full bg-white/45 blur-lg" />
-
 			<div
 				className="relative z-10 h-[68%] w-[58%] rounded-[22px] border border-white/35"
 				style={{
@@ -162,7 +165,6 @@ function ProductMedia({ product }) {
 					boxShadow: "var(--shadow-float)",
 				}}
 			/>
-
 			<div className="absolute bottom-[18px] left-[18px] grid gap-0.5 text-[color:var(--text-inverse-color)]">
 				<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
 					{product.empresaNome}
@@ -177,10 +179,27 @@ function ProductMedia({ product }) {
 
 export default function RecommendedProducts({ games = [] }) {
 	const navigate = useNavigate();
+	const cartAnimationTimeoutRef = useRef(null);
+
 	const [selectedProduct, setSelectedProduct] = useState(null);
+	const [addingCartKey, setAddingCartKey] = useState("");
+	const [addedCartKey, setAddedCartKey] = useState("");
+	const [popupState, setPopupState] = useState({
+		open: false,
+		title: "",
+		message: "",
+	});
 
 	const recommendedProducts = useMemo(() => buildRecommendedProducts(games), [games]);
 	const bannerList = useMemo(() => buildRecommendedBanners(games), [games]);
+
+	useEffect(() => {
+		return () => {
+			if (cartAnimationTimeoutRef.current) {
+				window.clearTimeout(cartAnimationTimeoutRef.current);
+			}
+		};
+	}, []);
 
 	useEffect(() => {
 		function handleEscape(event) {
@@ -196,6 +215,27 @@ export default function RecommendedProducts({ games = [] }) {
 		};
 	}, []);
 
+	function closePopup() {
+		setPopupState({
+			open: false,
+			title: "",
+			message: "",
+		});
+	}
+
+	function navigateToLogin(product) {
+		navigate("/login", {
+			state: product
+				? {
+						pendingProduct: {
+							nome: product.nome,
+							ano: product.ano ?? null,
+						},
+					}
+				: undefined,
+		});
+	}
+
 	function handleCatalogNavigation(action = {}) {
 		const search = buildSearchParams(action);
 
@@ -203,6 +243,114 @@ export default function RecommendedProducts({ games = [] }) {
 			pathname: "/",
 			search: search ? `?${search}` : "",
 		});
+	}
+
+	function handleCardKeyDown(event, product) {
+		if (event.key === "Enter" || event.key === " ") {
+			event.preventDefault();
+			handleOpenProductPage(product, event);
+		}
+	}
+
+	function handleOpenProductPreview(product, event) {
+		event?.stopPropagation?.();
+		setSelectedProduct(product);
+	}
+
+	function handleOpenProductPage(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin(product);
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível abrir este produto agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		navigate(`/product/${product.id}`);
+	}
+
+	async function handleAddToCart(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin();
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível adicionar este jogo ao carrinho agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		setAddingCartKey(product.key);
+
+		try {
+			await addToCart(product.id);
+			window.dispatchEvent(new Event("nexgames:cart-updated"));
+			setAddedCartKey(product.key);
+
+			if (cartAnimationTimeoutRef.current) {
+				window.clearTimeout(cartAnimationTimeoutRef.current);
+			}
+
+			cartAnimationTimeoutRef.current = window.setTimeout(() => {
+				setAddedCartKey("");
+			}, 900);
+		} catch {
+			setPopupState({
+				open: true,
+				title: "Não foi possível adicionar ao carrinho",
+				message:
+					"Verifique se o produto já está no carrinho ou tente novamente em instantes.",
+			});
+		} finally {
+			setAddingCartKey("");
+		}
+	}
+
+	async function handleAddToWishlist(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin();
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível adicionar este jogo aos favoritos agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		try {
+			await addToWishlist(product.id);
+			window.dispatchEvent(new Event("nexgames:wishlist-updated"));
+		} catch {
+			setPopupState({
+				open: true,
+				title: "Não foi possível adicionar aos favoritos",
+				message:
+					"Verifique se o jogo já está na sua lista de desejos ou tente novamente em instantes.",
+			});
+		}
 	}
 
 	if (!recommendedProducts.length) {
@@ -233,20 +381,33 @@ export default function RecommendedProducts({ games = [] }) {
 
 				<div className="grid auto-cols-[minmax(82%,1fr)] grid-flow-col gap-[12px] overflow-x-auto rounded-[var(--radius-large)] border border-[color:var(--border-color)] bg-[color:var(--surface-soft-color)] p-[12px] shadow-[var(--shadow-soft)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid-cols-2 md:grid-flow-row md:auto-cols-auto md:gap-[18px] md:p-[18px] xl:grid-cols-4 2xl:grid-cols-7">
 					{recommendedProducts.map((product) => (
-						<button
+						<div
 							key={product.key}
-							type="button"
-							onClick={() => setSelectedProduct(product)}
-							className="flex min-h-full snap-start flex-col gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] px-[18px] pb-[18px] pt-5 text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] hover:shadow-[var(--shadow-medium)]"
+							role="button"
+							tabIndex={0}
+							onClick={(event) => handleOpenProductPage(product, event)}
+							onKeyDown={(event) => handleCardKeyDown(event, product)}
+							className="flex min-h-full cursor-pointer snap-start flex-col gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] px-[18px] pb-[18px] pt-5 text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] hover:shadow-[var(--shadow-medium)]"
 						>
 							<div className="flex items-center justify-end gap-[10px]">
 								<div className="flex items-center gap-2">
-									<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
+									<button
+										type="button"
+										aria-label={`Adicionar ${product.nome} aos favoritos`}
+										onClick={(event) => handleAddToWishlist(product, event)}
+										className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] transition hover:border-[color:var(--border-primary-color)] hover:text-[color:var(--text-primary-color)]"
+									>
 										<Heart size={18} />
-									</span>
-									<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
+									</button>
+
+									<button
+										type="button"
+										aria-label={`Visualizar ${product.nome}`}
+										onClick={(event) => handleOpenProductPreview(product, event)}
+										className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] transition hover:border-[color:var(--border-primary-color)] hover:text-[color:var(--text-primary-color)]"
+									>
 										<Eye size={18} />
-									</span>
+									</button>
 								</div>
 							</div>
 
@@ -280,11 +441,18 @@ export default function RecommendedProducts({ games = [] }) {
 
 								<TertiaryButton
 									icon={ShoppingBag}
-									size="sm"
-									aria-label={`Comprar ${product.nome}`}
+									aria-label={`Adicionar ${product.nome} ao carrinho`}
+									onClick={(event) => handleAddToCart(product, event)}
+									className={`transition-all duration-200 ${
+										addingCartKey === product.key ? "opacity-70" : ""
+									} ${
+										addedCartKey === product.key
+											? "scale-110 shadow-[var(--shadow-medium)]"
+											: ""
+									}`}
 								/>
 							</div>
-						</button>
+						</div>
 					))}
 				</div>
 
@@ -341,16 +509,15 @@ export default function RecommendedProducts({ games = [] }) {
 			<ModalProduct
 				product={selectedProduct}
 				onClose={() => setSelectedProduct(null)}
-				onPrimaryAction={() =>
-					handleCatalogNavigation({
-						search: selectedProduct?.search,
-					})
-				}
-				onSecondaryAction={() =>
-					handleCatalogNavigation({
-						category: selectedProduct?.category,
-					})
-				}
+				onPrimaryAction={() => handleAddToCart(selectedProduct)}
+				onSecondaryAction={() => handleOpenProductPage(selectedProduct)}
+			/>
+
+			<FeedbackPopup
+				open={popupState.open}
+				title={popupState.title}
+				message={popupState.message}
+				onClose={closePopup}
 			/>
 		</section>
 	);

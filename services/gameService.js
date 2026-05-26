@@ -22,6 +22,7 @@ function normalizePublicGame(game) {
 	if (!game) return null;
 
 	return {
+		id: game.id ?? null,
 		nome: game.nome ?? "",
 		descricao: game.descricao ?? "",
 		ano: game.ano ?? null,
@@ -30,6 +31,46 @@ function normalizePublicGame(game) {
 		categoria: game.categoria ?? "",
 		empresaNome: game.empresa_nome ?? "",
 	};
+}
+
+function findAuthenticatedGameMatch(publicGame, authenticatedGames) {
+	if (!publicGame || !authenticatedGames.length) {
+		return null;
+	}
+
+	return (
+		authenticatedGames.find(
+			(game) =>
+				game.nome === publicGame.nome &&
+				(game.ano === publicGame.ano || !game.ano || !publicGame.ano)
+		) ||
+		authenticatedGames.find((game) => game.nome === publicGame.nome) ||
+		null
+	);
+}
+
+function mergeCatalogGames(publicGames, authenticatedGames) {
+	if (!authenticatedGames.length) {
+		return publicGames;
+	}
+
+	return publicGames.map((publicGame) => {
+		const authenticatedGame = findAuthenticatedGameMatch(
+			publicGame,
+			authenticatedGames
+		);
+
+		if (!authenticatedGame) {
+			return publicGame;
+		}
+
+		return {
+			...publicGame,
+			id: authenticatedGame.id,
+			fkEmpresa: authenticatedGame.fkEmpresa ?? null,
+			fkCategoria: authenticatedGame.fkCategoria ?? null,
+		};
+	});
 }
 
 function savePublicGamesToStorage(games) {
@@ -97,9 +138,20 @@ export async function getPublicGames({ forceRefresh = false } = {}) {
 
 	try {
 		const data = await apiRequest("/public/jogos");
-		const games = Array.isArray(data)
+		const publicGames = Array.isArray(data)
 			? data.map(normalizePublicGame).filter(Boolean)
 			: [];
+
+		let games = publicGames;
+
+		if (getToken()) {
+			try {
+				const authenticatedGames = await getGames();
+				games = mergeCatalogGames(publicGames, authenticatedGames);
+			} catch {
+				games = publicGames;
+			}
+		}
 
 		savePublicGamesToStorage(games);
 

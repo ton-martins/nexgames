@@ -8,22 +8,14 @@ import {
 	Gift,
 	LayoutGrid,
 	LifeBuoy,
-	Moon,
 	ShieldCheck,
 	ShoppingCart,
 	Sparkles,
-	Sun,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import PrimaryButton from "./shared/PrimaryButton";
 import SecondaryButton from "./shared/SecondaryButton";
-import {
-	THEMES,
-	applyTheme,
-	resolveInitialTheme,
-	toggleTheme as switchTheme,
-} from "../theme/theme";
 
 const HERO_PALETTES = [
 	{
@@ -168,73 +160,15 @@ function buildHeroInfoCards(games) {
 	});
 }
 
-function ThemeToggle({ theme, onToggle }) {
-	const isDark = theme === THEMES.DARK;
-
-	return (
-		<div className="fixed left-3 top-1/2 z-20 hidden -translate-y-1/2 md:block">
-			<button
-				type="button"
-				onClick={onToggle}
-				aria-label="Alternar tema claro e escuro"
-				aria-pressed={isDark}
-				className="relative grid h-[108px] w-[54px] grid-rows-2 rounded-full p-1"
-				style={{
-					background:
-						"linear-gradient(180deg, var(--surface-soft-color) 0%, var(--surface-contrast-color) 100%)",
-					boxShadow: "var(--shadow-large)",
-				}}
-			>
-				<span
-					className={`relative z-10 flex items-center justify-center text-[11px] font-extrabold uppercase tracking-[0.08em] transition ${
-						isDark
-							? "text-[color:var(--text-inverse-color)]"
-							: "text-[color:var(--text-inverse-color)]"
-					}`}
-				>
-					<Moon size={14} />
-				</span>
-
-				<span
-					className={`relative z-10 flex items-center justify-center text-[11px] font-extrabold uppercase tracking-[0.08em] transition ${
-						isDark
-							? "text-[color:var(--text-inverse-color)]"
-							: "text-[color:var(--surface-contrast-color)]"
-					}`}
-				>
-					<Sun size={14} />
-				</span>
-
-				<span
-					aria-hidden="true"
-					className="absolute left-1 h-[46px] w-[46px] rounded-full transition-transform duration-200"
-					style={{
-						bottom: "4px",
-						transform: isDark ? "translateY(-54px)" : "translateY(0)",
-						background:
-							"linear-gradient(180deg, var(--surface-color) 0%, var(--surface-soft-color) 100%)",
-						boxShadow: "var(--shadow-soft)",
-					}}
-				/>
-			</button>
-		</div>
-	);
-}
-
 export default function Hero({ games = [], catalogGames = [] }) {
 	const navigate = useNavigate();
 	const [activeIndex, setActiveIndex] = useState(0);
-	const [theme, setTheme] = useState(resolveInitialTheme);
 
 	const slides = useMemo(() => buildHeroSlides(games), [games]);
 	const infoCards = useMemo(() => {
 		const sourceGames = catalogGames.length > 0 ? catalogGames : games;
 		return buildHeroInfoCards(sourceGames);
 	}, [catalogGames, games]);
-
-	useEffect(() => {
-		setTheme(applyTheme(resolveInitialTheme()));
-	}, []);
 
 	useEffect(() => {
 		if (!slides.length) return;
@@ -257,10 +191,6 @@ export default function Hero({ games = [], catalogGames = [] }) {
 
 	const currentSlide = slides[activeIndex] ?? null;
 
-	function handleThemeToggle() {
-		setTheme((current) => switchTheme(current));
-	}
-
 	function handleCatalogNavigation(action = {}) {
 		const search = buildSearchParams(action);
 
@@ -281,9 +211,7 @@ export default function Hero({ games = [], catalogGames = [] }) {
 	}
 
 	const sliderOverlay =
-		theme === THEMES.DARK
-			? "linear-gradient(90deg, rgba(11, 16, 21, 0.94) 0%, rgba(11, 16, 21, 0.78) 34%, rgba(11, 16, 21, 0.18) 100%)"
-			: "linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.78) 34%, rgba(255, 255, 255, 0.18) 100%)";
+		"linear-gradient(90deg, var(--hero-overlay-start) 0%, var(--hero-overlay-mid) 34%, var(--hero-overlay-end) 100%)";
 
 	const heroBackground = currentSlide
 		? `
@@ -298,8 +226,6 @@ export default function Hero({ games = [], catalogGames = [] }) {
 
 	return (
 		<section className="relative bg-[color:var(--background-color)]">
-			<ThemeToggle theme={theme} onToggle={handleThemeToggle} />
-
 			<div className="app-container">
 				<article
 					className="relative overflow-hidden rounded-[var(--radius-large)] border border-[color:var(--border-light-color)]"

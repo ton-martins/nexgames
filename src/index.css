@@ -38,6 +38,9 @@
   --danger-color: #e2401c;
   --rating-color: #f2b01e;
   --overlay-color: rgba(17, 22, 27, 0.56);
+  --hero-overlay-start: rgba(255, 255, 255, 0.95);
+  --hero-overlay-mid: rgba(255, 255, 255, 0.78);
+  --hero-overlay-end: rgba(255, 255, 255, 0.18);
 
   /* Interaction */
   --icon-hover-background: rgba(254, 215, 0, 0.26);
@@ -92,6 +95,9 @@
   --danger-color: #ff7c5d;
   --rating-color: #ffc94d;
   --overlay-color: rgba(5, 8, 11, 0.72);
+  --hero-overlay-start: rgba(11, 16, 21, 0.94);
+  --hero-overlay-mid: rgba(11, 16, 21, 0.78);
+  --hero-overlay-end: rgba(11, 16, 21, 0.18);
 
   --icon-hover-background: rgba(244, 203, 49, 0.18);
   --subnav-hover-background: rgba(255, 255, 255, 0.08);

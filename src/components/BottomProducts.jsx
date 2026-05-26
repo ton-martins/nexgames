@@ -1,24 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../../services/authService";
+import { addToCart } from "../../services/cartService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
+import FeedbackPopup from "./FeedbackPopup";
 import ModalProduct from "./shared/ModalProduct";
 
 const COLUMN_CONFIG_LIST = [
-	{
-		id: "featured",
-		title: "Produtos em destaque",
-		type: "recent",
-	},
-	{
-		id: "bestsellers",
-		title: "Mais vendidos",
-		type: "premium",
-	},
-	{
-		id: "promotion",
-		title: "Em promoção",
-		type: "promotion",
-	},
+	{ id: "featured", title: "Produtos em destaque", type: "recent" },
+	{ id: "bestsellers", title: "Mais vendidos", type: "premium" },
+	{ id: "promotion", title: "Em promoção", type: "promotion" },
 ];
 
 const BOTTOM_PALETTES = [
@@ -28,20 +19,6 @@ const BOTTOM_PALETTES = [
 	{ startColor: "#d2b8ff", endColor: "#f8f3ff" },
 	{ startColor: "#ffc78d", endColor: "#fff6ed" },
 ];
-
-function buildSearchParams({ search, category } = {}) {
-	const params = new URLSearchParams();
-
-	if (search) {
-		params.set("search", search);
-	}
-
-	if (category) {
-		params.set("categoria", category);
-	}
-
-	return params.toString();
-}
 
 function sanitizeDescription(description) {
 	const normalizedDescription = (description || "")
@@ -64,6 +41,7 @@ function buildRowProduct(game, index) {
 
 	return {
 		key: `${game.nome}-${index}`,
+		id: game.id ?? null,
 		nome: game.nome ?? "Jogo em destaque",
 		categoria: game.categoria ?? "Catálogo digital",
 		empresaNome: game.empresaNome ?? "NexGames",
@@ -72,8 +50,6 @@ function buildRowProduct(game, index) {
 		precoAtual: currentPrice,
 		precoOriginal: hasDiscount ? originalPrice : null,
 		badge: hasDiscount ? `-${discount}%` : "Destaque",
-		search: game.nome ?? "",
-		category: game.categoria ?? "",
 		startColor: palette.startColor,
 		endColor: palette.endColor,
 	};
@@ -81,14 +57,14 @@ function buildRowProduct(game, index) {
 
 function buildColumns(games) {
 	const recentGames = [...games]
-		.sort((gameA, gameB) => Number(gameB.ano ?? 0) - Number(gameA.ano ?? 0))
+		.sort((a, b) => Number(b.ano ?? 0) - Number(a.ano ?? 0))
 		.slice(0, 3);
 	const premiumGames = [...games]
-		.sort((gameA, gameB) => getDiscountedPrice(gameB) - getDiscountedPrice(gameA))
+		.sort((a, b) => getDiscountedPrice(b) - getDiscountedPrice(a))
 		.slice(0, 3);
 	const promotionGames = games
 		.filter((game) => Number(game.desconto ?? 0) > 0)
-		.sort((gameA, gameB) => Number(gameB.desconto ?? 0) - Number(gameA.desconto ?? 0))
+		.sort((a, b) => Number(b.desconto ?? 0) - Number(a.desconto ?? 0))
 		.slice(0, 3);
 
 	return COLUMN_CONFIG_LIST.map((column) => {
@@ -108,20 +84,20 @@ function buildColumns(games) {
 
 function buildFeaturedAdProduct(games) {
 	const sourceGame =
-		[...games].sort(
-			(gameA, gameB) => getDiscountedPrice(gameB) - getDiscountedPrice(gameA)
-		)[0] || null;
+		[...games].sort((a, b) => getDiscountedPrice(b) - getDiscountedPrice(a))[0] ||
+		null;
 
-	if (!sourceGame) {
-		return null;
-	}
-
-	return buildRowProduct(sourceGame, 0);
+	return sourceGame ? buildRowProduct(sourceGame, 0) : null;
 }
 
 export default function BottomProducts({ games = [] }) {
 	const navigate = useNavigate();
 	const [selectedProduct, setSelectedProduct] = useState(null);
+	const [popupState, setPopupState] = useState({
+		open: false,
+		title: "",
+		message: "",
+	});
 
 	const columns = useMemo(() => buildColumns(games), [games]);
 	const featuredAdProduct = useMemo(() => buildFeaturedAdProduct(games), [games]);
@@ -140,13 +116,94 @@ export default function BottomProducts({ games = [] }) {
 		};
 	}, []);
 
-	function handleCatalogNavigation(action = {}) {
-		const search = buildSearchParams(action);
-
-		navigate({
-			pathname: "/",
-			search: search ? `?${search}` : "",
+	function closePopup() {
+		setPopupState({
+			open: false,
+			title: "",
+			message: "",
 		});
+	}
+
+	function navigateToLogin(product) {
+		navigate("/login", {
+			state: product
+				? {
+						pendingProduct: {
+							nome: product.nome,
+							ano: product.ano ?? null,
+						},
+					}
+				: undefined,
+		});
+	}
+
+	function handleCardKeyDown(event, product) {
+		if (event.key === "Enter" || event.key === " ") {
+			event.preventDefault();
+			handleOpenProductPreview(product, event);
+		}
+	}
+
+	function handleOpenProductPreview(product, event) {
+		event?.stopPropagation?.();
+		setSelectedProduct(product);
+	}
+
+	function handleOpenProductPage(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin(product);
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível abrir este produto agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		navigate(`/product/${product.id}`);
+	}
+
+	async function handleAddToCart(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin();
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível adicionar este jogo ao carrinho agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		try {
+			await addToCart(product.id);
+			window.dispatchEvent(new Event("nexgames:cart-updated"));
+			setPopupState({
+				open: true,
+				title: "Jogo adicionado ao carrinho",
+				message: "O produto foi adicionado ao seu carrinho com sucesso.",
+			});
+		} catch {
+			setPopupState({
+				open: true,
+				title: "Não foi possível adicionar ao carrinho",
+				message:
+					"Verifique se o produto já está no carrinho ou tente novamente em instantes.",
+			});
+		}
 	}
 
 	if (!columns.length || !featuredAdProduct) {
@@ -170,11 +227,13 @@ export default function BottomProducts({ games = [] }) {
 
 							<div>
 								{column.products.map((product, index) => (
-									<button
+									<div
 										key={product.key}
-										type="button"
-										onClick={() => setSelectedProduct(product)}
-										className={`grid w-full grid-cols-[82px_minmax(0,1fr)] items-center gap-[14px] bg-transparent py-3 text-left ${
+										role="button"
+										tabIndex={0}
+										onClick={(event) => handleOpenProductPreview(product, event)}
+										onKeyDown={(event) => handleCardKeyDown(event, product)}
+										className={`grid w-full cursor-pointer grid-cols-[82px_minmax(0,1fr)] items-center gap-[14px] bg-transparent py-3 text-left transition hover:opacity-90 ${
 											index < column.products.length - 1
 												? "border-b border-[color:var(--border-light-color)]"
 												: ""
@@ -197,12 +256,15 @@ export default function BottomProducts({ games = [] }) {
 										</div>
 
 										<div className="grid gap-1.5">
-											<span className="text-xs text-[color:var(--text-muted-color)]">
-												{product.categoria}
-											</span>
-											<strong className="text-[15px] font-bold leading-[1.2] text-[color:var(--text-primary-color)]">
-												{product.nome}
-											</strong>
+											<div className="grid gap-1.5">
+												<span className="text-xs text-[color:var(--text-muted-color)]">
+													{product.categoria}
+												</span>
+												<strong className="text-[15px] font-bold leading-[1.2] text-[color:var(--text-primary-color)]">
+													{product.nome}
+												</strong>
+											</div>
+
 											<div className="flex items-center gap-2">
 												<span
 													className={`text-[24px] font-normal leading-none ${
@@ -220,46 +282,55 @@ export default function BottomProducts({ games = [] }) {
 												) : null}
 											</div>
 										</div>
-									</button>
+									</div>
 								))}
 							</div>
 						</article>
 					))}
 				</div>
 
-				<aside
-					className="grid content-start gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-muted-color)] p-[22px] transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] hover:shadow-[var(--shadow-medium)]"
-					onClick={() => setSelectedProduct(featuredAdProduct)}
-				>
-					<span className="text-xs uppercase text-[color:var(--text-muted-color)]">
-						{featuredAdProduct.badge}
-					</span>
-					<strong className="text-2xl leading-[1.05] text-[color:var(--text-primary-color)]">
-						{featuredAdProduct.nome}
-					</strong>
-
+				<aside className="rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-muted-color)] p-[22px] shadow-[var(--shadow-soft)]">
 					<div
-						className="relative flex min-h-[220px] items-center justify-center overflow-hidden rounded-[var(--radius-large)]"
-						style={{
-							background: `linear-gradient(135deg, color-mix(in srgb, ${featuredAdProduct.startColor} 82%, var(--surface-color)), color-mix(in srgb, ${featuredAdProduct.endColor} 88%, var(--surface-soft-color)))`,
-						}}
+						role="button"
+						tabIndex={0}
+						onClick={(event) => handleOpenProductPreview(featuredAdProduct, event)}
+						onKeyDown={(event) => handleCardKeyDown(event, featuredAdProduct)}
+						className="grid w-full cursor-pointer content-start gap-[10px] text-left transition hover:-translate-y-1"
 					>
-						<div
-							className="h-[66%] w-[56%] rounded-[22px] border border-white/35"
-							style={{
-								background:
-									"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-								transform: "rotate(-14deg)",
-							}}
-						/>
+						<div className="flex items-start justify-between gap-3">
+							<div className="grid gap-1">
+								<span className="text-xs uppercase text-[color:var(--text-muted-color)]">
+									{featuredAdProduct.badge}
+								</span>
+								<strong className="text-2xl leading-[1.05] text-[color:var(--text-primary-color)]">
+									{featuredAdProduct.nome}
+								</strong>
+							</div>
+						</div>
 
-						<div className="absolute bottom-[18px] left-[18px] grid gap-0.5 text-[color:var(--text-inverse-color)]">
-							<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
-								{featuredAdProduct.empresaNome}
-							</span>
-							<strong className="text-[15px] leading-[1.05]">
-								{featuredAdProduct.categoria}
-							</strong>
+						<div
+							className="relative flex min-h-[220px] items-center justify-center overflow-hidden rounded-[var(--radius-large)]"
+							style={{
+								background: `linear-gradient(135deg, color-mix(in srgb, ${featuredAdProduct.startColor} 82%, var(--surface-color)), color-mix(in srgb, ${featuredAdProduct.endColor} 88%, var(--surface-soft-color)))`,
+							}}
+						>
+							<div
+								className="h-[66%] w-[56%] rounded-[22px] border border-white/35"
+								style={{
+									background:
+										"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+									transform: "rotate(-14deg)",
+								}}
+							/>
+
+							<div className="absolute bottom-[18px] left-[18px] grid gap-0.5 text-[color:var(--text-inverse-color)]">
+								<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
+									{featuredAdProduct.empresaNome}
+								</span>
+								<strong className="text-[15px] leading-[1.05]">
+									{featuredAdProduct.categoria}
+								</strong>
+							</div>
 						</div>
 					</div>
 				</aside>
@@ -268,16 +339,15 @@ export default function BottomProducts({ games = [] }) {
 			<ModalProduct
 				product={selectedProduct}
 				onClose={() => setSelectedProduct(null)}
-				onPrimaryAction={() =>
-					handleCatalogNavigation({
-						search: selectedProduct?.search,
-					})
-				}
-				onSecondaryAction={() =>
-					handleCatalogNavigation({
-						category: selectedProduct?.category,
-					})
-				}
+				onPrimaryAction={() => handleAddToCart(selectedProduct)}
+				onSecondaryAction={() => handleOpenProductPage(selectedProduct)}
+			/>
+
+			<FeedbackPopup
+				open={popupState.open}
+				title={popupState.title}
+				message={popupState.message}
+				onClose={closePopup}
 			/>
 		</section>
 	);

@@ -1,8 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, Eye, Heart, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../../services/authService";
+import { addToCart } from "../../services/cartService";
+import { addToWishlist } from "../../services/wishlistService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
+import FeedbackPopup from "./FeedbackPopup";
 import ModalProduct from "./shared/ModalProduct";
+import TertiaryButton from "./shared/TertiaryButton";
 
 const TRENDING_TAB_LIST = [
 	{ id: "featured", label: "Em destaque" },
@@ -54,6 +59,7 @@ function buildProductItem(game, index) {
 
 	return {
 		key: `${game.nome}-${index}`,
+		id: game.id ?? null,
 		nome: game.nome ?? "Jogo em destaque",
 		categoria: game.categoria ?? "Catálogo digital",
 		empresaNome: game.empresaNome ?? "NexGames",
@@ -91,8 +97,17 @@ function buildTabProducts(games) {
 export default function TrendingProducts({ games = [] }) {
 	const navigate = useNavigate();
 	const activeTabRef = useRef(null);
+	const cartAnimationTimeoutRef = useRef(null);
+
 	const [activeTabId, setActiveTabId] = useState("featured");
 	const [selectedProduct, setSelectedProduct] = useState(null);
+	const [addingCartKey, setAddingCartKey] = useState("");
+	const [addedCartKey, setAddedCartKey] = useState("");
+	const [popupState, setPopupState] = useState({
+		open: false,
+		title: "",
+		message: "",
+	});
 
 	const productsByTab = useMemo(() => buildTabProducts(games), [games]);
 	const availableTabs = useMemo(() => {
@@ -101,6 +116,14 @@ export default function TrendingProducts({ games = [] }) {
 		);
 	}, [productsByTab]);
 	const activeProducts = productsByTab[activeTabId] || [];
+
+	useEffect(() => {
+		return () => {
+			if (cartAnimationTimeoutRef.current) {
+				window.clearTimeout(cartAnimationTimeoutRef.current);
+			}
+		};
+	}, []);
 
 	useEffect(() => {
 		if (!games.length || !availableTabs.length) {
@@ -134,6 +157,27 @@ export default function TrendingProducts({ games = [] }) {
 		};
 	}, []);
 
+	function closePopup() {
+		setPopupState({
+			open: false,
+			title: "",
+			message: "",
+		});
+	}
+
+	function navigateToLogin(product) {
+		navigate("/login", {
+			state: product
+				? {
+						pendingProduct: {
+							nome: product.nome,
+							ano: product.ano ?? null,
+						},
+					}
+				: undefined,
+		});
+	}
+
 	function handleCatalogNavigation(action = {}) {
 		const search = buildSearchParams(action);
 
@@ -141,6 +185,114 @@ export default function TrendingProducts({ games = [] }) {
 			pathname: "/",
 			search: search ? `?${search}` : "",
 		});
+	}
+
+	function handleCardKeyDown(event, product) {
+		if (event.key === "Enter" || event.key === " ") {
+			event.preventDefault();
+			handleOpenProductPage(product, event);
+		}
+	}
+
+	function handleOpenProductPreview(product, event) {
+		event?.stopPropagation?.();
+		setSelectedProduct(product);
+	}
+
+	function handleOpenProductPage(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin(product);
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível abrir este produto agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		navigate(`/product/${product.id}`);
+	}
+
+	async function handleAddToCart(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin();
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível adicionar este jogo ao carrinho agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		setAddingCartKey(product.key);
+
+		try {
+			await addToCart(product.id);
+			window.dispatchEvent(new Event("nexgames:cart-updated"));
+			setAddedCartKey(product.key);
+
+			if (cartAnimationTimeoutRef.current) {
+				window.clearTimeout(cartAnimationTimeoutRef.current);
+			}
+
+			cartAnimationTimeoutRef.current = window.setTimeout(() => {
+				setAddedCartKey("");
+			}, 900);
+		} catch {
+			setPopupState({
+				open: true,
+				title: "Não foi possível adicionar ao carrinho",
+				message:
+					"Verifique se o produto já está no carrinho ou tente novamente em instantes.",
+			});
+		} finally {
+			setAddingCartKey("");
+		}
+	}
+
+	async function handleAddToWishlist(product, event) {
+		event?.stopPropagation?.();
+
+		if (!isAuthenticated()) {
+			navigateToLogin();
+			return;
+		}
+
+		if (!product?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível adicionar este jogo aos favoritos agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
+
+		try {
+			await addToWishlist(product.id);
+			window.dispatchEvent(new Event("nexgames:wishlist-updated"));
+		} catch {
+			setPopupState({
+				open: true,
+				title: "Não foi possível adicionar aos favoritos",
+				message:
+					"Verifique se o jogo já está na sua lista de desejos ou tente novamente em instantes.",
+			});
+		}
 	}
 
 	if (!games.length || !availableTabs.length) {
@@ -180,11 +332,13 @@ export default function TrendingProducts({ games = [] }) {
 						const isHighlighted = index === activeProducts.length - 1;
 
 						return (
-							<button
+							<div
 								key={product.key}
-								type="button"
-								onClick={() => setSelectedProduct(product)}
-								className={`relative flex min-h-full flex-col gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] px-6 pb-[18px] pt-5 text-left transition hover:-translate-y-1 hover:border-[color:var(--primary-color)] hover:shadow-[var(--shadow-medium)] ${
+								role="button"
+								tabIndex={0}
+								onClick={(event) => handleOpenProductPage(product, event)}
+								onKeyDown={(event) => handleCardKeyDown(event, product)}
+								className={`relative flex min-h-full cursor-pointer flex-col gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] px-6 pb-[18px] pt-5 text-left transition hover:-translate-y-1 hover:border-[color:var(--primary-color)] hover:shadow-[var(--shadow-medium)] ${
 									isHighlighted ? "shadow-[var(--shadow-medium)]" : ""
 								}`}
 							>
@@ -194,12 +348,23 @@ export default function TrendingProducts({ games = [] }) {
 									</span>
 
 									<div className="flex items-center gap-2">
-										<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
+										<button
+											type="button"
+											aria-label={`Adicionar ${product.nome} aos favoritos`}
+											onClick={(event) => handleAddToWishlist(product, event)}
+											className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] transition hover:border-[color:var(--border-primary-color)] hover:text-[color:var(--text-primary-color)]"
+										>
 											<Heart size={18} />
-										</span>
-										<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
+										</button>
+
+										<button
+											type="button"
+											aria-label={`Visualizar ${product.nome}`}
+											onClick={(event) => handleOpenProductPreview(product, event)}
+											className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)] transition hover:border-[color:var(--border-primary-color)] hover:text-[color:var(--text-primary-color)]"
+										>
 											<Eye size={18} />
-										</span>
+										</button>
 									</div>
 								</div>
 
@@ -265,11 +430,20 @@ export default function TrendingProducts({ games = [] }) {
 										) : null}
 									</div>
 
-									<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--primary-color)] bg-[color:var(--primary-color)] text-[color:var(--text-on-primary-color)]">
-										<ShoppingBag size={18} />
-									</span>
+									<TertiaryButton
+										icon={ShoppingBag}
+										aria-label={`Adicionar ${product.nome} ao carrinho`}
+										onClick={(event) => handleAddToCart(product, event)}
+										className={`transition-all duration-200 ${
+											addingCartKey === product.key ? "opacity-70" : ""
+										} ${
+											addedCartKey === product.key
+												? "scale-110 shadow-[var(--shadow-medium)]"
+												: ""
+										}`}
+									/>
 								</div>
-							</button>
+							</div>
 						);
 					})}
 				</div>
@@ -278,16 +452,15 @@ export default function TrendingProducts({ games = [] }) {
 			<ModalProduct
 				product={selectedProduct}
 				onClose={() => setSelectedProduct(null)}
-				onPrimaryAction={() =>
-					handleCatalogNavigation({
-						search: selectedProduct?.search,
-					})
-				}
-				onSecondaryAction={() =>
-					handleCatalogNavigation({
-						category: selectedProduct?.category,
-					})
-				}
+				onPrimaryAction={() => handleAddToCart(selectedProduct)}
+				onSecondaryAction={() => handleOpenProductPage(selectedProduct)}
+			/>
+
+			<FeedbackPopup
+				open={popupState.open}
+				title={popupState.title}
+				message={popupState.message}
+				onClose={closePopup}
 			/>
 		</section>
 	);

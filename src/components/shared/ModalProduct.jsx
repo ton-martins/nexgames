@@ -1,4 +1,4 @@
-import { CalendarDays, Search, ShoppingBag, X } from "lucide-react";
+import { CalendarDays, Eye, ShoppingBag, X } from "lucide-react";
 import { formatCurrency } from "../../helpers/currency";
 import PrimaryButton from "./PrimaryButton";
 import SecondaryButton from "./SecondaryButton";
@@ -114,8 +114,8 @@ export default function ModalProduct({
 								Comprar agora
 							</PrimaryButton>
 
-							<SecondaryButton icon={Search} onClick={onSecondaryAction}>
-								Ver categoria
+							<SecondaryButton icon={Eye} onClick={onSecondaryAction}>
+								Ver produto
 							</SecondaryButton>
 						</div>
 					</div>
