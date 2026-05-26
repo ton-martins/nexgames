@@ -98,6 +98,14 @@ export default function Auth() {
 	);
 
 	useEffect(() => {
+		window.scrollTo({
+			top: 0,
+			left: 0,
+			behavior: "auto",
+		});
+	}, [location.pathname, location.search]);
+
+	useEffect(() => {
 		if (getSessionUser()) {
 			navigate("/", { replace: true });
 		}
