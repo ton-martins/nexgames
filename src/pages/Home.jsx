@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import BestSellersProducts from "../components/BestSellersProducts";
 import { useLocation } from "react-router-dom";
+import BestSellersProducts from "../components/BestSellersProducts";
+import BottomProducts from "../components/BottomProducts";
+import Brands from "../components/Brands";
 import ExclusiveProducts from "../components/ExclusiveProducts";
 import FeedbackPopup from "../components/FeedbackPopup";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
+import Newsletter from "../components/Newsletter";
 import Products from "../components/Products";
 import RecommendedProducts from "../components/RecommendedProducts";
 import SubHeader from "../components/SubHeader";
@@ -97,7 +101,12 @@ export default function Home() {
 						<Products games={games} />
 						<BestSellersProducts games={games} />
 						<RecommendedProducts games={games} />
+						<BottomProducts games={games} />
+						<Brands games={games} />
 					</main>
+
+					<Newsletter />
+					<Footer />
 				</>
 			) : null}
 

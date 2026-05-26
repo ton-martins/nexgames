@@ -160,7 +160,7 @@ export default function Header({ games = [] }) {
 						type="button"
 						aria-label={isMobileSearchOpen ? "Fechar pesquisa" : "Abrir pesquisa"}
 						onClick={() => setIsMobileSearchOpen((current) => !current)}
-						className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--icon-hover-background)] hover:text-[color:var(--secondary-color)] lg:hidden"
+						className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)] lg:hidden"
 					>
 						{isMobileSearchOpen ? <X size={18} /> : <Search size={18} />}
 					</button>
@@ -243,7 +243,7 @@ export default function Header({ games = [] }) {
 							type="button"
 							aria-label="Itens vistos recentemente"
 							title="Itens vistos recentemente"
-							className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)]"
+							className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
 						>
 							<RefreshCcw size={18} />
 						</button>
@@ -251,7 +251,7 @@ export default function Header({ games = [] }) {
 						<Link
 							to={sessionUser ? "/my-wishlist" : "/login"}
 							aria-label="Lista de favoritos"
-							className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)]"
+							className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
 						>
 							<Heart size={18} />
 							{wishlistCount > 0 ? (
@@ -264,7 +264,7 @@ export default function Header({ games = [] }) {
 						<Link
 							to={sessionUser ? "/my-account" : "/login"}
 							aria-label="Conta"
-							className="inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)]"
+							className="inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
 						>
 							<User size={18} />
 						</Link>
@@ -272,7 +272,7 @@ export default function Header({ games = [] }) {
 						<Link
 							to={sessionUser ? "/cart" : "/login"}
 							aria-label="Carrinho"
-							className="relative inline-flex items-center gap-2 rounded-full px-2 text-[color:var(--text-primary-color)] transition hover:text-[color:var(--secondary-color)]"
+							className="relative inline-flex items-center gap-1 rounded-full px-2 py-1 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
 						>
 							<div className="relative inline-flex h-[42px] w-[42px] items-center justify-center rounded-full">
 								<ShoppingBag size={18} />

@@ -239,11 +239,7 @@ export default function RecommendedProducts({ games = [] }) {
 							onClick={() => setSelectedProduct(product)}
 							className="flex min-h-full snap-start flex-col gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] px-[18px] pb-[18px] pt-5 text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] hover:shadow-[var(--shadow-medium)]"
 						>
-							<div className="flex items-center justify-between gap-[10px]">
-								<span className="inline-flex min-w-[58px] items-center justify-center rounded-full bg-[color:var(--primary-soft-color)] px-[10px] py-1.5 text-[11px] font-extrabold uppercase text-[color:var(--text-primary-color)]">
-									{product.badge}
-								</span>
-
+							<div className="flex items-center justify-end gap-[10px]">
 								<div className="flex items-center gap-2">
 									<span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-muted-color)]">
 										<Heart size={18} />

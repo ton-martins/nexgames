@@ -168,6 +168,16 @@ img {
   margin-top: var(--section-spacing-large);
 }
 
+@keyframes brands-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (max-width: 1180px) {
   :root {
     --container-padding: 20px;
