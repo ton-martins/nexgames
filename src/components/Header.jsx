@@ -13,10 +13,11 @@ import {
 	getSessionUser,
 	isAuthenticated,
 } from "../../services/authService";
-import { getCart } from "../../services/cartService";
+import { getCart, removeFromCart } from "../../services/cartService";
 import { getPublicGameCategories } from "../../services/gameService";
 import { getWishlist } from "../../services/wishlistService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
+import ModalCart from "./shared/ModalCart";
 
 const ALL_CATEGORIES_LABEL = "Todas as categorias";
 
@@ -31,8 +32,12 @@ export default function Header({ games = [] }) {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORIES_LABEL);
 	const [wishlistCount, setWishlistCount] = useState(0);
+	const [cart, setCart] = useState(null);
 	const [cartCount, setCartCount] = useState(0);
 	const [cartTotal, setCartTotal] = useState(0);
+	const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+	const [isCartLoading, setIsCartLoading] = useState(false);
+	const [isCartUpdating, setIsCartUpdating] = useState(false);
 
 	const categories = useMemo(() => {
 		return [ALL_CATEGORIES_LABEL, ...getPublicGameCategories(games)];
@@ -71,6 +76,7 @@ export default function Header({ games = [] }) {
 		async function loadHeaderActions() {
 			if (!isAuthenticated()) {
 				if (!isMounted) return;
+				setCart(null);
 				setWishlistCount(0);
 				setCartCount(0);
 				setCartTotal(0);
@@ -78,6 +84,9 @@ export default function Header({ games = [] }) {
 			}
 
 			try {
+				if (!isMounted) return;
+				setIsCartLoading(true);
+
 				const [wishlist, cart] = await Promise.all([
 					getWishlist().catch(() => []),
 					getCart().catch(() => null),
@@ -87,18 +96,23 @@ export default function Header({ games = [] }) {
 
 				const items = Array.isArray(cart?.itens) ? cart.itens : [];
 				const total = items.reduce((sum, item) => {
-					const itemPrice = Number(item?.jogo?.preco ?? 0);
+					const itemPrice = getDiscountedPrice(item?.jogo);
 					return sum + itemPrice;
 				}, 0);
 
+				setCart(cart);
 				setWishlistCount(Array.isArray(wishlist) ? wishlist.length : 0);
 				setCartCount(items.length);
 				setCartTotal(total);
 			} catch {
 				if (!isMounted) return;
+				setCart(null);
 				setWishlistCount(0);
 				setCartCount(0);
 				setCartTotal(0);
+			} finally {
+				if (!isMounted) return;
+				setIsCartLoading(false);
 			}
 		}
 
@@ -108,6 +122,24 @@ export default function Header({ games = [] }) {
 			isMounted = false;
 		};
 	}, [location.pathname]);
+
+	async function refreshCartState() {
+		setIsCartLoading(true);
+
+		try {
+			const cartData = await getCart().catch(() => null);
+			const items = Array.isArray(cartData?.itens) ? cartData.itens : [];
+			const total = items.reduce((sum, item) => {
+				return sum + getDiscountedPrice(item?.jogo);
+			}, 0);
+
+			setCart(cartData);
+			setCartCount(items.length);
+			setCartTotal(total);
+		} finally {
+			setIsCartLoading(false);
+		}
+	}
 
 	function navigateWithCategory(category) {
 		const params = new URLSearchParams();
@@ -137,6 +169,40 @@ export default function Header({ games = [] }) {
 		setSelectedCategory(category);
 		setIsCategoryMenuOpen(false);
 		navigateWithCategory(category);
+	}
+
+	function handleCartOpen() {
+		setIsCartModalOpen(true);
+	}
+
+	async function handleRemoveCartItem(item) {
+		if (!item?.fkJogo) {
+			return;
+		}
+
+		setIsCartUpdating(true);
+
+		try {
+			await removeFromCart(item.fkJogo);
+			await refreshCartState();
+		} finally {
+			setIsCartUpdating(false);
+		}
+	}
+
+	function handleViewCart() {
+		setIsCartModalOpen(false);
+		navigate("/cart");
+	}
+
+	function handleCheckout() {
+		setIsCartModalOpen(false);
+		navigate("/checkout");
+	}
+
+	function handleLoginFromCart() {
+		setIsCartModalOpen(false);
+		navigate("/login");
 	}
 
 	return (
@@ -269,9 +335,10 @@ export default function Header({ games = [] }) {
 							<User size={18} />
 						</Link>
 
-						<Link
-							to={sessionUser ? "/cart" : "/login"}
+						<button
+							type="button"
 							aria-label="Carrinho"
+							onClick={handleCartOpen}
 							className="relative inline-flex items-center gap-1 rounded-full px-2 py-1 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
 						>
 							<div className="relative inline-flex h-[42px] w-[42px] items-center justify-center rounded-full">
@@ -286,10 +353,23 @@ export default function Header({ games = [] }) {
 							<strong className="text-sm font-semibold text-[color:var(--text-primary-color)]">
 								{formatCurrency(cartTotal)}
 							</strong>
-						</Link>
+						</button>
 					</div>
 				</div>
 			</div>
+
+			<ModalCart
+				open={isCartModalOpen}
+				cart={cart}
+				isAuthenticated={isAuthenticated()}
+				isLoading={isCartLoading}
+				isUpdating={isCartUpdating}
+				onClose={() => setIsCartModalOpen(false)}
+				onLogin={handleLoginFromCart}
+				onRemoveItem={handleRemoveCartItem}
+				onViewCart={handleViewCart}
+				onCheckout={handleCheckout}
+			/>
 		</header>
 	);
 }
