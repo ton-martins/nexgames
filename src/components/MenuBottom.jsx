@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
-import { Heart, House, ShoppingBag, User } from "lucide-react";
+import {
+	Heart,
+	House,
+	Package,
+	ShoppingCart,
+	User,
+} from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getSessionUser } from "../../services/authService";
-import { getCart } from "../../services/cartService";
+import { getCart, removeFromCart } from "../../services/cartService";
 import { getWishlist } from "../../services/wishlistService";
+import ModalCart from "./shared/ModalCart";
 
 function joinClasses(...classNames) {
 	return classNames.filter(Boolean).join(" ");
@@ -11,6 +18,10 @@ function joinClasses(...classNames) {
 
 function isHomeRoute(pathname) {
 	return pathname === "/";
+}
+
+function isOrdersRoute(pathname) {
+	return pathname === "/orders" || pathname.startsWith("/account/orders");
 }
 
 function isWishlistRoute(pathname) {
@@ -26,7 +37,7 @@ function isCartRoute(pathname) {
 }
 
 function isAccountRoute(pathname) {
-	return pathname === "/my-account" || pathname.startsWith("/account");
+	return pathname === "/my-account" || pathname.startsWith("/account/profile");
 }
 
 export default function MenuBottom() {
@@ -34,41 +45,93 @@ export default function MenuBottom() {
 	const location = useLocation();
 	const [sessionUser, setSessionUser] = useState(() => getSessionUser());
 	const [wishlistCount, setWishlistCount] = useState(0);
+	const [cart, setCart] = useState(null);
 	const [cartCount, setCartCount] = useState(0);
+	const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+	const [isCartLoading, setIsCartLoading] = useState(false);
+	const [isCartUpdating, setIsCartUpdating] = useState(false);
 
 	useEffect(() => {
 		setSessionUser(getSessionUser());
 	}, [location.pathname]);
 
+	async function refreshCartState() {
+		if (!getSessionUser()) {
+			setCart(null);
+			setCartCount(0);
+			return;
+		}
+
+		setIsCartLoading(true);
+
+		try {
+			const cartData = await getCart().catch(() => null);
+			const items = Array.isArray(cartData?.itens) ? cartData.itens : [];
+
+			setCart(cartData);
+			setCartCount(items.length);
+		} catch {
+			setCart(null);
+			setCartCount(0);
+		} finally {
+			setIsCartLoading(false);
+		}
+	}
+
+	async function refreshWishlistState() {
+		if (!getSessionUser()) {
+			setWishlistCount(0);
+			return;
+		}
+
+		try {
+			const wishlist = await getWishlist().catch(() => []);
+			setWishlistCount(Array.isArray(wishlist) ? wishlist.length : 0);
+		} catch {
+			setWishlistCount(0);
+		}
+	}
+
 	useEffect(() => {
 		let isMounted = true;
 
-		async function loadCounts() {
+		async function loadMenuState() {
 			if (!getSessionUser()) {
 				if (!isMounted) return;
+				setCart(null);
 				setWishlistCount(0);
 				setCartCount(0);
 				return;
 			}
 
+			if (!isMounted) return;
+			setIsCartLoading(true);
+
 			try {
-				const [wishlist, cart] = await Promise.all([
+				const [wishlist, cartData] = await Promise.all([
 					getWishlist().catch(() => []),
 					getCart().catch(() => null),
 				]);
 
 				if (!isMounted) return;
 
+				const items = Array.isArray(cartData?.itens) ? cartData.itens : [];
+
+				setCart(cartData);
 				setWishlistCount(Array.isArray(wishlist) ? wishlist.length : 0);
-				setCartCount(Array.isArray(cart?.itens) ? cart.itens.length : 0);
+				setCartCount(items.length);
 			} catch {
 				if (!isMounted) return;
+				setCart(null);
 				setWishlistCount(0);
 				setCartCount(0);
+			} finally {
+				if (!isMounted) return;
+				setIsCartLoading(false);
 			}
 		}
 
-		loadCounts();
+		loadMenuState();
 
 		return () => {
 			isMounted = false;
@@ -77,17 +140,7 @@ export default function MenuBottom() {
 
 	useEffect(() => {
 		async function handleCartUpdated() {
-			if (!getSessionUser()) {
-				setCartCount(0);
-				return;
-			}
-
-			try {
-				const cart = await getCart().catch(() => null);
-				setCartCount(Array.isArray(cart?.itens) ? cart.itens.length : 0);
-			} catch {
-				setCartCount(0);
-			}
+			await refreshCartState();
 		}
 
 		window.addEventListener("nexgames:cart-updated", handleCartUpdated);
@@ -99,17 +152,7 @@ export default function MenuBottom() {
 
 	useEffect(() => {
 		async function handleWishlistUpdated() {
-			if (!getSessionUser()) {
-				setWishlistCount(0);
-				return;
-			}
-
-			try {
-				const wishlist = await getWishlist().catch(() => []);
-				setWishlistCount(Array.isArray(wishlist) ? wishlist.length : 0);
-			} catch {
-				setWishlistCount(0);
-			}
+			await refreshWishlistState();
 		}
 
 		window.addEventListener("nexgames:wishlist-updated", handleWishlistUpdated);
@@ -133,88 +176,168 @@ export default function MenuBottom() {
 		});
 	}
 
-	const items = [
-		{
-			key: "home",
-			label: "Home",
-			icon: House,
-			active: isHomeRoute(location.pathname),
-			onClick: () => navigate("/"),
-			badge: 0,
-		},
-		{
-			key: "wishlist",
-			label: "Favoritos",
-			icon: Heart,
-			active: isWishlistRoute(location.pathname),
-			onClick: () => navigateProtected("/my-wishlist"),
-			badge: wishlistCount,
-		},
-		{
-			key: "cart",
-			label: "Carrinho",
-			icon: ShoppingBag,
-			active: isCartRoute(location.pathname),
-			onClick: () => navigateProtected("/cart"),
-			badge: cartCount,
-		},
-		{
-			key: "account",
-			label: "Conta",
-			icon: User,
-			active: isAccountRoute(location.pathname),
-			onClick: () => navigateProtected("/my-account"),
-			badge: 0,
-		},
-	];
+	function handleCartOpen() {
+		setIsCartModalOpen(true);
+
+		if (getSessionUser()) {
+			refreshCartState();
+		}
+	}
+
+	async function handleRemoveCartItem(item) {
+		if (!item?.fkJogo) {
+			return;
+		}
+
+		setIsCartUpdating(true);
+
+		try {
+			await removeFromCart(item.fkJogo);
+			await refreshCartState();
+			window.dispatchEvent(new Event("nexgames:cart-updated"));
+		} finally {
+			setIsCartUpdating(false);
+		}
+	}
+
+	function handleViewCart() {
+		setIsCartModalOpen(false);
+		navigateProtected("/cart");
+	}
+
+	function handleCheckout() {
+		setIsCartModalOpen(false);
+		navigateProtected("/checkout");
+	}
+
+	function handleLoginFromCart() {
+		setIsCartModalOpen(false);
+		navigate("/auth", { state: { redirectTo: "/cart" } });
+	}
+
+	const homeActive = isHomeRoute(location.pathname);
+	const ordersActive = isOrdersRoute(location.pathname);
+	const wishlistActive = isWishlistRoute(location.pathname);
+	const accountActive = isAccountRoute(location.pathname);
+	const cartActive = isCartRoute(location.pathname) || isCartModalOpen;
 
 	return (
 		<>
-			<div aria-hidden="true" className="h-[76px] md:hidden" />
+			<div
+				aria-hidden="true"
+				className="h-[78px] pb-[max(env(safe-area-inset-bottom),0px)] md:hidden"
+			/>
 
 			<nav
 				aria-label="Menu inferior da loja"
-				className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--border-color)] bg-[color:var(--surface-color)] shadow-[0_-10px_30px_rgba(15,23,42,0.08)] md:hidden"
+				className="fixed bottom-0 z-50 flex w-full items-center justify-between border-t border-[color:var(--border-color)] bg-[color:var(--surface-color)] px-6 py-2 md:hidden"
 			>
-				<div className="grid grid-cols-4">
-					{items.map((item) => {
-						const Icon = item.icon;
+				<button
+					type="button"
+					onClick={() => navigate("/")}
+					className={joinClasses(
+						"flex flex-col items-center p-2 transition",
+						homeActive
+							? "text-[color:var(--secondary-color)]"
+							: "text-[color:var(--text-muted-color)]"
+					)}
+				>
+					<House size={16} className="mb-1" />
+					<span className="text-[10px] font-medium">Início</span>
+				</button>
 
-						return (
-							<button
-								key={item.key}
-								type="button"
-								onClick={item.onClick}
-								className={joinClasses(
-									"relative flex min-h-[76px] flex-col items-center justify-center gap-1 px-2 pb-2 pt-3 text-[11px] font-semibold transition",
-									item.active
-										? "text-[color:var(--text-primary-color)]"
-										: "text-[color:var(--text-muted-color)]"
-								)}
-							>
-								<div
-									className={joinClasses(
-										"relative inline-flex h-10 w-10 items-center justify-center rounded-full transition",
-										item.active
-											? "bg-[color:var(--primary-soft-color)] text-[color:var(--primary-color)]"
-											: "text-[color:var(--text-primary-color)]"
-									)}
-								>
-									<Icon size={19} />
+				<button
+					type="button"
+					onClick={() => navigateProtected("/orders")}
+					className={joinClasses(
+						"flex flex-col items-center p-2 transition",
+						ordersActive
+							? "text-[color:var(--secondary-color)]"
+							: "text-[color:var(--text-muted-color)]"
+					)}
+				>
+					<Package size={16} className="mb-1" />
+					<span className="text-[10px] font-medium">Pedidos</span>
+				</button>
 
-									{item.badge > 0 ? (
-										<span className="absolute -right-1 -top-1 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[color:var(--primary-color)] px-1 text-[10px] font-bold text-[color:var(--text-on-primary-color)]">
-											{item.badge}
-										</span>
-									) : null}
-								</div>
-
-								<span>{item.label}</span>
-							</button>
-						);
-					})}
+				<div className="relative -top-5">
+					<button
+						type="button"
+						onClick={() => navigateProtected("/my-wishlist")}
+						className="flex h-14 w-14 items-center justify-center rounded-full shadow-lg"
+						style={{
+							backgroundColor: "var(--primary-color)",
+							color: "var(--primary-ui-text-color)",
+						}}
+					>
+						<Heart
+							size={20}
+							fill={wishlistActive ? "currentColor" : "none"}
+						/>
+					</button>
+					<span
+						className={joinClasses(
+							"absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-medium",
+							wishlistActive
+								? "text-[color:var(--secondary-color)]"
+								: "text-[color:var(--text-muted-color)]"
+						)}
+					>
+						Favoritos
+					</span>
+					{wishlistCount > 0 ? (
+						<span className="absolute -right-1 top-0 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[color:var(--secondary-color)] px-1 text-[10px] font-bold text-white shadow-sm">
+							{wishlistCount}
+						</span>
+					) : null}
 				</div>
+
+				<button
+					type="button"
+					onClick={() => navigateProtected("/my-account")}
+					className={joinClasses(
+						"flex flex-col items-center p-2 transition",
+						accountActive
+							? "text-[color:var(--secondary-color)]"
+							: "text-[color:var(--text-muted-color)]"
+					)}
+				>
+					<User size={16} className="mb-1" />
+					<span className="text-[10px] font-medium">Conta</span>
+				</button>
+
+				<button
+					type="button"
+					onClick={handleCartOpen}
+					className={joinClasses(
+						"relative flex flex-col items-center p-2 transition",
+						cartActive
+							? "text-[color:var(--secondary-color)]"
+							: "text-[color:var(--text-muted-color)]"
+					)}
+				>
+					<ShoppingCart size={16} className="mb-1" />
+					<span className="text-[10px] font-medium">Carrinho</span>
+					{cartCount > 0 ? (
+						<span className="pointer-events-none absolute -right-1 top-0 rounded-full bg-[color:var(--secondary-color)] px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm">
+							{cartCount}
+						</span>
+					) : null}
+				</button>
 			</nav>
+
+			<ModalCart
+				open={isCartModalOpen}
+				cart={cart}
+				isAuthenticated={Boolean(sessionUser)}
+				isLoading={isCartLoading}
+				isUpdating={isCartUpdating}
+				onClose={() => setIsCartModalOpen(false)}
+				onLogin={handleLoginFromCart}
+				onRemoveItem={handleRemoveCartItem}
+				onViewCart={handleViewCart}
+				onCheckout={handleCheckout}
+			/>
 		</>
 	);
 }
