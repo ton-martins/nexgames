@@ -13,7 +13,6 @@ import {
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import RecommendedProducts from "../components/RecommendedProducts";
-import SubHeader from "../components/SubHeader";
 import TopHeader from "../components/TopHeader";
 import PrimaryButton from "../components/shared/PrimaryButton";
 
@@ -224,7 +223,6 @@ export default function Auth() {
 		<div className="min-h-screen bg-[color:var(--background-color)] text-[color:var(--text-primary-color)]">
 			<TopHeader />
 			<Header games={catalogGames} />
-			<SubHeader games={catalogGames} />
 
 			<main className="pb-14 pt-8">
 				<div className="app-container">

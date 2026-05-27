@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
 	ChevronDown,
 	Heart,
-	RefreshCcw,
 	Search,
 	ShoppingBag,
 	User,
@@ -351,15 +350,6 @@ export default function Header({ games = [] }) {
 					</form>
 
 					<div className="hidden items-center gap-[6px] lg:flex" aria-label="Ações da conta">
-						<button
-							type="button"
-							aria-label="Itens vistos recentemente"
-							title="Itens vistos recentemente"
-							className="relative inline-flex min-h-[42px] min-w-[42px] items-center justify-center rounded-full bg-transparent px-2 text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
-						>
-							<RefreshCcw size={18} />
-						</button>
-
 						{sessionUser ? (
 							<Link
 								to="/my-wishlist"

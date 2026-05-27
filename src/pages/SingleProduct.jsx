@@ -15,7 +15,6 @@ import FeedbackPopup from "../components/FeedbackPopup";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import RecommendedProducts from "../components/RecommendedProducts";
-import SubHeader from "../components/SubHeader";
 import TopHeader from "../components/TopHeader";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import PrimaryButton from "../components/shared/PrimaryButton";
@@ -245,7 +244,6 @@ export default function SingleProduct() {
 		<div className="min-h-screen bg-[color:var(--background-color)] text-[color:var(--text-primary-color)]">
 			<TopHeader />
 			<Header games={catalogGames} />
-			<SubHeader games={catalogGames} />
 
 			<main className="pb-[var(--section-spacing-large)]">
 				<div className="app-container py-8">

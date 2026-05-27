@@ -189,7 +189,9 @@ function buildSections(games) {
 			...section,
 			products: sourceGames.map((game, index) => buildProductItem(game, index)),
 		};
-	}).filter((section) => section.products.length > 0);
+	}).filter(
+		(section) => section.id !== "promotion" && section.products.length > 0
+	);
 }
 
 function ProductMedia({ product, className = "" }) {
