@@ -14,6 +14,7 @@ import { getPublicGameCategories } from "../../services/gameService";
 import { getWishlist } from "../../services/wishlistService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import ModalCart from "./shared/ModalCart";
+import ThemeToggle from "./shared/ThemeToggle";
 
 const ALL_CATEGORIES_LABEL = "Todas as categorias";
 
@@ -270,14 +271,18 @@ export default function Header({ games = [] }) {
 						</span>
 					</Link>
 
-					<button
-						type="button"
-						aria-label={isMobileSearchOpen ? "Fechar pesquisa" : "Abrir pesquisa"}
-						onClick={() => setIsMobileSearchOpen((current) => !current)}
-						className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)] lg:hidden"
-					>
-						{isMobileSearchOpen ? <X size={18} /> : <Search size={18} />}
-					</button>
+					<div className="flex items-center gap-2 lg:hidden">
+						<ThemeToggle />
+
+						<button
+							type="button"
+							aria-label={isMobileSearchOpen ? "Fechar pesquisa" : "Abrir pesquisa"}
+							onClick={() => setIsMobileSearchOpen((current) => !current)}
+							className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
+						>
+							{isMobileSearchOpen ? <X size={18} /> : <Search size={18} />}
+						</button>
+					</div>
 
 					<form
 						onSubmit={handleSearchSubmit}
@@ -349,7 +354,12 @@ export default function Header({ games = [] }) {
 						</button>
 					</form>
 
-					<div className="hidden items-center gap-[6px] lg:flex" aria-label="Ações da conta">
+					<div
+						className="hidden items-center gap-[6px] lg:flex"
+						aria-label="Ações da conta"
+					>
+						<ThemeToggle />
+
 						{sessionUser ? (
 							<Link
 								to="/my-wishlist"

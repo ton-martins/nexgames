@@ -5,14 +5,14 @@ import { getCart, removeFromCart } from "../../../../services/cartService";
 import FeedbackPopup from "../../../components/FeedbackPopup";
 import PrimaryButton from "../../../components/shared/PrimaryButton";
 import SecondaryButton from "../../../components/shared/SecondaryButton";
-import { formatCurrency } from "../../../helpers/currency";
+import { formatCurrency, getDiscountedPrice } from "../../../helpers/currency";
 
 function getCartItemGameId(item) {
 	return item?.jogo?.id ?? item?.fkJogo ?? null;
 }
 
 function getCartItemPrice(item) {
-	return Number(item?.jogo?.preco ?? 0);
+	return getDiscountedPrice(item?.jogo);
 }
 
 export default function Cart() {

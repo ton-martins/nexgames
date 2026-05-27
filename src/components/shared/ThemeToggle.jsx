@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, Moon, Sun } from "lucide-react";
 
 const THEMES = {
 	LIGHT: "light",
@@ -43,7 +43,12 @@ function getCurrentDocumentTheme() {
 }
 
 function resolveTheme() {
-	return getCurrentDocumentTheme() || getStoredTheme() || getPreferredTheme() || DEFAULT_THEME;
+	return (
+		getCurrentDocumentTheme() ||
+		getStoredTheme() ||
+		getPreferredTheme() ||
+		DEFAULT_THEME
+	);
 }
 
 function applyTheme(theme) {
@@ -58,63 +63,101 @@ function applyTheme(theme) {
 	return validTheme;
 }
 
-export default function ThemeToggle() {
+function joinClasses(...classNames) {
+	return classNames.filter(Boolean).join(" ");
+}
+
+export default function ThemeToggle({ className = "" }) {
+	const containerRef = useRef(null);
 	const [theme, setTheme] = useState(() => resolveTheme());
+	const [isOpen, setIsOpen] = useState(false);
 
 	useEffect(() => {
 		setTheme(applyTheme(resolveTheme()));
 	}, []);
 
-	function handleToggle() {
-		setTheme((currentTheme) =>
-			applyTheme(
-				currentTheme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK
-			)
-		);
+	useEffect(() => {
+		if (!isOpen) {
+			return undefined;
+		}
+
+		function handleClickOutside(event) {
+			if (!containerRef.current?.contains(event.target)) {
+				setIsOpen(false);
+			}
+		}
+
+		function handleEscape(event) {
+			if (event.key === "Escape") {
+				setIsOpen(false);
+			}
+		}
+
+		document.addEventListener("mousedown", handleClickOutside);
+		window.addEventListener("keydown", handleEscape);
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+			window.removeEventListener("keydown", handleEscape);
+		};
+	}, [isOpen]);
+
+	function handleSelectTheme(nextTheme) {
+		setTheme(applyTheme(nextTheme));
+		setIsOpen(false);
 	}
 
-	const isDark = theme === THEMES.DARK;
+	const TriggerIcon = theme === THEMES.DARK ? Moon : Sun;
 
 	return (
-		<div className="fixed left-3 top-1/2 z-40 hidden -translate-y-1/2 md:block">
+		<div ref={containerRef} className={joinClasses("relative", className)}>
 			<button
 				type="button"
-				onClick={handleToggle}
-				aria-label="Alternar tema claro e escuro"
-				aria-pressed={isDark}
-				className="relative grid h-[108px] w-[54px] grid-rows-2 rounded-full p-1"
-				style={{
-					background:
-						"linear-gradient(180deg, var(--surface-soft-color) 0%, var(--surface-contrast-color) 100%)",
-					boxShadow: "var(--shadow-large)",
-				}}
+				onClick={() => setIsOpen((current) => !current)}
+				aria-label="Abrir seletor de tema"
+				aria-haspopup="menu"
+				aria-expanded={isOpen}
+				className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
 			>
-				<span className="relative z-10 flex items-center justify-center text-[color:var(--text-inverse-color)]">
-					<Moon size={14} />
-				</span>
-
-				<span
-					className={`relative z-10 flex items-center justify-center transition ${
-						isDark
-							? "text-[color:var(--text-inverse-color)]"
-							: "text-[color:var(--surface-contrast-color)]"
-					}`}
-				>
-					<Sun size={14} />
-				</span>
-
-				<span
-					aria-hidden="true"
-					className="absolute left-1 h-[46px] w-[46px] rounded-full transition-transform duration-200"
-					style={{
-						bottom: "4px",
-						transform: isDark ? "translateY(-54px)" : "translateY(0)",
-						background:
-							"linear-gradient(180deg, var(--surface-color) 0%, var(--surface-soft-color) 100%)",
-						boxShadow: "var(--shadow-soft)",
-					}}
-				/>
+				<TriggerIcon size={18} />
 			</button>
+
+			{isOpen ? (
+				<div
+					role="menu"
+					aria-label="Selecionar tema"
+					className="absolute right-0 top-[calc(100%+10px)] z-40 min-w-[176px] overflow-hidden rounded-[var(--radius-large)] border border-[color:var(--border-color)] bg-[color:var(--surface-color)] p-2"
+					style={{ boxShadow: "var(--shadow-large)" }}
+				>
+					<button
+						type="button"
+						role="menuitemradio"
+						aria-checked={theme === THEMES.LIGHT}
+						onClick={() => handleSelectTheme(THEMES.LIGHT)}
+						className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-medium)] px-3 py-2.5 text-left text-sm text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--surface-soft-color)]"
+					>
+						<span className="inline-flex items-center gap-2">
+							<Sun size={16} />
+							<span>Claro</span>
+						</span>
+						{theme === THEMES.LIGHT ? <Check size={16} /> : null}
+					</button>
+
+					<button
+						type="button"
+						role="menuitemradio"
+						aria-checked={theme === THEMES.DARK}
+						onClick={() => handleSelectTheme(THEMES.DARK)}
+						className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-medium)] px-3 py-2.5 text-left text-sm text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--surface-soft-color)]"
+					>
+						<span className="inline-flex items-center gap-2">
+							<Moon size={16} />
+							<span>Escuro</span>
+						</span>
+						{theme === THEMES.DARK ? <Check size={16} /> : null}
+					</button>
+				</div>
+			) : null}
 		</div>
 	);
 }

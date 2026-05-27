@@ -1,12 +1,12 @@
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "../routes/AppRoutes";
-import ThemeToggle from "./components/shared/ThemeToggle";
+import MenuBottom from "./components/MenuBottom";
 
 export default function App() {
 	return (
 		<BrowserRouter>
-			<ThemeToggle />
 			<AppRoutes />
+			<MenuBottom />
 		</BrowserRouter>
 	);
 }
