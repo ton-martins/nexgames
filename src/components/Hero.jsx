@@ -4,7 +4,6 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	CircleArrowRight,
-	Compass,
 	Gift,
 	LayoutGrid,
 	LifeBuoy,
@@ -13,9 +12,11 @@ import {
 	Sparkles,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../../services/authService";
+import { addToCart } from "../../services/cartService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
+import FeedbackPopup from "./FeedbackPopup";
 import PrimaryButton from "./shared/PrimaryButton";
-import SecondaryButton from "./shared/SecondaryButton";
 
 const HERO_PALETTES = [
 	{
@@ -116,6 +117,7 @@ function buildHeroSlides(games) {
 
 		return {
 			key: `${game.nome}-${index}`,
+			id: game.id ?? null,
 			nome: game.nome ?? "Jogo em destaque",
 			categoria: game.categoria ?? "",
 			empresaNome: game.empresaNome ?? "NexGames",
@@ -126,7 +128,6 @@ function buildHeroSlides(games) {
 				? `${Number(game.desconto)}% OFF`
 				: game.categoria || "Destaque",
 			search: game.nome ?? "",
-			category: game.categoria ?? "",
 			titleLines: [firstLine, secondLine],
 			overline: game.categoria
 				? `${game.categoria.toUpperCase()} NA NEXGAMES`
@@ -163,6 +164,12 @@ function buildHeroInfoCards(games) {
 export default function Hero({ games = [], catalogGames = [] }) {
 	const navigate = useNavigate();
 	const [activeIndex, setActiveIndex] = useState(0);
+	const [isAddingToCart, setIsAddingToCart] = useState(false);
+	const [popupState, setPopupState] = useState({
+		open: false,
+		title: "",
+		message: "",
+	});
 
 	const slides = useMemo(() => buildHeroSlides(games), [games]);
 	const infoCards = useMemo(() => {
@@ -208,6 +215,41 @@ export default function Hero({ games = [], catalogGames = [] }) {
 
 	function handleNextSlide() {
 		setActiveIndex((current) => (current + 1) % slides.length);
+	}
+
+	async function handleAddCurrentSlideToCart() {
+		if (!isAuthenticated()) {
+			navigate("/auth", {
+				state: { redirectTo: "/" },
+			});
+			return;
+		}
+
+		if (!currentSlide?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível adicionar este jogo ao carrinho agora. Tente novamente em instantes.",
+			});
+			return;
+		}
+
+		setIsAddingToCart(true);
+
+		try {
+			await addToCart(currentSlide.id);
+			window.dispatchEvent(new Event("nexgames:cart-updated"));
+		} catch {
+			setPopupState({
+				open: true,
+				title: "Não foi possível adicionar ao carrinho",
+				message:
+					"Verifique se o produto já está no carrinho ou tente novamente em instantes.",
+			});
+		} finally {
+			setIsAddingToCart(false);
+		}
 	}
 
 	const sliderOverlay =
@@ -282,25 +324,12 @@ export default function Hero({ games = [], catalogGames = [] }) {
 							<div className="mb-4 mt-[30px] flex flex-col gap-[6px] sm:flex-row sm:items-center">
 								<PrimaryButton
 									icon={ShoppingCart}
-									onClick={() =>
-										handleCatalogNavigation({ search: currentSlide.search })
-									}
+									onClick={handleAddCurrentSlideToCart}
+									disabled={isAddingToCart}
 									className="text-sm font-extrabold"
 								>
-									Comprar agora
+									{isAddingToCart ? "Adicionando..." : "Adicionar ao carrinho"}
 								</PrimaryButton>
-
-								<SecondaryButton
-									icon={Compass}
-									onClick={() =>
-										handleCatalogNavigation({
-											category: currentSlide.category,
-										})
-									}
-									className="bg-[color:var(--surface-color)] text-sm font-extrabold"
-								>
-									Ver categoria
-								</SecondaryButton>
 							</div>
 						</div>
 
@@ -461,6 +490,19 @@ export default function Hero({ games = [], catalogGames = [] }) {
 					})}
 				</div>
 			</div>
+
+			<FeedbackPopup
+				open={popupState.open}
+				title={popupState.title}
+				message={popupState.message}
+				onClose={() =>
+					setPopupState({
+						open: false,
+						title: "",
+						message: "",
+					})
+				}
+			/>
 		</section>
 	);
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import {
 	CalendarDays,
 	ChevronRight,
@@ -149,6 +149,10 @@ export default function SingleProduct() {
 	const recommendedGames = useMemo(() => {
 		return buildRecommendedCatalog(productView, catalogGames);
 	}, [catalogGames, productView]);
+
+	useLayoutEffect(() => {
+		window.scrollTo(0, 0);
+	}, [id]);
 
 	useEffect(() => {
 		let isMounted = true;

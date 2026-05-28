@@ -2,6 +2,67 @@
 
 :root {
   /* Brand */
+  --primary-color: #f4cb31;
+  --primary-hover-color: #ffd84f;
+  --primary-light-color: #ffe37c;
+  --primary-soft-color: rgba(244, 203, 49, 0.16);
+
+  --secondary-color: #62c8f0;
+  --secondary-hover-color: #8ad9f7;
+  --secondary-soft-color: rgba(98, 200, 240, 0.18);
+
+  /* Surfaces */
+  --background-color: #0e141b;
+  --surface-color: #1a212a;
+  --surface-soft-color: #161d25;
+  --surface-muted-color: #111821;
+  --surface-contrast-color: #0b1015;
+
+  /* Text */
+  --text-primary-color: #f4f7fb;
+  --text-muted-color: #97a4b3;
+  --text-soft-color: #728090;
+  --text-inverse-color: #ffffff;
+  --text-on-primary-color: #14181d;
+  --primary-content-color: #14181d;
+  --primary-ui-text-color: #14181d;
+  --text-on-contrast-color: #f4f7fb;
+
+  /* Borders */
+  --border-color: #2a3440;
+  --border-light-color: #202a35;
+  --border-strong-color: #44505f;
+  --border-primary-color: rgba(244, 203, 49, 0.42);
+
+  /* Feedback */
+  --danger-color: #ff7c5d;
+  --rating-color: #ffc94d;
+  --overlay-color: rgba(5, 8, 11, 0.72);
+  --hero-overlay-start: rgba(11, 16, 21, 0.94);
+  --hero-overlay-mid: rgba(11, 16, 21, 0.78);
+  --hero-overlay-end: rgba(11, 16, 21, 0.18);
+
+  /* Interaction */
+  --icon-hover-background: rgba(244, 203, 49, 0.18);
+  --subnav-hover-background: rgba(255, 255, 255, 0.08);
+
+  /* Shadows */
+  --shadow-soft: 0 10px 24px rgba(0, 0, 0, 0.28);
+  --shadow-medium: 0 18px 42px rgba(0, 0, 0, 0.34);
+  --shadow-large: 0 24px 56px rgba(0, 0, 0, 0.52);
+  --shadow-float: 0 20px 40px rgba(0, 0, 0, 0.32);
+
+  /* Layout */
+  --container-width: 1490px;
+  --container-padding: 32px;
+  --section-spacing: clamp(38px, 4vw, 56px);
+  --section-spacing-large: clamp(58px, 6vw, 82px);
+  --radius-small: 6px;
+  --radius-medium: 10px;
+  --radius-large: 10px;
+}
+
+:root[data-theme="light"] {
   --primary-color: #fed700;
   --primary-hover-color: #f6cf00;
   --primary-light-color: #ffe45f;
@@ -51,15 +112,6 @@
   --shadow-medium: 0 16px 38px rgba(51, 62, 72, 0.14);
   --shadow-large: 0 20px 48px rgba(17, 22, 27, 0.24);
   --shadow-float: 0 20px 40px rgba(17, 22, 27, 0.14);
-
-  /* Layout */
-  --container-width: 1490px;
-  --container-padding: 32px;
-  --section-spacing: clamp(38px, 4vw, 56px);
-  --section-spacing-large: clamp(58px, 6vw, 82px);
-  --radius-small: 6px;
-  --radius-medium: 10px;
-  --radius-large: 10px;
 }
 
 :root[data-theme="dark"] {

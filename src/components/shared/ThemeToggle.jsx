@@ -6,7 +6,7 @@ const THEMES = {
 	DARK: "dark",
 };
 
-const DEFAULT_THEME = THEMES.LIGHT;
+const DEFAULT_THEME = THEMES.DARK;
 const THEME_STORAGE_KEY = "nexgames_theme";
 
 function isValidTheme(theme) {
@@ -23,14 +23,7 @@ function getStoredTheme() {
 }
 
 function getPreferredTheme() {
-	if (
-		typeof window !== "undefined" &&
-		window.matchMedia("(prefers-color-scheme: dark)").matches
-	) {
-		return THEMES.DARK;
-	}
-
-	return THEMES.LIGHT;
+	return THEMES.DARK;
 }
 
 function getCurrentDocumentTheme() {

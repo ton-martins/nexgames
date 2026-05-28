@@ -257,13 +257,13 @@ export default function Header({ games = [] }) {
 	return (
 		<header className="sticky top-0 z-30 border-b border-[color:var(--border-color)] bg-[color:var(--surface-color)] text-[color:var(--text-primary-color)]">
 			<div className="app-container">
-				<div className="grid min-h-[88px] grid-cols-[1fr_auto] items-center gap-4 py-4 lg:grid-cols-[220px_minmax(560px,760px)_auto] lg:justify-between lg:gap-8 lg:py-0">
+				<div className="grid min-h-[64px] grid-cols-[1fr_auto] items-center gap-3 py-2.5 lg:min-h-[88px] lg:grid-cols-[220px_minmax(560px,760px)_auto] lg:justify-between lg:gap-8 lg:py-0">
 					<Link
 						to="/"
 						aria-label="Ir para a página inicial"
 						className="inline-flex items-center"
 					>
-						<span className="inline-flex items-center text-3xl font-extrabold leading-none lg:text-[38px]">
+						<span className="inline-flex items-center text-[2.3rem] font-extrabold leading-none lg:text-[38px]">
 							<span className="text-[color:var(--text-primary-color)]">
 								NexGames
 							</span>
@@ -271,16 +271,16 @@ export default function Header({ games = [] }) {
 						</span>
 					</Link>
 
-					<div className="flex items-center gap-2 lg:hidden">
+					<div className="flex items-center gap-1.5 lg:hidden">
 						<ThemeToggle />
 
 						<button
 							type="button"
 							aria-label={isMobileSearchOpen ? "Fechar pesquisa" : "Abrir pesquisa"}
 							onClick={() => setIsMobileSearchOpen((current) => !current)}
-							className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
+							className="inline-flex h-[36px] w-[36px] items-center justify-center rounded-full bg-transparent text-[color:var(--text-primary-color)] transition hover:bg-[color:var(--primary-light-color)] hover:text-[color:var(--text-primary-color)]"
 						>
-							{isMobileSearchOpen ? <X size={18} /> : <Search size={18} />}
+							{isMobileSearchOpen ? <X size={16} /> : <Search size={16} />}
 						</button>
 					</div>
 
@@ -295,7 +295,7 @@ export default function Header({ games = [] }) {
 							value={searchTerm}
 							onChange={(event) => setSearchTerm(event.target.value)}
 							placeholder="Buscar jogos, categorias ou publicadoras"
-							className="min-w-0 self-stretch rounded-l-full bg-transparent px-5 py-3 text-sm text-[color:var(--text-muted-color)] outline-none placeholder:text-[color:var(--text-soft-color)]"
+							className="min-w-0 self-stretch rounded-l-full bg-transparent px-4 py-2.5 text-sm text-[color:var(--text-muted-color)] outline-none placeholder:text-[color:var(--text-soft-color)]"
 						/>
 
 						<div ref={categoryMenuRef} className="relative hidden h-full lg:flex">
