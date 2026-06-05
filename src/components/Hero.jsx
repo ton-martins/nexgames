@@ -184,24 +184,25 @@ export default function Hero({ games = [], catalogGames = [] }) {
 	const currentSlide = slides[activeIndex] ?? null;
 
 	function handleHeroCardNavigation(card) {
+		if (!isAuthenticated()) {
+			navigate("/login", {
+				state: {
+					redirectTo: card?.id ? `/product/${card.id}` : undefined,
+					pendingProduct: {
+						nome: card.nome,
+						ano: card.ano ?? null,
+					},
+				},
+			});
+			return;
+		}
+
 		if (!card?.id) {
 			setPopupState({
 				open: true,
 				title: "Produto indisponível",
 				message:
 					"Não foi possível abrir este jogo agora. Atualize a página e tente novamente.",
-			});
-			return;
-		}
-
-		if (!isAuthenticated()) {
-			navigate("/login", {
-				state: {
-					pendingProduct: {
-						nome: card.nome,
-						ano: card.ano ?? null,
-					},
-				},
 			});
 			return;
 		}
