@@ -13,6 +13,8 @@ export default function ModalProduct({
 	onClose,
 	onPrimaryAction,
 	onSecondaryAction,
+	primaryActionLabel = "Comprar agora",
+	primaryActionIcon: PrimaryActionIcon = ShoppingBag,
 }) {
 	if (!product) {
 		return null;
@@ -110,8 +112,8 @@ export default function ModalProduct({
 						</div>
 
 						<div className="mt-1 flex flex-wrap items-center gap-3">
-							<PrimaryButton icon={ShoppingBag} onClick={onPrimaryAction}>
-								Comprar agora
+							<PrimaryButton icon={PrimaryActionIcon} onClick={onPrimaryAction}>
+								{primaryActionLabel}
 							</PrimaryButton>
 
 							<SecondaryButton icon={Eye} onClick={onSecondaryAction}>

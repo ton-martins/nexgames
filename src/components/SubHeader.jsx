@@ -1,4 +1,3 @@
-import { ChevronDown } from "lucide-react";
 import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getPublicGameCategories } from "../../services/gameService";
@@ -75,14 +74,13 @@ export default function SubHeader({ games = [] }) {
 							key={item.id}
 							type="button"
 							onClick={() => handleNavigation(item.action)}
-							className={`inline-flex min-h-12 shrink-0 items-center gap-1.5 px-4 text-sm font-bold transition ${
+							className={`inline-flex min-h-12 shrink-0 items-center px-4 text-sm font-bold transition ${
 								isActive
 									? "bg-[color:var(--subnav-hover-background)] !text-[color:var(--primary-ui-text-color)]"
 									: "bg-transparent !text-[color:var(--primary-ui-text-color)] hover:bg-[color:var(--subnav-hover-background)]"
 							}`}
 						>
 							<span>{item.label}</span>
-							<ChevronDown size={16} />
 						</button>
 					);
 				})}

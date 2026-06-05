@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated } from "../../services/authService";
 import { addToCart } from "../../services/cartService";
@@ -124,6 +125,10 @@ export default function BottomProducts({ games = [] }) {
 		});
 	}
 
+	function closeProductPreview() {
+		setSelectedProduct(null);
+	}
+
 	function navigateToLogin(product) {
 		navigate("/login", {
 			state: product
@@ -170,8 +175,16 @@ export default function BottomProducts({ games = [] }) {
 		navigate(`/product/${product.id}`);
 	}
 
-	async function handleAddToCart(product, event) {
+	async function handleAddToCart(
+		product,
+		event,
+		{ closePreview = false } = {}
+	) {
 		event?.stopPropagation?.();
+
+		if (closePreview) {
+			closeProductPreview();
+		}
 
 		if (!isAuthenticated()) {
 			navigateToLogin();
@@ -189,12 +202,14 @@ export default function BottomProducts({ games = [] }) {
 		}
 
 		try {
-			await addToCart(product.id);
+			const response = await addToCart(product.id);
 			window.dispatchEvent(new Event("nexgames:cart-updated"));
 			setPopupState({
 				open: true,
 				title: "Jogo adicionado ao carrinho",
-				message: "O produto foi adicionado ao seu carrinho com sucesso.",
+				message:
+					response?.message ||
+					"O produto foi adicionado ao seu carrinho com sucesso.",
 			});
 		} catch {
 			setPopupState({
@@ -338,9 +353,13 @@ export default function BottomProducts({ games = [] }) {
 
 			<ModalProduct
 				product={selectedProduct}
-				onClose={() => setSelectedProduct(null)}
-				onPrimaryAction={() => handleAddToCart(selectedProduct)}
+				onClose={closeProductPreview}
+				onPrimaryAction={() =>
+					handleAddToCart(selectedProduct, undefined, { closePreview: true })
+				}
 				onSecondaryAction={() => handleOpenProductPage(selectedProduct)}
+				primaryActionLabel="Adicionar ao carrinho"
+				primaryActionIcon={ShoppingCart}
 			/>
 
 			<FeedbackPopup

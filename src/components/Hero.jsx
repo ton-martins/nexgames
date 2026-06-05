@@ -95,20 +95,6 @@ function sanitizeDescription(description) {
 	return normalizedDescription.replace(/^"+|"+$/g, "");
 }
 
-function buildSearchParams({ search, category } = {}) {
-	const params = new URLSearchParams();
-
-	if (search) {
-		params.set("search", search);
-	}
-
-	if (category) {
-		params.set("categoria", category);
-	}
-
-	return params.toString();
-}
-
 function buildHeroSlides(games) {
 	return games.slice(0, 3).map((game, index) => {
 		const palette = HERO_PALETTES[index % HERO_PALETTES.length];
@@ -146,15 +132,14 @@ function buildHeroInfoCards(games) {
 
 		return {
 			key: `${game.nome}-card-${index}`,
+			id: game.id ?? null,
+			nome: game.nome ?? "Jogo em destaque",
+			ano: game.ano ?? null,
 			titleTop: (game.categoria || game.empresaNome || "NexGames").toUpperCase(),
 			titleMain: firstLine.toUpperCase(),
 			titleBottom:
 				secondLine.toUpperCase() || formatCurrency(getDiscountedPrice(game)),
 			buttonLabel: "Ver jogo",
-			action: {
-				search: game.nome ?? "",
-				category: game.categoria ?? "",
-			},
 			startColor: palette.startColor,
 			endColor: palette.endColor,
 		};
@@ -198,13 +183,37 @@ export default function Hero({ games = [], catalogGames = [] }) {
 
 	const currentSlide = slides[activeIndex] ?? null;
 
-	function handleCatalogNavigation(action = {}) {
-		const search = buildSearchParams(action);
+	function handleHeroCardNavigation(card) {
+		if (!card?.id) {
+			setPopupState({
+				open: true,
+				title: "Produto indisponível",
+				message:
+					"Não foi possível abrir este jogo agora. Atualize a página e tente novamente.",
+			});
+			return;
+		}
 
-		navigate({
-			pathname: "/",
-			search: search ? `?${search}` : "",
-		});
+		if (!isAuthenticated()) {
+			navigate("/login", {
+				state: {
+					pendingProduct: {
+						nome: card.nome,
+						ano: card.ano ?? null,
+					},
+				},
+			});
+			return;
+		}
+
+		navigate(`/product/${card.id}`);
+	}
+
+	function handleHeroCardKeyDown(event, card) {
+		if (event.key === "Enter" || event.key === " ") {
+			event.preventDefault();
+			handleHeroCardNavigation(card);
+		}
 	}
 
 	function handlePrevSlide() {
@@ -410,7 +419,11 @@ export default function Hero({ games = [], catalogGames = [] }) {
 					{infoCards.map((card) => (
 						<article
 							key={card.key}
-							className="grid min-h-[164px] min-w-[292px] shrink-0 snap-start grid-cols-[46%_minmax(0,1fr)] gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] p-[18px] transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] md:min-w-0"
+							role="button"
+							tabIndex={0}
+							onClick={() => handleHeroCardNavigation(card)}
+							onKeyDown={(event) => handleHeroCardKeyDown(event, card)}
+							className="grid min-h-[164px] min-w-[292px] shrink-0 snap-start cursor-pointer grid-cols-[46%_minmax(0,1fr)] gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] p-[18px] text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] md:min-w-0"
 							style={{ boxShadow: "var(--shadow-soft)" }}
 						>
 							<div
@@ -447,14 +460,10 @@ export default function Hero({ games = [], catalogGames = [] }) {
 									{card.titleBottom}
 								</small>
 
-								<button
-									type="button"
-									onClick={() => handleCatalogNavigation(card.action)}
-									className="mt-3 inline-flex w-fit items-center gap-2 bg-transparent p-0 text-[15px] font-bold text-[color:var(--text-primary-color)]"
-								>
+								<span className="mt-3 inline-flex w-fit items-center gap-2 text-[15px] font-bold text-[color:var(--text-primary-color)]">
 									{card.buttonLabel}
 									<CircleArrowRight size={16} />
-								</button>
+								</span>
 							</div>
 						</article>
 					))}
