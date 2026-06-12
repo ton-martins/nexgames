@@ -271,6 +271,7 @@ export default function Hero({ games = [], catalogGames = [] }) {
 	}
 
 	const hasFullHeroImage = Boolean(currentSlide?.image) && !hasHeroImageError;
+	const hasSliderControls = slides.length > 1;
 
 	const sliderOverlay = hasFullHeroImage
 		? "linear-gradient(90deg, rgba(8, 10, 16, 0.9) 0%, rgba(8, 10, 16, 0.72) 34%, rgba(8, 10, 16, 0.28) 100%)"
@@ -324,11 +325,11 @@ export default function Hero({ games = [], catalogGames = [] }) {
 					/>
 
 					<div
-						className={`relative z-10 grid gap-10 p-6 md:p-8 xl:items-center xl:px-16 xl:py-14 ${
+						className={`relative z-10 grid gap-10 p-6 pb-24 md:p-8 md:pb-8 xl:items-center xl:px-16 xl:py-14 ${
 							hasFullHeroImage
 								? "xl:grid-cols-1 xl:py-16"
 								: "xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)]"
-						}`}
+						} ${hasSliderControls ? "" : "pb-6 md:pb-8"}`}
 					>
 						<div className={hasFullHeroImage ? "max-w-[620px]" : "max-w-[520px] xl:pl-[38px]"}>
 							<span className="inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-[0.08em] text-[color:var(--secondary-color)]">
