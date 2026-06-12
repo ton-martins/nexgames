@@ -18,6 +18,7 @@ import RecommendedProducts from "../components/RecommendedProducts";
 import TopHeader from "../components/TopHeader";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import PrimaryButton from "../components/shared/PrimaryButton";
+import ProductArtwork from "../components/shared/ProductArtwork";
 import SecondaryButton from "../components/shared/SecondaryButton";
 
 function sanitizeDescription(description) {
@@ -80,6 +81,7 @@ function buildProductView(product, catalogGames) {
 		descricao: sanitizeDescription(product.descricao),
 		categoria: catalogGame?.categoria ?? "Catálogo digital",
 		empresaNome: catalogGame?.empresaNome ?? "NexGames",
+		image: product.image ?? catalogGame?.image ?? null,
 		precoAtual: currentPrice,
 		precoOriginal: hasDiscount ? originalPrice : null,
 		badge: hasDiscount ? `-${discount}%` : "Disponível",
@@ -284,34 +286,21 @@ export default function SingleProduct() {
 						<>
 							<section className="grid gap-8 rounded-[18px] border border-[color:var(--border-color)] bg-[color:var(--surface-color)] p-6 shadow-[var(--shadow-soft)] min-[1181px]:grid-cols-[minmax(320px,420px)_minmax(0,1fr)]">
 								<div className="relative min-h-[320px] min-[1181px]:min-h-[420px]">
-									<div
-										className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-[var(--radius-large)] min-[1181px]:min-h-[420px]"
-										style={{
+									<ProductArtwork
+										image={productView.image}
+										alt={productView.nome}
+										primaryLabel={productView.empresaNome}
+										secondaryLabel={productView.categoria}
+										className="min-h-[320px] min-[1181px]:min-h-[420px]"
+										background="linear-gradient(135deg, color-mix(in srgb, var(--primary-light-color) 72%, var(--surface-color)), var(--surface-soft-color))"
+										placeholderClassName="relative z-10 h-[66%] w-[58%] rounded-[22px] border border-white/35"
+										placeholderStyle={{
 											background:
-												"linear-gradient(135deg, color-mix(in srgb, var(--primary-light-color) 72%, var(--surface-color)), var(--surface-soft-color))",
+												"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+											transform: "rotate(-14deg)",
+											boxShadow: "var(--shadow-float)",
 										}}
-									>
-										<div className="absolute aspect-square w-[62%] rounded-full bg-white/45 blur-lg" />
-
-										<div
-											className="relative z-10 h-[66%] w-[58%] rounded-[22px] border border-white/35"
-											style={{
-												background:
-													"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-												transform: "rotate(-14deg)",
-												boxShadow: "var(--shadow-float)",
-											}}
-										/>
-
-										<div className="absolute bottom-[18px] left-[18px] grid max-w-[62%] gap-0.5 text-[color:var(--text-inverse-color)]">
-											<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
-												{productView.empresaNome}
-											</span>
-											<strong className="text-[15px] leading-[1.05]">
-												{productView.categoria}
-											</strong>
-										</div>
-									</div>
+									/>
 								</div>
 
 								<div className="grid content-start gap-[14px]">
