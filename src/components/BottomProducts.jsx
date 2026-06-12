@@ -6,6 +6,7 @@ import { addToCart } from "../../services/cartService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import FeedbackPopup from "./FeedbackPopup";
 import ModalProduct from "./shared/ModalProduct";
+import ProductArtwork from "./shared/ProductArtwork";
 
 const COLUMN_CONFIG_LIST = [
 	{ id: "featured", title: "Produtos em destaque", type: "recent" },
@@ -48,6 +49,7 @@ function buildRowProduct(game, index) {
 		empresaNome: game.empresaNome ?? "NexGames",
 		descricao: sanitizeDescription(game.descricao),
 		ano: game.ano ?? null,
+		image: game.image ?? null,
 		precoAtual: currentPrice,
 		precoOriginal: hasDiscount ? originalPrice : null,
 		badge: hasDiscount ? `-${discount}%` : "Destaque",
@@ -254,21 +256,21 @@ export default function BottomProducts({ games = [] }) {
 												: ""
 										}`}
 									>
-										<div
-											className="relative flex h-[82px] w-[82px] items-center justify-center overflow-hidden rounded-[var(--radius-medium)]"
-											style={{
-												background: `linear-gradient(135deg, color-mix(in srgb, ${product.startColor} 82%, var(--surface-color)), color-mix(in srgb, ${product.endColor} 88%, var(--surface-soft-color)))`,
+										<ProductArtwork
+											image={product.image}
+											alt={product.nome}
+											className="h-[82px] w-[82px] rounded-[var(--radius-medium)]"
+											showGlow={false}
+											showImageOverlay={false}
+											placeholderClassName="h-[58%] w-[52%] rounded-[18px] border border-white/35"
+											placeholderStyle={{
+												background:
+													"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+												transform: "rotate(-14deg)",
 											}}
-										>
-											<div
-												className="h-[58%] w-[52%] rounded-[18px] border border-white/35"
-												style={{
-													background:
-														"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-													transform: "rotate(-14deg)",
-												}}
-											/>
-										</div>
+											startColor={product.startColor}
+											endColor={product.endColor}
+										/>
 
 										<div className="grid gap-1.5">
 											<div className="grid gap-1.5">
@@ -323,30 +325,22 @@ export default function BottomProducts({ games = [] }) {
 							</div>
 						</div>
 
-						<div
-							className="relative flex min-h-[220px] items-center justify-center overflow-hidden rounded-[var(--radius-large)]"
-							style={{
-								background: `linear-gradient(135deg, color-mix(in srgb, ${featuredAdProduct.startColor} 82%, var(--surface-color)), color-mix(in srgb, ${featuredAdProduct.endColor} 88%, var(--surface-soft-color)))`,
+						<ProductArtwork
+							image={featuredAdProduct.image}
+							alt={featuredAdProduct.nome}
+							primaryLabel={featuredAdProduct.empresaNome}
+							secondaryLabel={featuredAdProduct.categoria}
+							className="min-h-[220px]"
+							textContainerClassName=""
+							startColor={featuredAdProduct.startColor}
+							endColor={featuredAdProduct.endColor}
+							placeholderClassName="h-[66%] w-[56%] rounded-[22px] border border-white/35"
+							placeholderStyle={{
+								background:
+									"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+								transform: "rotate(-14deg)",
 							}}
-						>
-							<div
-								className="h-[66%] w-[56%] rounded-[22px] border border-white/35"
-								style={{
-									background:
-										"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-									transform: "rotate(-14deg)",
-								}}
-							/>
-
-							<div className="absolute bottom-[18px] left-[18px] grid gap-0.5 text-[color:var(--text-inverse-color)]">
-								<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
-									{featuredAdProduct.empresaNome}
-								</span>
-								<strong className="text-[15px] leading-[1.05]">
-									{featuredAdProduct.categoria}
-								</strong>
-							</div>
-						</div>
+						/>
 					</div>
 				</aside>
 			</div>

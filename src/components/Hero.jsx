@@ -17,6 +17,7 @@ import { addToCart } from "../../services/cartService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import FeedbackPopup from "./FeedbackPopup";
 import PrimaryButton from "./shared/PrimaryButton";
+import ProductArtwork from "./shared/ProductArtwork";
 
 const HERO_PALETTES = [
 	{
@@ -118,6 +119,7 @@ function buildHeroSlides(games) {
 			overline: game.categoria
 				? `${game.categoria.toUpperCase()} NA NEXGAMES`
 				: "DESTAQUE DO CATÁLOGO",
+			image: game.image ?? null,
 			startColor: palette.startColor,
 			endColor: palette.endColor,
 			glowColor: palette.glowColor,
@@ -140,6 +142,7 @@ function buildHeroInfoCards(games) {
 			titleBottom:
 				secondLine.toUpperCase() || formatCurrency(getDiscountedPrice(game)),
 			buttonLabel: "Ver jogo",
+			image: game.image ?? null,
 			startColor: palette.startColor,
 			endColor: palette.endColor,
 		};
@@ -349,31 +352,26 @@ export default function Hero({ games = [], catalogGames = [] }) {
 								style={{ backgroundColor: currentSlide.glowColor }}
 							/>
 
-							<div
-								className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-[var(--radius-medium)]"
-								style={{
-									background: `linear-gradient(135deg, ${currentSlide.startColor} 0%, ${currentSlide.endColor} 100%)`,
+							<ProductArtwork
+								image={currentSlide.image}
+								alt={currentSlide.nome}
+								primaryLabel={currentSlide.empresaNome}
+								secondaryLabel={currentSlide.nome}
+								className="min-h-[320px] rounded-[var(--radius-medium)]"
+								labelPositionClassName="bottom-6 left-6"
+								primaryLabelClassName="text-[11px] font-bold uppercase tracking-[0.08em] opacity-90"
+								secondaryLabelClassName="text-lg font-black leading-[1.05]"
+								placeholderClassName="relative h-[72%] w-[54%] rounded-[22px] border border-white/25"
+								placeholderStyle={{
+									transform: "rotate(-14deg)",
+									background:
+										"linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.12) 100%)",
+									boxShadow: "var(--shadow-float)",
 								}}
-							>
-								<div
-									className="relative h-[72%] w-[54%] rounded-[22px] border border-white/25"
-									style={{
-										transform: "rotate(-14deg)",
-										background:
-											"linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.12) 100%)",
-										boxShadow: "var(--shadow-float)",
-									}}
-								/>
-
-								<div className="absolute bottom-6 left-6 grid max-w-[62%] gap-0.5 text-[color:var(--text-inverse-color)]">
-									<span className="text-[11px] font-bold uppercase tracking-[0.08em] opacity-90">
-										{currentSlide.empresaNome}
-									</span>
-									<strong className="text-lg font-black leading-[1.05]">
-										{currentSlide.nome}
-									</strong>
-								</div>
-							</div>
+								startColor={currentSlide.startColor}
+								endColor={currentSlide.endColor}
+								softGradient={false}
+							/>
 						</div>
 					</div>
 
@@ -427,28 +425,22 @@ export default function Hero({ games = [], catalogGames = [] }) {
 							className="grid min-h-[164px] min-w-[292px] shrink-0 snap-start cursor-pointer grid-cols-[46%_minmax(0,1fr)] gap-[10px] rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] bg-[color:var(--surface-color)] p-[18px] text-left transition hover:-translate-y-1 hover:border-[color:var(--border-primary-color)] md:min-w-0"
 							style={{ boxShadow: "var(--shadow-soft)" }}
 						>
-							<div
-								className="relative flex min-h-[146px] items-center justify-center overflow-hidden rounded-[var(--radius-large)]"
-								style={{
-									background: `linear-gradient(135deg, ${card.startColor} 0%, ${card.endColor} 100%)`,
+							<ProductArtwork
+								image={card.image}
+								alt={card.nome}
+								className="min-h-[146px]"
+								showImageOverlay={false}
+								glowClassName="absolute aspect-square w-[62%] rounded-full blur-lg"
+								placeholderClassName="relative z-10 h-[62%] w-[56%] rounded-[18px] border border-white/35"
+								placeholderStyle={{
+									transform: "rotate(-14deg)",
+									background:
+										"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
 								}}
-							>
-								<div
-									className="absolute aspect-square w-[62%] rounded-full blur-lg"
-									style={{
-										background: "color-mix(in srgb, white 64%, transparent)",
-									}}
-								/>
-
-								<div
-									className="relative z-10 h-[62%] w-[56%] rounded-[18px] border border-white/35"
-									style={{
-										transform: "rotate(-14deg)",
-										background:
-											"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-									}}
-								/>
-							</div>
+								startColor={card.startColor}
+								endColor={card.endColor}
+								softGradient={false}
+							/>
 
 							<div className="grid content-center gap-0.5">
 								<span className="text-[15px] leading-[1.12] uppercase text-[color:var(--text-primary-color)]">

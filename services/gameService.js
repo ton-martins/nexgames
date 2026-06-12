@@ -1,5 +1,6 @@
 import { apiRequest } from "./api";
 import { getToken } from "./authService";
+import { attachGameImage } from "../src/data/gameImages";
 
 const PUBLIC_GAMES_STORAGE_KEY = "nexgames_public_games";
 
@@ -29,7 +30,7 @@ function normalizePublicGame(game) {
 		preco: Number(game.preco ?? 0),
 		desconto: Number(game.desconto ?? 0),
 		categoria: game.categoria ?? "",
-		empresaNome: game.empresa_nome ?? "",
+		empresaNome: game.empresa_nome ?? game.empresaNome ?? "",
 	};
 }
 
@@ -101,7 +102,7 @@ export function getStoredPublicGames() {
 			return [];
 		}
 
-		return parsedGames.map(normalizePublicGame).filter(Boolean);
+		return parsedGames.map(normalizePublicGame).filter(Boolean).map(attachGameImage);
 	} catch {
 		return [];
 	}
@@ -124,7 +125,7 @@ export async function getGames({ categoria } = {}) {
 		return [];
 	}
 
-	return data.map(normalizeGame);
+	return data.map(normalizeGame).filter(Boolean).map(attachGameImage);
 }
 
 export async function getPublicGames({ forceRefresh = false } = {}) {
@@ -155,7 +156,7 @@ export async function getPublicGames({ forceRefresh = false } = {}) {
 
 		savePublicGamesToStorage(games);
 
-		return games;
+		return games.map(attachGameImage);
 	} catch (error) {
 		const storedGames = getStoredPublicGames();
 
@@ -174,7 +175,7 @@ export async function getGameById(id) {
 		token,
 	});
 
-	return normalizeGame(data);
+	return attachGameImage(normalizeGame(data));
 }
 
 export async function createGame({
@@ -202,7 +203,7 @@ export async function createGame({
 		},
 	});
 
-	return normalizeGame(data);
+	return attachGameImage(normalizeGame(data));
 }
 
 export async function updateGame(
@@ -233,7 +234,7 @@ export async function updateGame(
 		},
 	});
 
-	return normalizeGame(data);
+	return attachGameImage(normalizeGame(data));
 }
 
 export async function deleteGame(id) {

@@ -7,6 +7,7 @@ import { addToWishlist } from "../../services/wishlistService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import FeedbackPopup from "./FeedbackPopup";
 import ModalProduct from "./shared/ModalProduct";
+import ProductArtwork from "./shared/ProductArtwork";
 import SecondaryButton from "./shared/SecondaryButton";
 import TertiaryButton from "./shared/TertiaryButton";
 
@@ -64,6 +65,7 @@ function buildExclusiveProduct(game, index) {
 		empresaNome: game.empresaNome ?? "NexGames",
 		descricao: sanitizeDescription(game.descricao),
 		ano: game.ano ?? null,
+		image: game.image ?? null,
 		precoAtual: currentPrice,
 		precoOriginal: hasDiscount ? originalPrice : null,
 		badge: hasDiscount ? `-${discount}%` : "Exclusivo",
@@ -298,31 +300,25 @@ export default function ExclusiveProducts({ games = [] }) {
 							onClick={(event) => handleOpenProductPage(featuredProduct, event)}
 							className="bg-transparent p-0 text-left"
 						>
-							<div
-								className="relative mt-1.5 flex min-h-[220px] items-center justify-center overflow-hidden rounded-[var(--radius-large)] xl:min-h-[280px]"
-								style={{
-									background: `linear-gradient(135deg, color-mix(in srgb, ${EXCLUSIVE_CONTENT.startColor} 82%, var(--surface-color)), color-mix(in srgb, ${EXCLUSIVE_CONTENT.endColor} 88%, var(--surface-soft-color)))`,
+							<ProductArtwork
+								image={featuredProduct.image}
+								alt={featuredProduct.nome}
+								primaryLabel={EXCLUSIVE_CONTENT.mediaSecondaryLabel}
+								secondaryLabel={EXCLUSIVE_CONTENT.mediaPrimaryLabel}
+								className="mt-1.5 min-h-[220px] xl:min-h-[280px]"
+								labelPositionClassName="bottom-5 left-5"
+								secondaryLabelClassName="text-base leading-[1.05]"
+								placeholderClassName="relative h-[72%] w-[54%] rounded-[22px] border border-white/35"
+								placeholderStyle={{
+									background:
+										"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+									transform: "rotate(-14deg)",
+									boxShadow: "var(--shadow-float)",
 								}}
-							>
-								<div className="absolute aspect-square w-[68%] rounded-full bg-white/45 blur-lg" />
-								<div
-									className="relative h-[72%] w-[54%] rounded-[22px] border border-white/35"
-									style={{
-										background:
-											"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-										transform: "rotate(-14deg)",
-										boxShadow: "var(--shadow-float)",
-									}}
-								/>
-								<div className="absolute bottom-5 left-5 grid gap-0.5 text-[color:var(--text-inverse-color)]">
-									<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
-										{EXCLUSIVE_CONTENT.mediaSecondaryLabel}
-									</span>
-									<strong className="text-base leading-[1.05]">
-										{EXCLUSIVE_CONTENT.mediaPrimaryLabel}
-									</strong>
-								</div>
-							</div>
+								glowClassName="absolute aspect-square w-[68%] rounded-full bg-white/45 blur-lg"
+								startColor={EXCLUSIVE_CONTENT.startColor}
+								endColor={EXCLUSIVE_CONTENT.endColor}
+							/>
 						</button>
 					</article>
 
@@ -402,31 +398,23 @@ export default function ExclusiveProducts({ games = [] }) {
 											</strong>
 										</div>
 
-										<div
-											className="relative flex min-h-[132px] items-center justify-center overflow-hidden rounded-[var(--radius-large)]"
-											style={{
-												background: `linear-gradient(135deg, color-mix(in srgb, ${product.startColor} 82%, var(--surface-color)), color-mix(in srgb, ${product.endColor} 88%, var(--surface-soft-color)))`,
+										<ProductArtwork
+											image={product.image}
+											alt={product.nome}
+											primaryLabel={product.mediaSecondaryLabel}
+											secondaryLabel={product.mediaPrimaryLabel}
+											className="min-h-[132px]"
+											labelPositionClassName="bottom-4 left-4"
+											secondaryLabelClassName="text-base leading-[1.05]"
+											startColor={product.startColor}
+											endColor={product.endColor}
+											placeholderStyle={{
+												background:
+													"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+												transform: "rotate(-14deg)",
+												boxShadow: "var(--shadow-float)",
 											}}
-										>
-											<div className="absolute aspect-square w-[62%] rounded-full bg-white/45 blur-lg" />
-											<div
-												className="relative z-10 h-[68%] w-[58%] rounded-[22px] border border-white/35"
-												style={{
-													background:
-														"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-													transform: "rotate(-14deg)",
-													boxShadow: "var(--shadow-float)",
-												}}
-											/>
-											<div className="absolute bottom-4 left-4 grid gap-0.5 text-[color:var(--text-inverse-color)]">
-												<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
-													{product.mediaSecondaryLabel}
-												</span>
-												<strong className="text-base leading-[1.05]">
-													{product.mediaPrimaryLabel}
-												</strong>
-											</div>
-										</div>
+										/>
 
 										<div className="mt-auto flex items-center justify-between gap-3">
 											<div className="grid gap-0.5">

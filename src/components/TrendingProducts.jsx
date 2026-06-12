@@ -7,6 +7,7 @@ import { addToWishlist } from "../../services/wishlistService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import FeedbackPopup from "./FeedbackPopup";
 import ModalProduct from "./shared/ModalProduct";
+import ProductArtwork from "./shared/ProductArtwork";
 import TertiaryButton from "./shared/TertiaryButton";
 
 const TRENDING_TAB_LIST = [
@@ -65,6 +66,7 @@ function buildProductItem(game, index) {
 		empresaNome: game.empresaNome ?? "NexGames",
 		ano: game.ano ?? null,
 		descricao: sanitizeDescription(game.descricao),
+		image: game.image ?? null,
 		precoAtual: currentPrice,
 		precoOriginal: hasDiscount ? originalPrice : null,
 		badge: hasDiscount ? `-${discount}%` : "Novo",
@@ -92,6 +94,26 @@ function buildTabProducts(games) {
 		promotion: discountedGames.map((game, index) => buildProductItem(game, index)),
 		recent: recentGames.map((game, index) => buildProductItem(game, index)),
 	};
+}
+
+function ProductMedia({ product, className = "" }) {
+	return (
+		<ProductArtwork
+			image={product.image}
+			alt={product.nome}
+			primaryLabel={product.empresaNome}
+			secondaryLabel={product.categoria}
+			className={className}
+			startColor={product.startColor}
+			endColor={product.endColor}
+			placeholderStyle={{
+				background:
+					"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+				transform: "rotate(-14deg)",
+				boxShadow: "var(--shadow-float)",
+			}}
+		/>
+	);
 }
 
 export default function TrendingProducts({ games = [] }) {
@@ -376,33 +398,7 @@ export default function TrendingProducts({ games = [] }) {
 									{product.nome}
 								</strong>
 
-								<div
-									className="relative mt-0.5 flex min-h-[180px] items-center justify-center overflow-hidden rounded-[var(--radius-large)]"
-									style={{
-										background: `linear-gradient(135deg, color-mix(in srgb, ${product.startColor} 82%, var(--surface-color)), color-mix(in srgb, ${product.endColor} 88%, var(--surface-soft-color)))`,
-									}}
-								>
-									<div className="absolute aspect-square w-[62%] rounded-full bg-white/45 blur-lg" />
-
-									<div
-										className="relative z-10 h-[68%] w-[58%] rounded-[22px] border border-white/35"
-										style={{
-											background:
-												"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-											transform: "rotate(-14deg)",
-											boxShadow: "var(--shadow-float)",
-										}}
-									/>
-
-									<div className="absolute bottom-[18px] left-[18px] grid max-w-[62%] gap-0.5 text-[color:var(--text-inverse-color)]">
-										<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
-											{product.empresaNome}
-										</span>
-										<strong className="text-[15px] leading-[1.05]">
-											{product.categoria}
-										</strong>
-									</div>
-								</div>
+								<ProductMedia product={product} className="mt-0.5 min-h-[180px]" />
 
 								<div className="flex items-center gap-1.5 text-xs text-[color:var(--rating-color)]">
 									<CalendarDays size={16} />

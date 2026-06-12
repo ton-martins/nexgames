@@ -1,6 +1,7 @@
 import { CalendarDays, Eye, ShoppingBag, X } from "lucide-react";
 import { formatCurrency } from "../../helpers/currency";
 import PrimaryButton from "./PrimaryButton";
+import ProductArtwork from "./ProductArtwork";
 import SecondaryButton from "./SecondaryButton";
 
 function createProductMeta(product) {
@@ -43,33 +44,23 @@ export default function ModalProduct({
 
 				<div className="grid gap-6 min-[1181px]:grid-cols-[minmax(260px,340px)_minmax(0,1fr)]">
 					<div className="relative min-h-[260px] min-[1181px]:min-h-[320px]">
-						<div
-							className="relative flex min-h-[260px] items-center justify-center overflow-hidden rounded-[var(--radius-large)] min-[1181px]:min-h-[320px]"
-							style={{
-								background: `linear-gradient(135deg, ${product.startColor} 0%, ${product.endColor} 100%)`,
+						<ProductArtwork
+							image={product.image}
+							alt={product.nome}
+							primaryLabel={product.empresaNome}
+							secondaryLabel={product.categoria}
+							className="min-h-[260px] min-[1181px]:min-h-[320px]"
+							placeholderClassName="relative z-10 h-[66%] w-[58%] rounded-[22px] border border-white/35"
+							placeholderStyle={{
+								background:
+									"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+								transform: "rotate(-14deg)",
+								boxShadow: "var(--shadow-float)",
 							}}
-						>
-							<div className="absolute aspect-square w-[62%] rounded-full bg-white/45 blur-lg" />
-
-							<div
-								className="relative z-10 h-[66%] w-[58%] rounded-[22px] border border-white/35"
-								style={{
-									background:
-										"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-									transform: "rotate(-14deg)",
-									boxShadow: "var(--shadow-float)",
-								}}
-							/>
-
-							<div className="absolute bottom-[18px] left-[18px] grid max-w-[62%] gap-0.5 text-[color:var(--text-inverse-color)]">
-								<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
-									{product.empresaNome}
-								</span>
-								<strong className="text-[15px] leading-[1.05]">
-									{product.categoria}
-								</strong>
-							</div>
-						</div>
+							startColor={product.startColor}
+							endColor={product.endColor}
+							softGradient={false}
+						/>
 					</div>
 
 					<div className="grid content-start gap-[14px]">

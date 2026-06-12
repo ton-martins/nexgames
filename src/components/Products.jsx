@@ -13,6 +13,7 @@ import { addToWishlist } from "../../services/wishlistService";
 import { formatCurrency, getDiscountedPrice } from "../helpers/currency";
 import FeedbackPopup from "./FeedbackPopup";
 import ModalProduct from "./shared/ModalProduct";
+import ProductArtwork from "./shared/ProductArtwork";
 import TertiaryButton from "./shared/TertiaryButton";
 
 const PRODUCTS_SECTION_LIST = [
@@ -125,6 +126,7 @@ function buildProductItem(game, index) {
 		empresaNome: game.empresaNome ?? "NexGames",
 		descricao: sanitizeDescription(game.descricao),
 		ano: game.ano ?? null,
+		image: game.image ?? null,
 		precoAtual: currentPrice,
 		precoOriginal: hasDiscount ? originalPrice : null,
 		badge: hasDiscount ? `-${discount}%` : "Novo",
@@ -196,31 +198,21 @@ function buildSections(games) {
 
 function ProductMedia({ product, className = "" }) {
 	return (
-		<div
-			className={`relative flex items-center justify-center overflow-hidden rounded-[var(--radius-large)] ${className}`}
-			style={{
-				background: `linear-gradient(135deg, color-mix(in srgb, ${product.startColor} 82%, var(--surface-color)), color-mix(in srgb, ${product.endColor} 88%, var(--surface-soft-color)))`,
+		<ProductArtwork
+			image={product.image}
+			alt={product.nome}
+			primaryLabel={product.empresaNome}
+			secondaryLabel={product.categoria}
+			className={className}
+			startColor={product.startColor}
+			endColor={product.endColor}
+			placeholderStyle={{
+				background:
+					"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
+				transform: "rotate(-14deg)",
+				boxShadow: "var(--shadow-float)",
 			}}
-		>
-			<div className="absolute aspect-square w-[62%] rounded-full bg-white/45 blur-lg" />
-			<div
-				className="relative z-10 h-[68%] w-[58%] rounded-[22px] border border-white/35"
-				style={{
-					background:
-						"linear-gradient(180deg, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0.14) 100%)",
-					transform: "rotate(-14deg)",
-					boxShadow: "var(--shadow-float)",
-				}}
-			/>
-			<div className="absolute bottom-[18px] left-[18px] grid max-w-[62%] gap-0.5 text-[color:var(--text-inverse-color)]">
-				<span className="text-[11px] font-bold tracking-[0.08em] opacity-90">
-					{product.empresaNome}
-				</span>
-				<strong className="text-[15px] leading-[1.05]">
-					{product.categoria}
-				</strong>
-			</div>
-		</div>
+		/>
 	);
 }
 
