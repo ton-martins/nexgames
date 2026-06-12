@@ -153,6 +153,7 @@ export default function Hero({ games = [], catalogGames = [] }) {
 	const navigate = useNavigate();
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [isAddingToCart, setIsAddingToCart] = useState(false);
+	const [hasHeroImageError, setHasHeroImageError] = useState(false);
 	const [popupState, setPopupState] = useState({
 		open: false,
 		title: "",
@@ -172,6 +173,12 @@ export default function Hero({ games = [], catalogGames = [] }) {
 		setActiveIndex(0);
 	}, [activeIndex, slides.length]);
 
+	const currentSlide = slides[activeIndex] ?? null;
+
+	useEffect(() => {
+		setHasHeroImageError(false);
+	}, [currentSlide?.image]);
+
 	useEffect(() => {
 		if (slides.length <= 1) return undefined;
 
@@ -183,8 +190,6 @@ export default function Hero({ games = [], catalogGames = [] }) {
 			window.clearInterval(autoplayId);
 		};
 	}, [slides.length]);
-
-	const currentSlide = slides[activeIndex] ?? null;
 
 	function handleHeroCardNavigation(card) {
 		if (!isAuthenticated()) {
@@ -265,8 +270,11 @@ export default function Hero({ games = [], catalogGames = [] }) {
 		}
 	}
 
-	const sliderOverlay =
-		"linear-gradient(90deg, var(--hero-overlay-start) 0%, var(--hero-overlay-mid) 34%, var(--hero-overlay-end) 100%)";
+	const hasFullHeroImage = Boolean(currentSlide?.image) && !hasHeroImageError;
+
+	const sliderOverlay = hasFullHeroImage
+		? "linear-gradient(90deg, rgba(8, 10, 16, 0.9) 0%, rgba(8, 10, 16, 0.72) 34%, rgba(8, 10, 16, 0.28) 100%)"
+		: "linear-gradient(90deg, var(--hero-overlay-start) 0%, var(--hero-overlay-mid) 34%, var(--hero-overlay-end) 100%)";
 
 	const heroBackground = currentSlide
 		? `
@@ -274,6 +282,16 @@ export default function Hero({ games = [], catalogGames = [] }) {
 			linear-gradient(118deg, ${currentSlide.startColor} 0%, ${currentSlide.endColor} 62%, var(--surface-soft-color) 100%)
 		`
 		: "linear-gradient(135deg, var(--surface-soft-color) 0%, var(--surface-color) 100%)";
+
+	const heroTitleClass = hasFullHeroImage
+		? "text-white"
+		: "text-[color:var(--text-primary-color)]";
+	const heroMutedTextClass = hasFullHeroImage
+		? "text-white/80"
+		: "text-[color:var(--text-muted-color)]";
+	const heroSoftTextClass = hasFullHeroImage
+		? "text-white/60"
+		: "text-[color:var(--text-soft-color)]";
 
 	if (!currentSlide) {
 		return null;
@@ -283,25 +301,44 @@ export default function Hero({ games = [], catalogGames = [] }) {
 		<section className="relative bg-[color:var(--background-color)]">
 			<div className="app-container">
 				<article
-					className="relative overflow-hidden rounded-[var(--radius-large)] border border-[color:var(--border-light-color)]"
+					className={`relative overflow-hidden rounded-[var(--radius-large)] border border-[color:var(--border-light-color)] ${
+						hasFullHeroImage ? "xl:min-h-[520px]" : ""
+					}`}
 					style={{
 						background: heroBackground,
 						boxShadow: "var(--shadow-soft)",
 					}}
 				>
+					{hasFullHeroImage ? (
+						<img
+							src={currentSlide.image}
+							alt={currentSlide.nome}
+							className="absolute inset-0 h-full w-full object-cover"
+							onError={() => setHasHeroImageError(true)}
+						/>
+					) : null}
+
 					<div
 						className="pointer-events-none absolute inset-0"
 						style={{ background: sliderOverlay }}
 					/>
 
-					<div className="relative z-10 grid gap-10 p-6 md:p-8 xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)] xl:items-center xl:px-16 xl:py-14">
-						<div className="max-w-[520px] xl:pl-[38px]">
+					<div
+						className={`relative z-10 grid gap-10 p-6 md:p-8 xl:items-center xl:px-16 xl:py-14 ${
+							hasFullHeroImage
+								? "xl:grid-cols-1 xl:py-16"
+								: "xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)]"
+						}`}
+					>
+						<div className={hasFullHeroImage ? "max-w-[620px]" : "max-w-[520px] xl:pl-[38px]"}>
 							<span className="inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-[0.08em] text-[color:var(--secondary-color)]">
 								<Sparkles size={16} />
 								{currentSlide.overline}
 							</span>
 
-							<h1 className="mt-3 text-[clamp(2.4rem,5vw,4rem)] font-light uppercase leading-[0.94] tracking-[-0.05em] text-[color:var(--text-primary-color)]">
+							<h1
+								className={`mt-3 text-[clamp(2.4rem,5vw,4rem)] font-light uppercase leading-[0.94] tracking-[-0.05em] ${heroTitleClass}`}
+							>
 								<span className="block">{currentSlide.titleLines[0]}</span>
 								<span
 									className="mt-1 block font-black text-[color:var(--primary-color)]"
@@ -314,17 +351,19 @@ export default function Hero({ games = [], catalogGames = [] }) {
 								</span>
 							</h1>
 
-							<p className="mt-4 max-w-[460px] text-sm font-medium leading-6 text-[color:var(--text-muted-color)] md:text-base">
+							<p
+								className={`mt-4 max-w-[460px] text-sm font-medium leading-6 md:text-base ${heroMutedTextClass}`}
+							>
 								{currentSlide.description}
 							</p>
 
 							<div className="mt-6 flex flex-wrap items-end gap-3">
-								<strong className="text-3xl font-black text-[color:var(--text-primary-color)] md:text-4xl">
+								<strong className={`text-3xl font-black md:text-4xl ${heroTitleClass}`}>
 									{currentSlide.price}
 								</strong>
 
 								{currentSlide.originalPrice ? (
-									<span className="pb-1 text-sm font-semibold text-[color:var(--text-soft-color)] line-through">
+									<span className={`pb-1 text-sm font-semibold line-through ${heroSoftTextClass}`}>
 										{currentSlide.originalPrice}
 									</span>
 								) : null}
@@ -346,7 +385,8 @@ export default function Hero({ games = [], catalogGames = [] }) {
 							</div>
 						</div>
 
-						<div className="relative min-h-[320px]">
+						{!hasFullHeroImage ? (
+							<div className="relative min-h-[320px]">
 							<div
 								className="absolute left-1/2 top-1/2 h-[68%] w-[68%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-xl"
 								style={{ backgroundColor: currentSlide.glowColor }}
@@ -372,7 +412,8 @@ export default function Hero({ games = [], catalogGames = [] }) {
 								endColor={currentSlide.endColor}
 								softGradient={false}
 							/>
-						</div>
+							</div>
+						) : null}
 					</div>
 
 					{slides.length > 1 ? (
